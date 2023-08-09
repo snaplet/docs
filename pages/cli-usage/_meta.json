@@ -1,0 +1,18 @@
+{
+  "auth": "auth",
+  "completion": "completion",
+  "config": "config",
+  "dev": "dev",
+  "discord": "discord",
+  "documentation": "documentation",
+  "generate": "generate",
+  "preview-database": "preview-database",
+  "project": "project",
+  "proxy": "proxy",
+  "seed": "seed",
+  "setup": "setup",
+  "snapshot": "snapshot",
+  "subset": "subset",
+  "team": "team",
+  "upgrade": "upgrade"
+}
