@@ -1,57 +1,86 @@
 import MonacoEditor, { type Monaco } from "@monaco-editor/react";
-import { themeData as githubDark } from "./github-dark";
-import { themeData as githubLight } from "./github-light";
+import { useCallback, type ComponentProps } from "react";
+import {
+  fakerDefs,
+  snapletClientTypes,
+  snapletConfig,
+  snapletTypes,
+} from "./generate-tutorial";
 import type { editor } from "monaco-editor";
-import { useTheme } from "nextra-theme-docs";
-import { useCallback, useEffect, useRef } from "react";
+import { AutoTypings, LocalStorageCache } from "monaco-editor-auto-typings";
 
-export function Editor() {
-  const { resolvedTheme } = useTheme();
+export function Editor(props: ComponentProps<typeof MonacoEditor>) {
+  return (
+    <MonacoEditor
+      options={{
+        fontSize: 14,
+        lineNumbers: "off",
+        renderLineHighlight: "none",
+        minimap: { enabled: false },
+        overviewRulerLanes: 0,
+        hideCursorInOverviewRuler: true,
+        scrollBeyondLastLine: false,
+        padding: { top: 18 },
+        lineDecorationsWidth: 0,
+      }}
+      theme="vs-dark"
+      defaultLanguage="typescript"
+      {...props}
+    />
+  );
+}
 
-  const monacoRef = useRef<Monaco>(null);
+export function GenerateTutorialEditor() {
+  const handleBeforeMount = useCallback((monaco: Monaco) => {
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      target: monaco.languages.typescript.ScriptTarget.Latest,
+      module: monaco.languages.typescript.ModuleKind.ESNext,
+      allowNonTsExtensions: true,
+      strict: true,
+      alwaysStrict: true,
+      noImplicitAny: true,
+      allowJs: false,
+    });
 
-  const handleEditorDidMount = useCallback(
-    (_: editor.IStandaloneCodeEditor, monaco: Monaco) => {
-      monacoRef.current = monaco;
-      monacoRef.current.editor.defineTheme("github-dark", githubDark);
-      monacoRef.current.editor.defineTheme("github-light", githubLight);
-      if (resolvedTheme === "dark") {
-        monacoRef.current.editor.setTheme("github-dark");
-      } else {
-        monacoRef.current.editor.setTheme("github-light");
-      }
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSuggestionDiagnostics: true,
+    });
+
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      fakerDefs,
+      "inmemory://faker.d.ts"
+    );
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      snapletClientTypes,
+      "inmemory://.snaplet/snaplet-client.d.ts"
+    );
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      snapletTypes,
+      "inmemory://.snaplet/snaplet.d.ts"
+    );
+    monaco.editor.createModel(
+      snapletConfig,
+      "typescript",
+      monaco.Uri.parse("inmemory://snaplet.config.ts")
+    );
+  }, []);
+
+  const handleMount = useCallback(
+    (editor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
+      AutoTypings.create(editor, {
+        sourceCache: new LocalStorageCache(),
+        monaco,
+      });
     },
-    [resolvedTheme]
+    []
   );
 
-  useEffect(() => {
-    if (!monacoRef.current) return;
-    if (resolvedTheme === "dark") {
-      monacoRef.current.editor.setTheme("github-dark");
-    } else {
-      monacoRef.current.editor.setTheme("github-light");
-    }
-  }, [resolvedTheme]);
-
   return (
-    <div className="monaco-editor-block">
-      <MonacoEditor
-        options={{
-          fontSize: 14,
-          lineNumbers: "off",
-          renderLineHighlight: "none",
-          minimap: { enabled: false },
-          overviewRulerLanes: 0,
-          hideCursorInOverviewRuler: true,
-          scrollBeyondLastLine: false,
-          padding: { top: 18 },
-          lineDecorationsWidth: 0,
-        }}
-        height="57px"
-        defaultLanguage="typescript"
-        defaultValue="type Foo = 'bar'"
-        onMount={handleEditorDidMount}
-      />
-    </div>
+    <Editor
+      height="500px"
+      beforeMount={handleBeforeMount}
+      onMount={handleMount}
+      defaultValue={snapletConfig}
+    />
   );
 }
