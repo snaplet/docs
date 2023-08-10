@@ -40,6 +40,9 @@ devDependencies:
   '@types/react':
     specifier: ^18.2.20
     version: 18.2.20
+  prettier:
+    specifier: ^3.0.1
+    version: 3.0.1
   typescript:
     specifier: ^5.1.6
     version: 5.1.6
@@ -2253,6 +2256,12 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
     dev: false
+
+  /prettier@3.0.1:
+    resolution: {integrity: sha512-fcOWSnnpCrovBsmFZIGIy9UqK2FaI7Hqax+DIO0A9UxeVoY4iweyaFjS5TavZN97Hfehph0nhsZnjlVKzEQSrQ==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /property-information@6.2.0:
     resolution: {integrity: sha512-kma4U7AFCTwpqq5twzC1YVIDXSqg6qQK6JN0smOw8fgRy1OkMi0CYSzFmsy6dnqSenamAtj0CyXMUJ1Mf6oROg==}
