@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "format": "remark . --output",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -27,6 +28,9 @@
     "@types/node": "20.4.9",
     "@types/react": "^18.2.20",
     "prettier": "^3.0.1",
+    "remark": "^14.0.3",
+    "remark-cli": "^11.0.0",
+    "remark-mdx": "^2.3.0",
     "typescript": "^5.1.6"
   }
 }
