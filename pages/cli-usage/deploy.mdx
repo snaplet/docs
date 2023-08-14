@@ -1,0 +1,30 @@
+import { Callout } from 'nextra/components'
+
+# Deploy
+
+## `deploy [snapshot-id]`
+
+<Callout type="info" emoji="ℹ️">
+  This command is an alias to [snaplet preview-databases create](/cli-usage/preview-databases#preview-databases-create)
+</Callout>
+
+Deploy a snapshot to a preview database.
+
+```bash >_&nbsp;terminal
+snaplet deploy [snapshot-id]
+```
+
+### Arguments
+
+#### `[snapshot-id]`
+
+The identifier of the snapshot to use as the basis for the preview database.
+
+### Flags
+
+#### `--name`
+Use a custom name for the preview database.
+
+#### `--git`
+
+Name the preview database after the current git branch.
