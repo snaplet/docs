@@ -17,6 +17,7 @@ brew install git
 #### Pnpm and Node.js
 
 ```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 pnpm env use --global lts
 corepack enable
 ```
