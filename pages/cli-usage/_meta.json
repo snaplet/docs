@@ -5,8 +5,14 @@
   "dev": "dev",
   "docs": "docs",
   "generate": "generate",
+  "link": "link",
+  "login": "login",
+  "preview-databases": "preview-databases",
+  "pull": "pull",
+  "push": "push",
   "setup": "setup",
   "share": "share",
+  "snapshots": "snapshots",
   "restore": "restore",
   "upgrade": "upgrade"
 }
