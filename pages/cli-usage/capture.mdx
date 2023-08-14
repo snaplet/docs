@@ -1,0 +1,31 @@
+import { Callout } from 'nextra/components'
+
+# Capture
+
+## `capture`
+
+<Callout type="info" emoji="ℹ️">
+  This command is an alias to [`snaplet snapshots capture`](/cli-usage/snapshots#snapshots-capture)
+</Callout>
+
+Captures a snapshot from a source database.
+
+```bash >_&nbsp;terminal
+snaplet capture [source-database-url]
+```
+
+### Arguments
+
+#### `[source-database-url]`
+
+The source database connection url to capture from.
+
+### Flags
+
+#### `--output`
+
+A custom destination path for the snapshot.
+
+#### `--tags`
+
+Attach tags to the snapshot.

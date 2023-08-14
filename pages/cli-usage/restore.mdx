@@ -1,37 +1,17 @@
-# Snapshots
+import { Callout } from 'nextra/components'
 
-Manages snapshots for a project.
+# Restore
 
-## `snapshots capture`
+## `restore`
 
-Captures a snapshot from a source database.
-
-```bash >_&nbsp;terminal
-snaplet snapshots capture [source-database-url]
-```
-
-### Arguments
-
-#### `[source-database-url]`
-
-The source database connection url to capture from.
-
-### Flags
-
-#### `--output`
-
-A custom destination path for the snapshot.
-
-#### `--tags`
-
-Attach tags to the snapshot.
-
-## `snapshots restore`
+<Callout type="info" emoji="ℹ️">
+  This command is an alias to [`snaplet snapshots restore`](/cli-usage/snapshots#snapshots-restore)
+</Callout>
 
 Restores a snapshot to a target database.
 
 ```bash >_&nbsp;terminal
-snaplet snapshots restore [snapshot-id | path]
+snaplet restore [snapshot-id | path]
 ```
 
 ### Arguments
