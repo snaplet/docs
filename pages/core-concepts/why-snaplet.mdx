@@ -1,1 +1,30 @@
-# Why Snaplet
+# Why Snaplet?
+
+One of the most common challenges software developers face is having to *make assumptions*. 
+
+Developers have to make assumptions about what their production data looks like, because actually writing code against this data is difficult, dangerous, or impactical. 
+
+These assumptions about what production data looks like, while necessary for progress, can result in code that is buggy, non-performant, or inconsistent.  
+
+## The Curse of Assumptions
+
+At the heart of Snaplet is a closely-held belief: **coding against production-like data improves both code quality and velocity**. 
+
+Why? Because code written against production data or production-like data more closely reflects the reality of that code at runtime, which means fewer assumptions, higher quality, and fewer bugs and inconsistencies. Fewer bugs means less rework, and less frustration. 
+
+But if coding against realistic data is so much better, why don't we do it all the time? There are several reasons why we compromise and code against non-representative data: 
+
+- We often _believe_ we understand the structure and intricacies of production data. However, without genuine access, these assumptions are often incorrect, and validating them is difficult.  This results in unforeseen challenges when shipping to production.
+
+- Directly coding against actual production data often isn't feasible. There are legitimate privacy concerns, regulatory restrictions, intricate workflow complications, and the challenge of managing massive database dumps make it an impractical solution. Consider also that production data and production schemas are dynamic and constantly changing, and a santized database dump create this week can be totally inaccurate and unrepresentative next week.  
+
+
+## Snaplet as a solution
+
+Recognizing these challenges, Snaplet was developed to seamlessly integrate production-like data into your development workflow and specifically address these issues:
+
+- **Consistently representative and safe**: Snaplet's workflow captures realtime "snapshots" of your production database, transforming any sensitive information. These snapshots are small, representative samples of your database, allowing every developer to work with data that mirrors the production without worrying about leaking sensitive information or pulling down massive database dumps.
+
+- **Workflow Integration**: Most developers are familiar with the GitOps-style workflow for code: Branching, writing code, pull requests, CI/CD processes, merging, and deploying. Snaplet embraces this approach. We introduced a method to sync your development database with your code branching, populating it with consistent, production-like data, making the entire process transparent and efficient.
+
+By using Snaplet, developers are no longer limited by outdated or non-representative data. Instead, have access to a real-time representation of their production environment's data, allowing for for high-quality, reliable code across their entire team, all from within a Gitops workflow. 
