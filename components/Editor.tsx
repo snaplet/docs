@@ -1,5 +1,5 @@
 import MonacoEditor, { type Monaco } from "@monaco-editor/react";
-import { useCallback, type ComponentProps } from "react";
+import { useCallback, type ComponentProps, useEffect, useRef } from "react";
 import {
   fakerDefs,
   snapletClientTypes,
@@ -31,7 +31,11 @@ export function Editor(props: ComponentProps<typeof MonacoEditor>) {
 }
 
 export function GenerateTutorialEditor() {
+  const monacoRef = useRef<Monaco>();
+
   const handleBeforeMount = useCallback((monaco: Monaco) => {
+    monacoRef.current = monaco;
+
     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
       target: monaco.languages.typescript.ScriptTarget.Latest,
       module: monaco.languages.typescript.ModuleKind.ESNext,
@@ -74,6 +78,14 @@ export function GenerateTutorialEditor() {
     },
     []
   );
+
+  useEffect(() => {
+    return () => {
+      monacoRef.current?.editor.getModels().forEach((model) => {
+        model.dispose();
+      });
+    };
+  }, []);
 
   return (
     <Editor
