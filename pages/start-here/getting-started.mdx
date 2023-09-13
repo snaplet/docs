@@ -23,23 +23,30 @@ We recommend beginning with our [cloud service](https://snaplet.dev). Sign up fo
 
 For those looking to delve deeper or self-host Snaplet, try our user-friendly `snaplet setup` CLI wizard!
 
-<Tabs items={["npm", "pnpm", "yarn"]}>
+<Tabs items={["npm", "pnpm", "yarn", "curl"]}>
   <Tab>
-  ```bash
+  ```bash >_&nbsp;terminal
   # Set up Snaplet with npx
   npx snaplet setup
   ```
   </Tab>
   <Tab>
-  ```bash
+  ```bash >_&nbsp;terminal
   # Set up Snaplet with pnpm
   pnpm dlx snaplet setup
   ```
   </Tab>
   <Tab>
-  ```bash
+  ```bash >_&nbsp;terminal
   # Set up Snaplet with yarn
   yarn dlx snaplet setup
+  ```
+  </Tab>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Set up Snaplet as a static binary
+  curl -sL https://app.snaplet.dev/get-cli/ | bash
+  snaplet setup
   ```
   </Tab>
 </Tabs>
@@ -50,17 +57,17 @@ For detailed, step-by-step instructions on installing Snaplet using your preferr
 
 Dive into the key concepts of Snaplet:
 
-📚 [Generate]('/core-concepts/generate') fake data.
+📚 [Generate](/core-concepts/generate) fake data.
 
-📚 [Capture]('/core-concepts/capture') your production data.
+📚 [Capture](/core-concepts/capture) your production data.
 
-📚 [Restore]('/core-concepts/restore') a snapshot.
+📚 [Restore](/core-concepts/restore) a snapshot.
 
-📚 [Share]('/core-concepts/share') a snapshot in Snaplet Cloud.
+📚 [Share](/core-concepts/share) a snapshot in Snaplet Cloud.
 
-📚 [Deploy]('/core-concepts/deploy') a snapshot to a Preview Database.
+📚 [Deploy](/core-concepts/deploy) a snapshot to a Preview Database.
 
-📚 Experience the [Snaplet Dev flow]('/core-concepts/snaplet-flow') within your local development process.
+📚 Experience the [Snaplet Dev flow](/core-concepts/snaplet-flow) within your local development process.
 
 ### Join our Community
 

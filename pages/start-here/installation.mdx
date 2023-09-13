@@ -1,1 +1,33 @@
+import { Tabs, Tab } from "nextra/components";
+
 # Install Snaplet
+
+<Tabs items={["npm", "pnpm", "yarn", "curl"]}>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Set up Snaplet with npx
+  npx snaplet setup
+  ```
+  </Tab>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Set up Snaplet with pnpm
+  pnpm dlx snaplet setup
+  ```
+  </Tab>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Set up Snaplet with yarn
+  yarn dlx snaplet setup
+  ```
+  </Tab>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Set up Snaplet as a static binary
+  curl -sL https://app.snaplet.dev/get-cli/ | bash
+  snaplet setup
+  ```
+  </Tab>
+</Tabs>
+
+`snaplet setup` will ask you a few questions to get you set up, and generate a [`snaplet.config.ts`](/configuration/snaplet-config-file) configuration file for your project.

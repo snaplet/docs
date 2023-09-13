@@ -66,6 +66,10 @@
   display: block;
 }
 
+.ch-scrollycoding-step-content {
+  min-height: auto;
+}
+
 .monaco-editor,
 .monaco-editor .overflow-guard {
   border-radius: 6px;
