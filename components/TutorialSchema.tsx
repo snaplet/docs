@@ -1,5 +1,9 @@
 import { useTheme } from "nextra-theme-docs";
 
+/**
+ * Those are generated with https://dbdiagram.io/ and turned into JSX with https://react-svgr.com/playground/
+ */
+
 const TutorialSchemaLight = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
