@@ -1,4 +1,5 @@
-import { Callout } from "nextra/components"
+import { Callout, Tabs, Tab } from "nextra/components"
+import { TutorialSchema } from "../../components/TutorialSchema"
 
 # Generate data
 
@@ -22,13 +23,50 @@ Here's why it's beneficial:
 
 While generated data might be the unsung hero of early development, it can get a bit needy as software evolves. But don't sweat it! Our mission is to save you from the never-ending saga of maintaining those seed scripts. Who has time for that, right?
 
+## Generating data with `snaplet generate`
+
+### Prerequisites
+
+- The [Snaplet CLI](/start-here/installation)
+
+### Getting started
+
+For this example, we consider the following database schema:
+
+<Tabs items={["diagram", "sql"]}>
+<Tab>
+<TutorialSchema className="nx-mx-auto nx-my-4" />
+</Tab>
+<Tab>
+```sql
+CREATE TABLE public."User" (
+  id uuid NOT NULL PRIMARY KEY,
+  username text NOT NULL,
+  email text NOT NULL
+);
+CREATE TABLE public."Post" (
+  id uuid NOT NULL PRIMARY KEY,
+  title text NOT NULL,
+  content text NOT NULL,
+  "createdBy" uuid NOT NULL REFERENCES public."User"(id)
+);
+CREATE TABLE public."Comment" (
+  id uuid NOT NULL PRIMARY KEY,
+  content text NOT NULL,
+  "userId" uuid NOT NULL REFERENCES public."User"(id),
+  "postId" uuid NOT NULL REFERENCES public."Post"(id),
+  "writtenAt" timestamptz NOT NULL DEFAULT now()
+);
+```
+</Tab>
+</Tabs>
+
 ## The Snaplet Data Client
 
-The key to effortless generated data is a tool that deeply understands your database's schema. By introspecting your database, we create a fully-typed client dedicated to data generation.
+The key to effortless generated data is a tool that deeply understands your database's schema. By introspecting your database, we are able to create a fully-typed client dedicated to data generation.
 
 Right now, the Snaplet Data Client is tied to our configuration file, but we intend to generate a standalone version that you will be able to use anywhere!
 
-### Architecture and concepts
 
 <CH.Scrollycoding>
 
