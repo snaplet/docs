@@ -32,7 +32,7 @@ Right now, the Snaplet Data Client is tied to our configuration file, but we int
 
 <CH.Scrollycoding>
 
-The generation process is driven by the generate section of your [`snaplet.config.ts`](/configuration/snaplet-config-file) file.
+The generation process is driven by the `generate` section of your [`snaplet.config.ts`](/configuration/snaplet-config-file) file.
 
 ```ts snaplet.config.ts focus=4:17
 import { defineConfig } from "snaplet";
@@ -57,7 +57,7 @@ export default defineConfig({
 
 ---
 
-The Snaplet Data Client is injected into the plan function of the generate configuration.
+The Snaplet Data Client is injected into the `plan` function.
 
 ```ts snaplet.config.ts focus=5[12:18]
 
@@ -80,8 +80,6 @@ These functions are producing plans. A plan is a description of the data that yo
 ```
 
 </CH.Scrollycoding>
-
-When generating data with the Snaplet Data Client, you are expected to create a [plan](#the-plan). When a plan is executed, its [store](#the-store) is populated with the generated data. At the end of the process, the values contained in the store are turned into SQL statements and executed against your target database.
 
 #### The Plan
 
