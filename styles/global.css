@@ -66,8 +66,13 @@
   display: block;
 }
 
+.ch-scrollycoding .ch-editor-frame {
+  height: 550px;
+  max-height: none;
+}
+
 .ch-scrollycoding-step-content {
-  min-height: auto;
+  min-height: 150px;
 }
 
 .monaco-editor,
