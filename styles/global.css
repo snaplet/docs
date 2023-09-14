@@ -86,3 +86,68 @@
     0 8px 16px -8px rgba(0, 0, 0, 0.3),
     0 -6px 16px -6px rgba(0, 0, 0, 0.025);
 }
+
+/*
+ * Nextra theme alteration to adhere to Snaplet's brand
+ * Basically HSL(233 79% <lightness> / <opacity>) depending on the context
+ */
+
+.nx-text-primary-600 {
+  color: hsl(var(--nextra-primary-hue) 79% 45% / var(--tw-text-opacity));
+}
+.nx-text-primary-800 {
+  color: hsl(var(--nextra-primary-hue) 79% 32% / var(--tw-text-opacity));
+}
+.nx-border-primary-500 {
+  border-color: hsl(
+    var(--nextra-primary-hue) 79% 45% / var(--tw-border-opacity)
+  );
+}
+
+:is(html[class~="dark"] .nx-text-primary-600),
+:is(html[class~="dark"] .dark\:nx-text-primary-600) {
+  color: hsl(var(--nextra-primary-hue) 79% 67% / var(--tw-text-opacity));
+}
+:is(html[class~="dark"] .nx-border-primary-500),
+:is(html[class~="dark"] .ch-scrollycoding-step-content[data-selected]) {
+  border-color: hsl(
+    var(--nextra-primary-hue) 79% 67% / var(--tw-border-opacity)
+  );
+}
+.ch-scrollycoding-step-content[data-selected] {
+  --tw-border-opacity: 1;
+  border-color: hsl(
+    var(--nextra-primary-hue) 79% 45% / var(--tw-border-opacity)
+  );
+}
+:is(html[class~="dark"] body),
+:is(html[class~="dark"] .dark\:nx-bg-dark),
+:is(html[class~="dark"] .dark\:nx-bg-neutral-900) {
+  background-color: hsl(
+    var(--nextra-primary-hue) 79% 3% / var(--tw-bg-opacity)
+  );
+}
+@supports (-webkit-backdrop-filter: blur(1px)) or
+  ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  :is(html[class~="dark"] .nextra-nav-container-blur) {
+    background-color: hsl(
+      var(--nextra-primary-hue) 79% 3% / var(--tw-bg-opacity)
+    ) !important;
+  }
+}
+:is(html[class~="dark"] .dark\:nx-shadow-\[0_-12px_16px_\#111\]) {
+  --tw-shadow: 0 -12px 16px hsl(var(--nextra-primary-hue) 79% 6% /
+        var(--tw-bg-opacity));
+}
+:is(html[class~="dark"] input:focus-visible) {
+  --tw-ring-color: hsl(
+    var(--nextra-primary-hue) 79% 67% / var(--tw-ring-opacity)
+  );
+  --tw-ring-offset-color: hsl(var(--nextra-primary-hue) 79% 74%);
+}
+:is(html[class~="dark"] .dark\:nx-bg-gray-50\/10) {
+  --tw-bg-opacity: 0.1;
+  background-color: hsl(
+    var(--nextra-primary-hue) 79% 67% / var(--tw-bg-opacity)
+  );
+}
