@@ -5,7 +5,7 @@ const withNextra = require("nextra")({
   themeConfig: "./theme.config.tsx",
   mdxOptions: {
     remarkPlugins: [
-      [remarkCodeHike, { theme: "dark-plus", showCopyButton: true }],
+      [remarkCodeHike, { theme: "github-from-css", showCopyButton: true }],
     ],
   },
 });

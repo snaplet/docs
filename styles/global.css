@@ -15,17 +15,22 @@
   --ch-13: #5a1e02;
   --ch-14: #161b22;
   --ch-15: #8b949e;
-  --ch-16: #0d1117;
+  --ch-16: hsl(var(--nextra-primary-hue) 39.5% 10%);
   --ch-17: #6e76811a;
   --ch-18: #ffffff0b;
   --ch-19: #3794ff;
   --ch-20: #264f78;
   --ch-21: #1f6feb;
-  --ch-22: #010409;
+  --ch-22: hsl(var(--nextra-primary-hue) 39.5% 22.33%);
   --ch-23: #30363d;
   --ch-24: #6e7681;
   --ch-25: #6e768166;
   --ch-26: #0d1117e6;
+}
+
+:is(html[class~="dark"] .ch-frame-button) {
+  border-color: hsl(var(--nextra-primary-hue) 39.5% 44.66%) !important;
+  background-color: hsl(var(--nextra-primary-hue) 39.5% 44.66%) !important;
 }
 
 :root.light {
@@ -56,6 +61,31 @@
   --ch-24: #8c959f;
   --ch-25: #afb8c133;
   --ch-26: #ffffffe6;
+}
+
+.ch-frame-button {
+  border-color: hsl(212 9% 80%) !important;
+  background-color: hsl(212 9% 80%) !important;
+}
+
+.ch-codeblock,
+.ch-codegroup,
+.ch-preview {
+  box-shadow:
+    0 13px 27px -5px rgba(50, 50, 93, 0.07),
+    0 8px 16px -8px rgba(0, 0, 0, 0.1),
+    0 -6px 16px -6px rgba(0, 0, 0, 0.07);
+}
+
+:is(html[class~="dark"] .ch-codeblock),
+:is(html[class~="dark"] .ch-codegroup),
+:is(html[class~="dark"] .ch-preview) {
+  box-shadow:
+    0 13px 27px -5px hsl(var(--nextra-primary-hue) 40% 20% /
+          var(--tw-bg-opacity)),
+    0 8px 16px -8px hsl(var(--nextra-primary-hue) 40% 20% / var(--tw-bg-opacity)),
+    0 -6px 16px -6px
+      hsl(var(--nextra-primary-hue) 40% 20% / var(--tw-bg-opacity));
 }
 
 .ch-codeblock .ch-code-button {
@@ -106,12 +136,12 @@
 
 :is(html[class~="dark"] .nx-text-primary-600),
 :is(html[class~="dark"] .dark\:nx-text-primary-600) {
-  color: hsl(var(--nextra-primary-hue) 79% 67% / var(--tw-text-opacity));
+  color: hsl(var(--nextra-primary-hue) 79% 69% / var(--tw-text-opacity));
 }
 :is(html[class~="dark"] .nx-border-primary-500),
 :is(html[class~="dark"] .ch-scrollycoding-step-content[data-selected]) {
   border-color: hsl(
-    var(--nextra-primary-hue) 79% 67% / var(--tw-border-opacity)
+    var(--nextra-primary-hue) 79% 69% / var(--tw-border-opacity)
   );
 }
 .ch-scrollycoding-step-content[data-selected] {
@@ -124,19 +154,19 @@
 :is(html[class~="dark"] .dark\:nx-bg-dark),
 :is(html[class~="dark"] .dark\:nx-bg-neutral-900) {
   background-color: hsl(
-    var(--nextra-primary-hue) 79% 3% / var(--tw-bg-opacity)
+    var(--nextra-primary-hue) 20% 10% / var(--tw-bg-opacity)
   );
 }
 @supports (-webkit-backdrop-filter: blur(1px)) or
   ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   :is(html[class~="dark"] .nextra-nav-container-blur) {
     background-color: hsl(
-      var(--nextra-primary-hue) 79% 3% / var(--tw-bg-opacity)
+      var(--nextra-primary-hue) 20% 10% / var(--tw-bg-opacity)
     ) !important;
   }
 }
 :is(html[class~="dark"] .dark\:nx-shadow-\[0_-12px_16px_\#111\]) {
-  --tw-shadow: 0 -12px 16px hsl(var(--nextra-primary-hue) 79% 6% /
+  --tw-shadow: 0 -12px 16px hsl(var(--nextra-primary-hue) 20% 9% /
         var(--tw-bg-opacity));
 }
 :is(html[class~="dark"] input:focus-visible) {
