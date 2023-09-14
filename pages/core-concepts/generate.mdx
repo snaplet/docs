@@ -39,7 +39,7 @@ Let's see how it works.
 
 ### Defining your first plan
 
-We consider the following database schema used in a blog application:
+To illustrate, let's consider a sample database schema for a blogging application:
 
 <Tabs items={["diagram", "sql"]}>
 <Tab>
@@ -69,12 +69,13 @@ CREATE TABLE public."Comment" (
 </Tab>
 </Tabs>
 
-We now want to generate data based on these requirements:
-- Creating a post with the title "Hello World!".
-- The author of the post has an email that ends with "acme.org".
-- This post receives 3 comments.
+Based on this schema, we'll create a data generation plan that fulfills the following criteria:
 
-Let's see how to translate these requirements into a plan using the Snaplet Data Client.
+- Generate a post titled "Hello World!"
+- Specify the author's email to end with "acme.org."
+- Add three comments to the post.
+
+Now let's translate these requirements into a plan with the Snaplet Data Client.
 
 <CH.Scrollycoding className="generate-tutorial-configuration-file">
 
@@ -329,3 +330,8 @@ snaplet generate
 ```
 
 All done, it's time to code against your generated data!
+
+## Key Takeaways
+
+- Generated data plays a critical role across different stages of software development.
+- Snaplet Data Client simplifies data generation by deeply understanding your database schema.
