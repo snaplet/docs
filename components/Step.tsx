@@ -10,10 +10,15 @@ export function Step(props: {
   }
 
   return (
-    <div className="nx-flex nx-mt-6">
-      <div style={{ flex: "1 0" }}>{props.children}</div>
-      <div style={{ flex: "1 0", position: "relative", minHeight: "320px" }}>
-        <Zoom src={props.image.src} alt={props.image.alt} fill />
+    <div className="nx-mt-6 block lg:flex lg:flex-row">
+      <div className="lg:flex-1">{props.children}</div>
+      <div className="lg:flex-1 relative h-[320px]">
+        <Zoom
+          className="object-contain"
+          src={props.image.src}
+          alt={props.image.alt}
+          fill
+        />
       </div>
     </div>
   );

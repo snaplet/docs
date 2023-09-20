@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root.dark {
   --ch-0: dark;
   --ch-1: #8b949e;
