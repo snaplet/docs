@@ -34,7 +34,12 @@ export function Zoom(props: ImageProps & ZoomProps) {
   const [clicked, setClicked] = useState(false);
 
   const handleImageZoom = () => {
-    if (!containerRef.current || clicked) return;
+    if (!containerRef.current) return;
+
+    if (clicked) {
+      closeWrapper();
+      return;
+    }
 
     const containerRect = containerRef.current.getBoundingClientRect();
     let clientHeight = containerRect.height;
@@ -76,7 +81,7 @@ export function Zoom(props: ImageProps & ZoomProps) {
   };
 
   const styles: CSSProperties = {
-    cursor: "zoom-in",
+    cursor: clicked ? "zoom-out" : "zoom-in",
     position: "relative",
     transition: `transform ${animationDuration}ms`,
     display: props.layout === "fixed" ? "inline-block" : "block",
