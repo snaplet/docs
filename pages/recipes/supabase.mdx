@@ -16,21 +16,17 @@ That's why we here! Snaplet makes populating your local development environments
 
 This guide will walk you through the exact steps to achieve this with your data in Supabase!. End-end, it shouldn't take more than 15 minutes and doing so will allow you to code against an accurate development environment that you can sync with production.
 
-<div style={{textAlign: 'center'}}>
-
-![I absolutely love Supabase!](/img/snappy-holding-supabase-logo.svg)
-
-</div>
+![I absolutely love Supabase!](/recipes/supabase/snappy-holding-supabase-logo.svg)
 
 ### Step 1: Connect your source database (Production Database)
 
-The first thing you'll want to do is navigate to https://www.snaplet.dev/ and sign up for a new account (it's free). Once you have successfully signed up for a new account, you'll begin the onboarding process...
+The first thing you'll want to do is navigate to https://www.snaplet.dev and sign up for a new account (it's free). Once you have successfully signed up for a new account, you'll begin the onboarding process...
 
-<img src="/screenshots/onboarding_start.webp" alt="Snaplet onboarding select team name" style={{ border: "1px solid #e5e7eb" }} />
+![Snaplet onboarding select team name](/recipes/supabase/onboarding_start.webp)
 
 On the “Connect database” step click on "Connect Supabase" to connect your supabase account to snaplet. Proceed through all the steps of authorizing your Supabase organization, selecting a Supabase project and giving us the password associated to the project.
 
-<img src="/screenshots/connect_to_supabase.webp" alt="Snaplet onboarding connect your database" style={{ border: "1px solid #e5e7eb" }} />
+![Snaplet onboarding connect your database](/recipes/supabase/connect_to_supabase.webp)
 
 ### Step 2: Create a snapshot
 
@@ -41,7 +37,7 @@ Once that is done, continue to the next steps:
 
 Once you have gone through those steps, a new snapshot process will start and you will now be on the “capture step.” Wait for it to finish - this is the snapshot you will restore into your **target database.**
 
-<img src="/screenshots/onboarding_capture.webp" alt="Snaplet onboarding capturing your database" style={{ border: "1px solid #e5e7eb" }} />
+![Snaplet onboarding capturing your database](/recipes/supabase/onboarding_capture.webp)
 
 ### Step 3: Set up your Supabase local development stack
 
@@ -88,7 +84,7 @@ You're now ready to restore your production snapshot into your Supabase developm
    1. You will be shown a warning to write `.snaplet/config` in your project directory. Select yes (y) to create the file.
    2. Then you will be asked for a **target database connection string.** . Paste in the **DB URL** you copied in step 3.
 
-3. Run `snaplet project setup` - you will be presented with a list of projects, these are databases that are connected to your Snaplet account. Choose the project that contains the snapshot you created in step 2.
+3. Run `snaplet project setup` - you will be presented with a list of projects, these are databases that are connected to your Snaplet account. Choose the project that contains the snapshot you created in step 2.
 
 ### Step 6: Restore the data target
 
@@ -98,11 +94,7 @@ With all the above steps complete, we can now restore!
 
 > **Note on `--no-reset`**: This will skip the “reset” step of the restore command. So no existing schemas will be dropped. Learn more about data operations [here](https://docs.snaplet.dev/getting-started/restoring#more-granular-control-over-restorations)
 
-<div style={{textAlign: 'center'}}>
-
-![Supabase is fun!](/img/snappy-with-supabase-ball.svg)
-
-</div>
+![Supabase is fun!](/recipes/supabase/snappy-with-supabase-ball.svg)
 
 ## All done!
 
@@ -131,7 +123,7 @@ Snaplet will still make sure to clear all data for tables in these schemas and r
 
 If you aren't actually needing the data for some of these schemas, you can stop these warnings by excluding the schema from the captured snapshots. You can read more on how to do this [over here in our docs](https://docs.snaplet.dev/references/data-operations/exclude):
 
-![Example of excluding a schema](/img/snaplet-supabase-schema-exclude.png)
+![Example of excluding a schema](/recipes/supabase/snaplet-supabase-schema-exclude.png)
 
 ---
 
