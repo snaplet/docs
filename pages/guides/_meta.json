@@ -1,3 +1,4 @@
 {
-  "postgresql": "PostgreSQL"
+  "postgresql": "PostgreSQL",
+  "self-hosting": "Self-hosting"
 }
