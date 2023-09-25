@@ -4,5 +4,6 @@
   "configuration": "Configuration",
   "cli-usage": "CLI Usage",
   "guides": "Guides",
-  "recipes": "Recipes"
+  "recipes": "Recipes",
+  "security": "Security"
 }
