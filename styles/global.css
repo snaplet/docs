@@ -185,3 +185,9 @@
     var(--nextra-primary-hue) 79% 67% / var(--tw-bg-opacity)
   );
 }
+
+/* center markdown-created images */
+p.nx-mt-6.nx-leading-7.first\:nx-mt-0 > img {
+  margin-left: auto;
+  margin-right: auto;
+}
