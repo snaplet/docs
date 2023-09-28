@@ -2,7 +2,7 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[mdx]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "unifiedjs.vscode-remark",
     "editor.formatOnSave": true
   },
   "javascript.format.enable": false,

@@ -1,3 +1,4 @@
+
 # CLI Commands
 
 You can use the Command-Line Interface (CLI) provided by Snaplet to manage your data from a terminal window.
@@ -111,7 +112,7 @@ snaplet config setup [targetDatabaseUrl]
 
 ## **dev**
 
-The `snaplet dev` command is used to keeps your dev database and its data in sync with your git branch so you don't have to, powered by Neon.
+The `snaplet dev` command is used to keep your dev database and its data in sync with your git branch so you don't have to, powered by Neon.
 
 **Usage**
 
@@ -127,7 +128,7 @@ snaplet dev
 
 ## **discord**
 
-The `snaplet discord` command is used to opens the Snaplet Discord chat window in your browser.
+The `snaplet discord` command is used to open the Snaplet Discord chat window in your browser.
 
 **Usage**
 
@@ -137,7 +138,7 @@ snaplet discord
 
 ## **documentation**
 
-The `snaplet documentation` command is used to opens the Snaplet Documentation in your browser.
+The `snaplet documentation` command is used to open the Snaplet Documentation in your browser.
 
 **Usage**
 
@@ -204,7 +205,7 @@ snaplet preview-database url [name]
 
 ### **list**
 
-The `snaplet preview-database list` command is used to shows all preview databases created from a specific snapshot.
+The `snaplet preview-database list` command is used to show all preview databases created from a specific snapshot.
 
 **Usage**
 
@@ -249,7 +250,7 @@ snaplet preview-database reset [name]
 
 ### **drop**
 
-The `snaplet preview-database drop` command is used to drops a specified preview database.
+The `snaplet preview-database drop` command is used to drop a specified preview database.
 
 **Usage**
 
@@ -323,7 +324,7 @@ snaplet project setup [project-id]
 
 ## **generate**
 
-The `snaplet generate` command is used to populates an empty database with generated data.
+The `snaplet generate` command is used to populate an empty database with generated data.
 
 **Usage**
 
@@ -436,8 +437,8 @@ snaplet snapshot restore [snapshot-name|snapshot-path]
 | --tags           |       | Filter snapshots by tags                                                  | array   |            |         |
 | --latest         |       | Restore the latest snapshot                                               | boolean |            | false   |
 | --yes            | -y    | Performs a restore without a confirmation message                         | boolean |            | false   |
-| --schema-only    |       | Skip data, only restore schema                                            | boolean |      ✅     | false   |
-| --data-only      |       | Restore data only (keep the current schema and indexes)                   | boolean |      ✅     | false   |
+| --schema-only    |       | Skip data, only restore schema                                            | boolean |      ✔     | false   |
+| --data-only      |       | Restore data only (keep the current schema and indexes)                   | boolean |      ✔     | false   |
 | --tables         |       | Restore only the specified tables to the target database                  | array   |            |         |
 | --exclude-tables |       | Exclude the specified tables from being restored to the target database   | array   |            |         |
 
