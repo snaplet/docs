@@ -1,9 +1,8 @@
 {
   "getting-started": "Getting Started",
   "core-concepts": "Core Concepts",
-  "configuration": "Configuration",
-  "cli-usage": "CLI Usage",
   "guides": "Guides",
   "recipes": "Recipes",
+  "reference": "Reference",
   "security": "Security"
 }

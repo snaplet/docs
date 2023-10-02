@@ -35,10 +35,11 @@ snaplet preview-database [action]
 manage preview databases
 
 Commands:
-  snaplet preview-database create [snapshot]          create a preview database from a snapshot  [aliases: c]
-  snaplet preview-database url [name]                 get a connection URL for a specified preview database [aliases: u]
-  snaplet preview-database list [snapshot]            shows all preview databases created from a specific snapshot [aliases: ls]
-  snaplet preview-database drop [name]                drops a specified preview database [aliases: d]
+  snaplet preview-database create [snapshot]  create a preview database from a snapshot  [aliases: c]
+  snaplet preview-database url [name]         get a connection URL for a specified preview database  [aliases: u]
+  snaplet preview-database list [snapshot]    shows all preview databases created from a specific snapshot  [aliases: ls]
+  snaplet preview-database reset [name]       reset a specified preview database state  [aliases: r]
+  snaplet preview-database drop [name]        drops a specified preview database  [aliases: d]
 ```
 
 ### `create [snapshot]`
@@ -46,8 +47,7 @@ Commands:
 The create subcommand generates a new preview database using a specified snapshot:
 
 ```bash >_&nbsp;terminal
-# To create a new preview database from a specific snapshot, run:
-snaplet preview-database create preview_db_tutorial
+snaplet preview-database create preview_db_tutorial --name my_awesome_pdb
 ```
 
 ### `url [name]`
@@ -55,8 +55,7 @@ snaplet preview-database create preview_db_tutorial
 This command retrieves the connection URL for a specified preview database. The name parameter is optional and if not provided, the most recent preview database will be used.
 
 ```bash >_&nbsp;terminal
-# To get the connection URL for a specific preview database, run:
-snaplet preview-database url preview_db_tutorial
+snaplet preview-database url my_awesome_pdb
 ```
 
 ### `list [snapshot]`
@@ -64,8 +63,15 @@ snaplet preview-database url preview_db_tutorial
 The list subcommand shows all preview databases created from a specific snapshot:
 
 ```bash >_&nbsp;terminal
-# To list all preview databases that have been created from a specific snapshot, run:
 snaplet preview-database list preview_db_tutorial
+```
+
+### `reset [name]`
+
+This command reset the state of a specified preview database. The name parameter is required and specifies the name of the preview database to reset.
+
+```bash >_&nbsp;terminal
+snaplet preview-database reset my_awesome_pdb
 ```
 
 ### `drop [name]`
@@ -73,6 +79,6 @@ snaplet preview-database list preview_db_tutorial
 This command drops a specified preview database. The name parameter is required and specifies the name of the preview database to drop.
 
 ```bash >_&nbsp;terminal
-snaplet preview-database drop preview_db_tutorial
+snaplet preview-database drop my_awesome_pdb
 ```
 
