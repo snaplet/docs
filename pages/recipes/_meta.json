@@ -1,8 +1,0 @@
-{
-  "aws": "Aws",
-  "github-action": "Github Action",
-  "neon": "Neon",
-  "netlify": "Netlify",
-  "prisma": "Prisma",
-  "supabase": "Supabase"
-}
