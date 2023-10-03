@@ -1,19 +1,21 @@
 import { Callout } from "nextra/components";
 
-# Overview
-
-This page is broken down into two sections:
-
-- [Seeding a supabase local development stack](/recipes/supabase#seeding-a-supabase-local-development-stack)
-- [Restoring to a supabase local development stack](/recipes/supabase#restoring-to-a-supabase-local-development-stack)
+# Supabase
 
 ![I absolutely love Supabase!](/recipes/supabase/snappy-holding-supabase-logo.svg)
 
-## Seeding a supabase local development stack.
+Snaplet can provide data for your Supabase project!
 
-Supabase makes it easy to set up a [local environment](https://supabase.com/docs/guides/cli/local-development) linked to your Supabase project. Snaplet can extend this functionality by helping you seed your local database. This ensures that you have readily available data to work with initially and for any future feature or testing needs.
+Pick your own path:
 
-In this short guide, we will use the [nextjs + supabase template](https://vercel.com/templates/next.js/supabase), to demonstrate how one could use the `snaplet generate` command to seed their local supabase stack.
+- [Generate data for your Supabase local development stack](/recipes/supabase#seeding-a-supabase-local-development-stack)
+- [Restore data from your production Supabase project to your local development stack](/recipes/supabase#restoring-to-a-supabase-local-development-stack)
+
+## Generate data for your Supabase local development stack
+
+Supabase makes it easy to set up a [local environment](https://supabase.com/docs/guides/cli/local-development) linked to your Supabase project. Snaplet can improve your local development by seeding your local database with data, making coding and testing more efficient and accurate.
+
+In this short guide, we will use the [Nextjs + Supabase template](https://vercel.com/templates/next.js/supabase), to demonstrate how one could use the `snaplet generate` command to seed their local Supabase stack.
 
 ### Prerequisites
 
@@ -27,9 +29,9 @@ Create a new project in the Supabase Dashboard by visiting https://supabase.com/
 
 ![Creating a supabase project](/recipes/supabase/supabase_new_project.webp)
 
-#### 2. Clone the nextjs + supabase template
+#### 2. Clone the Nextjs + Supabase template
 
-2.1. Create a Next.js app using the supabase starter template by running the `npx` command:
+2.1. Create a Next.js app using the Supabase starter template by running the `npx` command:
 
 ```bash
 npx create-next-app -e with-supabase
@@ -43,7 +45,7 @@ cd name-of-new-app
 
 #### 3. Apply your migrations to the Supabase project.
 
-**3.1.** Link your nextjs starter template to your supabase project
+**3.1.** Link your Nextjs starter template to your Supabase project
 
 ```bash
 supabase init
@@ -51,13 +53,13 @@ supabase init
 
 **3.2.** Apply the migrations in `/supabase/migrations` to your project
 
-> Your target database must have a structure, for the snaplet generate command to work.
+> Migrations are required to be applied to your target database, as the `snaplet generate` needs a database structure to generate data for.
 
 ```bash
 supabase db push
 ```
 
-**3.3.** Start your supabase local stack
+**3.3.** Start your Supabase local stack
 
 ```bash
 supabase start
@@ -76,7 +78,7 @@ Started supabase local development setup.
 service_role key: eyJh......
 ```
 
-**3.4.** Copy the **DB URL** we will use this in the next step (step 4) as your target database credentials.
+**3.4.** Copy the DB URL - we will use this in the next step (step 4) as your target database credentials.
 
 #### 4. Set up your generate config
 
@@ -131,13 +133,13 @@ In your project if you move the `app/_examples/client-component/page.tsx` to `ap
 
 ### All done!
 
-You have now successfully seeded your local supabase development stack. You can now use the `snaplet generate` command to seed your local database with any data you need.
+You have now successfully seeded your local Supabase development stack. You can now use the `snaplet generate` command to seed your local database with any data you need.
 
 If you have any questions or feedback, please feel free to reach out to us on [Discord](https://app.snaplet.dev/chat).
 
-## Restoring to a supabase local development stack
+## Restoring to a Supabase local development stack
 
-This guide will help you get a development Supabase environmnent setup using Snaplet. You will create a snapshot of your production Supabase project and restore it to your [supabase local dev](https://supabase.com/docs/guides/cli/local-development) stack.
+This guide will help you get a development Supabase environmnent setup using Snaplet. You will create a snapshot of your production Supabase project and restore it to your [Supabase local dev](https://supabase.com/docs/guides/cli/local-development) stack.
 
 <Callout>
 We've spent a lot of time ensuring that Snaplet works seamlessly with Supabase, however, if you experience any issues with this integration or this guide, feel free to come chat with us on [Discord](https://app.snaplet.dev/chat).
@@ -157,7 +159,7 @@ The first thing you'll want to do is navigate to https://www.snaplet.dev and sig
 
 ![Snaplet onboarding select team name](/recipes/supabase/onboarding_start.webp)
 
-On the “Connect database” step click on "Connect Supabase" to connect your supabase account to snaplet. Proceed through all the steps of authorizing your Supabase organization, selecting a Supabase project and giving us the password associated to the project.
+On the “Connect database” step click on "Connect Supabase" to connect your Supabase account to Snaplet. Proceed through all the steps of authorizing your Supabase organization, selecting a Supabase project and giving us the password associated to the project.
 
 ![Snaplet onboarding connect your database](/recipes/supabase/connect_to_supabase.webp)
 
@@ -180,10 +182,10 @@ Below is a summary of commands you will have to run in your terminal to get Supa
 # log in to the Supabase CLI
 supabase login
 
-# initial your supabase configuration in your project folder
+# initial your Supabase configuration in your project folder
 supabase init
 
-# with docker running, start your supabase services
+# with docker running, start your Supabase services
 supabase start
 ```
 
