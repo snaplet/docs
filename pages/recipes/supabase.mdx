@@ -94,17 +94,19 @@ service_role key: eyJh......
 snaplet config setup
 ```
 
-> The target database credentials will be used to introspect your database and generate a base config.
+> The target database credentials will be used to introspect your database and generate a base config
 
-**4.2.** In the `snaplet.config.ts` update your generate field in your config, creating 20 todo items.
+**4.2.** In the `snaplet.config.ts` update the `generate` statement to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
 ```ts
 generate: {
-    plan({ snaplet }) {
-        // create 20 todos
-        return snaplet.todos({
-            count: 20,
-        });
+    plan({ snaplet, pipe }) {
+      return pipe(
+        // 10 users
+        snaplet.users({ count: 10 }),
+        // 20 todos, with one of the 10 users assigned to each todo
+        snaplet.todos({ count: 20 }, { autoConnect: true })
+      );
     },
 },
 ```
