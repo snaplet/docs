@@ -98,7 +98,7 @@ snaplet config setup
 
 **4.2.** In the `snaplet.config.ts` update the `generate` statement to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
-```ts
+```ts snaplet.config.ts
 generate: {
     plan({ snaplet, pipe }) {
       return pipe(
@@ -264,7 +264,7 @@ We recommand excluding the `storage` and `supabase_functions` schemas from your 
 
 Your snapshot config should look something like this:
 
-```ts >_&nbsp;snaplet.config.ts
+```ts snaplet.config.ts
 defineConfig({
   select: {
     $default: false,
