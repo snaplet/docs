@@ -331,7 +331,362 @@ snaplet generate
 
 All done, it's time to code against your generated data!
 
-## Key Takeaways
+### Connecting to existing data
 
-- Generated data plays a critical role across different stages of software development.
-- Snaplet Data Client simplifies data generation by deeply understanding your database schema.
+Let's take a moment to understand what happened under the hood.
+
+You used the **snaplet data client** to define a **plan**. We then executed this plan to generate **SQL statements**. Finally, we executed these SQL statements to **persist the data in your database**.
+
+Internally, a plan persist the generated data in an in-memory object called a **store**. This is actually the store that is turned into SQL statements.
+
+If we take our previous plan, its `store` would look like this:
+
+```ts
+const store = {
+  User: [User, User, User, User],
+  Post: [Post],
+  Comment: [Comment, Comment, Comment],
+}
+```
+
+This store is very useful when you want to `connect` your models together, reusing existing data instead of generating new one. Let's see how to do that.
+
+#### Using `connect`
+
+In addition to the `data` key, you can use the `connect` key to connect your models together.
+
+<CH.Scrollycoding className="generate-tutorial-configuration-file">
+
+Let's start from our previous plan.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet }) {
+      return snaplet.Post({
+        data: {
+          title: 'Hello World!',
+          User: {
+            data: {
+              email: ({ seed }) =>
+                copycat.email(seed, {
+                  domain: 'acme.org'
+                }),
+            },
+          },
+          Comment: {
+            count: 3,
+          },
+        },
+      });
+    },
+  },
+});
+```
+
+---
+
+We specify that the author of each comment will be provided from an external source rather than being generated using the `connect` key.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet }) {
+      return snaplet.Post({
+        data: {
+          title: 'Hello World!',
+          User: {
+            data: {
+              email: ({ seed }) =>
+                copycat.email(seed, {
+                  domain: 'acme.org'
+                }),
+            },
+          },
+          Comment: {
+            count: 3,
+            // focus(1:6)
+            data: {
+              User: {
+                connect: () => {}
+              }
+            }
+          },
+        },
+      });
+    },
+  },
+});
+```
+
+---
+
+We can use the injected `store` to provide the `User` model we want to connect to. In this case the only generated `User` in the plan will be the author of the post.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet }) {
+      return snaplet.Post({
+        data: {
+          title: 'Hello World!',
+          User: {
+            data: {
+              email: ({ seed }) =>
+                copycat.email(seed, {
+                  domain: 'acme.org'
+                }),
+            },
+          },
+          Comment: {
+            count: 3,
+            data: {
+              User: {
+                connect: ({ store }) => {
+                  // focus
+                  return store.User[0];
+                }
+              }
+            }
+          },
+        },
+      });
+    },
+  },
+});
+```
+
+</CH.Scrollycoding>
+
+##### `graph`
+
+If your plan is complex, it can be quite challenging to find the right model to connect to. That's why we also provide the `graph` variable to the `connect` function.
+
+The `graph` contains all the data that was generated as part of the plan, arranged to follow the shape of your plan.
+
+And here is how you can use it:
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet }) {
+      return snaplet.Post({
+        data: {
+          title: 'Hello World!',
+          User: {
+            data: {
+              email: ({ seed }) =>
+                copycat.email(seed, {
+                  domain: 'acme.org'
+                }),
+            },
+          },
+          Comment: {
+            count: 3,
+            data: {
+              User: {
+                // focus(1:4)
+                // we alias the graph to posts to make it more readable
+                connect: ({ graph: posts }) => {
+                  return posts[0].User;
+                }
+              }
+            }
+          },
+        },
+      });
+    },
+  },
+});
+```
+
+Here is what the `graph` looks like for this plan:
+
+```ts
+// as we started with snaplet.Post, the graph is an array of Post
+const graph = [
+  {
+    User: User,
+    Comment: [
+      Comment,
+      Comment,
+      Comment
+    ],
+  },
+];
+```
+
+##### `branch`
+
+Now let's complexify our plan a bit:
+
+- We want to generate 3 posts.
+- The author of each post should also be the author of the post's comments.
+
+It seems challenging to find the right User to connect to using `store` or `graph`. That's why we also provide the `branch` variable to the `connect` function.
+
+The `branch` is a particular iteration of the `graph` that was generated. It matches the path to the `connect` function in which it is injected.
+
+Let's take a look at the `branch` for our previous plan, adapted to our new requirements:
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet }) {
+      return snaplet.Post({
+        // focus
+        count: 3,
+        data: {
+          title: 'Hello World!',
+          User: {
+            data: {
+              email: ({ seed }) =>
+                copycat.email(seed, {
+                  domain: 'acme.org'
+                }),
+            },
+          },
+          Comment: {
+            count: 3,
+            data: {
+              User: {
+                // focus(1:4)
+                // we alias the branch to post to make it more readable
+                connect: ({ branch: post }) => {
+                  return post.User;
+                }
+              }
+            }
+          },
+        },
+      });
+    },
+  },
+});
+```
+
+Generating 3 posts will result in 3 branches, each containing a post, its author and its comments.
+
+In our above example, the `connect` function will receive the branch corresponding to its iteration. So the first `connect` function will receive the first branch, the second `connect` function will receive the second branch, and so on.
+
+Here is what the `branch` looks like for this particular `connect` function:
+
+```ts
+// as we started with snaplet.Post, the branch is a Post model
+const branch = {
+  User: User,
+  Comment: Comment,
+};
+```
+
+### Manipulating stores
+
+We saw that a **plan** is persisting the generated data in a **store**, and the store will be turned into **SQL statements**.
+
+Sometimes, it's easier to break down your plan into multiple plans, and then merge them together. That's why we provide the `pipe` and `merge` functions.
+
+#### Using `pipe`
+
+The `pipe` operator allows you to chain multiple plans together, injecting the `store` of the previous plan into the next plan.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet, pipe }) {
+      return pipe(
+        snaplet.User({
+          count: 3
+        }),
+        snaplet.Post({
+          data: {
+            User: {
+              connect({ store }) {
+                // this is the first User generated by the previous plan
+                return store.User[0];
+              }
+            }
+          }
+        })
+      );
+    },
+  },
+});
+```
+
+##### `autoConnect`
+
+We provide a special option that you can activate in the options of a plan, called `autoConnect`.
+
+When `true`, the plan will automatically connect models relationships to fulfill to the store if possible. The corresponding model will be picked randomly (but deterministically, we're using `copycat.oneOf` method under the hood).
+
+In the following example, the `Post` model will be connected to one of the 3 `User` in the store.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet, pipe }) {
+      return pipe(
+        snaplet.User({
+          count: 3
+        }),
+        // mark
+        snaplet.Post({}, { autoConnect: true })
+      );
+    },
+  },
+});
+```
+
+#### Using `merge`
+
+The `merge` operator allows you to merge multiple plans together, without injecting the `store` of the previous plan into the next plan. All stores stay independent and are merged together once all the plans are generated.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet, merge }) {
+      return merge(
+        snaplet.User({
+          count: 3
+        }),
+        snaplet.Post({}),
+        snaplet.Comment({
+          count: 2
+        })
+      );
+    },
+  },
+});
+```
