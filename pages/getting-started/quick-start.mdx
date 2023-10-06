@@ -1,1 +1,97 @@
-# Quick Start
+import { Steps } from 'nextra/components'
+import { Step } from '../../components/Step'
+
+
+# Snapshot Quick Start Guide
+
+## Assumptions
+This guide assumes you have access to a database that has production data, or production-like data you can connect to. If you're just looking to demo Snaplet's snapshot feature, you can also use a Snaplet demo database as part of this guide.
+
+If you don't have access to a database with production data, and would prefer to generate production-like using Snaplet's AI `generate` feature, you should instead follow the [Generate Quick Start](/getting-started/quick-start-generate) guide. 
+
+## Getting Started 
+**In this tutorial, we'll guide you through the process of:**
+* Capturing your first snapshot with Snaplet.
+* Installing the Snaplet Visual Code extension.
+* Restoring that snapshot to your development environment.
+
+Let's get started.
+
+## Sign up for Snaplet and Capture a Snapshot 
+You'll need a free Snaplet account to capture a snapshot of your database.
+
+<Steps>
+
+### Sign up for Snaplet
+<Step image={{ src: "/getting-started/quick-start/quick-start-01.png", alt: "sign up for snaplet"}}>
+First off, you'll need a free Snaplet account. Sign up to [Snaplet Cloud](https://app.snaplet.dev).
+</Step>
+
+### Start the Snaplet Onboarding 
+<Step image={{ src: "/getting-started/quick-start/quick-start-02.png", alt: "start the onboarding"}}>
+The Snaplet onboarding should start automatically once signed in. Click '**Let's go**'.
+</Step>
+
+### Select a Source Database
+<Step image={{ src: "/getting-started/quick-start/quick-start-03.png", alt: "select a source database"}}>
+The first step is to choose the **source database** you're going to connect to Snaplet. The source database is typically your production database. Click 'Provide my own db'.
+
+If you're uncomfortable connecting to your actual production database, use your staging or QA database, or the Snaplet demo database. Supabase users should select the Supabase option and follow the [Supabase tutorial](/tutorials/supabase-clone-environments) for assistance. 
+
+No database? Use Snaplet's `generate` feature to create fake production-like data. Follow the [generate quick start guide](/getting-started/quick-start-generate) instead of this guide.
+</Step>
+
+### Provide database credentials
+<Step image={{ src: "/getting-started/quick-start/quick-start-04.png", alt: "input connection information"}}>
+You'll need to provide your database connection details. You can either do so individually for each of the values, or import a connection string. 
+
+Once done, click 'Test my connection' to verify that Snaplet is able to connect to your database, and proceed. If you see a warning about read-only access to your database, make sure you're using [read-only role](guides/postgresql/#create-a-read-only-role) credentials for Snaplet. 
+
+If you're having trouble getting your database connection string to work, refer to our [connection string reference](/references/connection-strings/). Prisma also has a [reference guide](https://www.prisma.io/dataguide/postgresql/short-guides/connection-uris) on URI encoding that may be useful.
+</Step>
+
+### Subset your database
+<Step image={{ src: "/getting-started/quick-start/quick-start-05.png", alt: "subsetting"}}>
+You will now be prompted to create a subset of your source database.
+
+Subsetting is great for reducing the size of larger databases to a more managable size.
+
+Select the starting table for your subset (typically your "primary" table, like users or customers) and select how many rows of data you'd like.
+
+You can also opt not to subset at all by selecting 'All rows'. Select any option to proceed.
+</Step>
+
+### Transform your data
+<Step image={{ src: "/getting-started/quick-start/quick-start-06.png", alt: "transform your data"}}>
+You can now transform the data from your source database. 
+
+Snaplet's transform process can scramble all data from your source database, while retaining the overall "shape" of that data, in essence removing any personally-identifiable data.
+
+You can also not to transform the data. Select either option, and click 'Create subset'.
+
+</Step>
+
+### Snapshot capture
+<Step image={{ src: "/getting-started/quick-start/quick-start-07.png", alt: "snapshot capture"}}>
+Snaplet's workers will now connect to your source database, copy the contents, and depending on what you've selected, subset and transform the data. The output of this process is a **database snapshot**, which you can then restore into your development environment to code against.
+</Step>
+
+### Snapshot complete
+<Step image={{ src: "/getting-started/quick-start/quick-start-10.png", alt: "snapshot capture"}}>
+The snapshot capture process should finish within a few minutes for all but the biggest databases. 
+
+Once it's done, you'll see a message confirming its succesful capture. At this point, you have a database snapshot, and will need to restore this snapshot into your development environment or workflow to use it further. 
+</Step>
+
+</Steps>
+
+## Restoring and using your snapshot
+
+A snapshot isn't a database, and needs to be restored to a database such as your local development database in order for you to code against it. 
+
+The easiest way to do this, and also automate the process of capturing updated database snapshots and restoring them automatically into your local development environment is the Snaplet VS Code extension.
+
+In order to complete this guide, you'll need to install and setup the Snaplet VS Code extension, which will allow you to restore this snapshot to your local development database. 
+
+## Next steps
+Continue on to part two in the [Snaplet VS Code Extension guide](/recipes/visual-studio-code).
