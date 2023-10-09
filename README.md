@@ -25,8 +25,8 @@ corepack enable
 ### Installation
 
 ```bash
-git clone git@github.com:snaplet/docs-next.git
-cd docs-next
+git clone git@github.com:snaplet/docs.git
+cd docs
 pnpm install
 ```
 
