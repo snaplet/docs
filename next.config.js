@@ -20,6 +20,64 @@ module.exports = withNextra({
         destination: "/getting-started/overview",
         permanent: true,
       },
+
+      // old doc links used in cli 0.63.6 and below
+      {
+        source: "/references/connection-strings",
+        destination: "/guides/postgresql#connection-strings",
+        permanent: false,
+      },
+      {
+        source: "/references/connection-strings/#troubleshooting",
+        destination: "/guides/postgresql#troubleshooting-connection-strings",
+        permanent: false,
+      },
+      {
+        source: "/references/configuration-files",
+        destination: "/reference/configuration",
+        permanent: false,
+      },
+      {
+        source: "/getting-started/start-here",
+        destination: "/getting-started/overview",
+        permanent: false,
+      },
+      {
+        source: "/getting-started/data-operations",
+        destination: "/core-concepts/reference/configuration",
+        permanent: false,
+      },
+      {
+        source:
+          "/tutorials/supabase-clone-environments#step-6-restore-the-data-target",
+        destination: "/recipes/supabase#6-restore-the-data-target",
+        permanent: false,
+      },
+      {
+        source: "/references/data-operations/generate",
+        destination: "/reference/configuration#generate",
+        permanent: false,
+      },
+      {
+        source: "/references/data-operations/exclude",
+        destination: "/reference/configuration#select",
+        permanent: false,
+      },
+      {
+        source: "/references/data-operations/transform",
+        destination: "/reference/configuration#transform",
+        permanent: false,
+      },
+      {
+        source: "/references/data-operations/reduce",
+        destination: "/reference/configuration#subset",
+        permanent: false,
+      },
+      {
+        source: "/references/data-operations/introspect",
+        destination: "/reference/configuration#introspect",
+        permanent: false,
+      },
     ];
   },
 });
