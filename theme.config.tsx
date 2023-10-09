@@ -14,6 +14,11 @@ const themeConfig: DocsThemeConfig = {
     light: 233,
     dark: 233,
   },
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s – Snaplet",
+    };
+  },
 };
 
 export default themeConfig;
