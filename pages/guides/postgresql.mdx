@@ -81,3 +81,31 @@ During the snapshot capture process, use `NODE_TLS_REJECT_UNAUTHORIZED=0`:
 ```bash >_&nbsp;terminal
 NODE_TLS_REJECT_UNAUTHORIZED=0 SNAPLET_DATABASE_URL='postgresql://<user>:<password>@<host>:<port>/<database>?sslmode=required&ssl=true&sslmode=require' snaplet snapshot capture
 ```
+
+## Connection strings
+
+> Also known as Connection URLs
+
+To connect to your database the CLI requires database credentials in the form of a connection string. A PostgreSQL connection url specifies the following parameters:
+
+- username (the username used to connect to the database)
+- password (the password used in the "user" parameter)
+- hostname (the IP address or domain name of the machine where the server is running)
+- port (port number on which the server is listening on)
+- database (name of the database to connect to)
+
+This connection string will also include a collection of parameter keywords (optional) that allow adjustments of various aspects of the url (e.g. SSL, timeouts, etc)
+
+**Here's an example connection string:**
+
+```bash
+postgresql://username:password@hostname:5432/database_name
+```
+
+### Troubleshooting connection strings
+
+When passing in a connection string to Snaplet, we will attempt to validate and encode the connection string, however you may still have problems with database names or passwords and special characters **`(%&/:=?@[])`**, in this case you may have to encode these characters manually.
+
+> **Encoding manually:** you can manually encode individual segments of your connection url (password, database, etc.) using [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+
+If you still have problems configuring your connection string, refer to this [short guide](https://www.prisma.io/dataguide/postgresql/short-guides/connection-uris) or reach out to us on [discord](https://app.snaplet.dev/chat) instead.
