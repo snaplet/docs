@@ -72,20 +72,14 @@ export default defineConfig({
   generate: {
     plan({ snaplet }) {
       return snaplet.Post({
-        data: {
-          title: 'Hello World!',
-          User: {
-            data: {
-              email: ({ seed }) =>
-                copycat.email(seed, {
-                  domain: 'acme.org'
-                }),
-            },
-          },
-          Comment: {
-            count: 3,
-          },
+        title: 'Hello World!',
+        User: {
+          email: ({ seed }) =>
+            copycat.email(seed, {
+              domain: 'acme.org'
+            }),
         },
+        Comment: (x) => x(3),
       });
     },
   },
@@ -94,7 +88,7 @@ export default defineConfig({
 
 ---
 
-We specify that the author of each comment will be provided from an external source rather than being generated using the `connect` key.
+We specify that the author of each comment will be provided from an external source rather than being generated using the `connect` callback function.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -105,26 +99,19 @@ export default defineConfig({
   generate: {
     plan({ snaplet }) {
       return snaplet.Post({
-        data: {
-          title: 'Hello World!',
-          User: {
-            data: {
-              email: ({ seed }) =>
-                copycat.email(seed, {
-                  domain: 'acme.org'
-                }),
-            },
-          },
-          Comment: {
-            count: 3,
-            // focus(1:6)
-            data: {
-              User: {
-                connect: () => {}
-              }
-            }
-          },
+        title: 'Hello World!',
+        User: {
+          email: ({ seed }) =>
+            copycat.email(seed, {
+              domain: 'acme.org'
+            }),
         },
+        Comment: (x) => x(3, () => ({
+          // focus(1:3)
+          User: () => {
+
+          }
+        })),
       });
     },
   },
@@ -144,28 +131,19 @@ export default defineConfig({
   generate: {
     plan({ snaplet }) {
       return snaplet.Post({
-        data: {
-          title: 'Hello World!',
-          User: {
-            data: {
-              email: ({ seed }) =>
-                copycat.email(seed, {
-                  domain: 'acme.org'
-                }),
-            },
-          },
-          Comment: {
-            count: 3,
-            data: {
-              User: {
-                connect: ({ store }) => {
-                  // focus
-                  return store.User[0];
-                }
-              }
-            }
-          },
+        title: 'Hello World!',
+        User: {
+          email: ({ seed }) =>
+            copycat.email(seed, {
+              domain: 'acme.org'
+            }),
         },
+        Comment: (x) => x(3, () => ({
+          // focus(1:3)
+          User: ({ store }) => {
+            return store.User[0];
+          }
+        })),
       });
     },
   },
@@ -191,29 +169,20 @@ export default defineConfig({
   generate: {
     plan({ snaplet }) {
       return snaplet.Post({
-        data: {
-          title: 'Hello World!',
-          User: {
-            data: {
-              email: ({ seed }) =>
-                copycat.email(seed, {
-                  domain: 'acme.org'
-                }),
-            },
-          },
-          Comment: {
-            count: 3,
-            data: {
-              User: {
-                // focus(1:4)
-                // we alias the graph to posts to make it more readable
-                connect: ({ graph: posts }) => {
-                  return posts[0].User;
-                }
-              }
-            }
-          },
+        title: 'Hello World!',
+        User: {
+          email: ({ seed }) =>
+            copycat.email(seed, {
+              domain: 'acme.org'
+            }),
         },
+        Comment: (x) => x(3, () => ({
+          // focus(1:4)
+          // we alias the graph to posts to make it more readable
+          User: ({ graph: posts }) => {
+            return posts[0].User;
+          }
+        })),
       });
     },
   },
@@ -258,31 +227,20 @@ export default defineConfig({
   generate: {
     plan({ snaplet }) {
       return snaplet.Post({
-        // focus
-        count: 3,
-        data: {
-          title: 'Hello World!',
-          User: {
-            data: {
-              email: ({ seed }) =>
-                copycat.email(seed, {
-                  domain: 'acme.org'
-                }),
-            },
-          },
-          Comment: {
-            count: 3,
-            data: {
-              User: {
-                // focus(1:4)
-                // we alias the branch to post to make it more readable
-                connect: ({ branch: post }) => {
-                  return post.User;
-                }
-              }
-            }
-          },
+        title: 'Hello World!',
+        User: {
+          email: ({ seed }) =>
+            copycat.email(seed, {
+              domain: 'acme.org'
+            }),
         },
+        Comment: (x) => x(3, () => ({
+          // focus(1:4)
+          // we alias the branch to post to make it more readable
+          User: ({ branch: post }) => {
+            return post.User;
+          }
+        })),
       });
     },
   },
@@ -322,17 +280,11 @@ export default defineConfig({
   generate: {
     plan({ snaplet, pipe }) {
       return pipe(
-        snaplet.User({
-          count: 3
-        }),
+        snaplet.User((x) => x(3)),
         snaplet.Post({
-          data: {
-            User: {
-              connect({ store }) {
-                // this is the first User generated by the previous plan
-                return store.User[0];
-              }
-            }
+          User: ({ store }) => {
+            // this is the first User generated by the previous plan
+            return store.User[0];
           }
         })
       );
@@ -358,9 +310,7 @@ export default defineConfig({
   generate: {
     plan({ snaplet, pipe }) {
       return pipe(
-        snaplet.User({
-          count: 3
-        }),
+        snaplet.User((x) => x(3)),
         // mark
         snaplet.Post({}, { autoConnect: true })
       );
@@ -382,13 +332,9 @@ export default defineConfig({
   generate: {
     plan({ snaplet, merge }) {
       return merge(
-        snaplet.User({
-          count: 3
-        }),
+        snaplet.User((x) => x(3)),
         snaplet.Post({}),
-        snaplet.Comment({
-          count: 2
-        })
+        snaplet.Comment((x) => x(2))
       );
     },
   },
