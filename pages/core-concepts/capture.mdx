@@ -661,7 +661,7 @@ Some database providers (like Supabase) may set default timeout values for state
 
 To fix this, we recommend allowing longer running statements during the capture process. This can be achieved by setting the `statement_timeout` to a higher value or infinity in the database via the command `SET statement_timeout = 0;`.
 
-If you've created a dedicated role for Snaplet, as recommended [here](/guides/postgresql#create-a-read-only-role), you can set an infinite timeout specifically for the `snaplet` user role with the following command:
+If you've created a dedicated role for Snaplet, as recommended [here](/guides/postgresql), you can set an infinite timeout specifically for the `snaplet` user role with the following command:
 
 ```sql >_&nbsp;terminal
 ALTER ROLE snaplet_readonly SET statement_timeout = 0;
