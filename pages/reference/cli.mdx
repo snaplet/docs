@@ -437,10 +437,9 @@ snaplet snapshot restore [snapshot-name|snapshot-path]
 | --tags           |       | Filter snapshots by tags                                                  | array   |            |         |
 | --latest         |       | Restore the latest snapshot                                               | boolean |            | false   |
 | --yes            | -y    | Performs a restore without a confirmation message                         | boolean |            | false   |
-| --schema-only    |       | Skip data, only restore schema                                            | boolean |      ✔     | false   |
-| --data-only      |       | Restore data only (keep the current schema and indexes)                   | boolean |      ✔     | false   |
 | --tables         |       | Restore only the specified tables to the target database                  | array   |            |         |
 | --exclude-tables |       | Exclude the specified tables from being restored to the target database   | array   |            |         |
+| --progress       |       | Report the restore progress into the terminal (silence with --no-progress)| boolean |            | true    |
 
 ### **share**
 
