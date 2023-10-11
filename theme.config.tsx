@@ -19,6 +19,9 @@ const themeConfig: DocsThemeConfig = {
       titleTemplate: "%s – Snaplet",
     };
   },
+  sidebar: {
+    defaultMenuCollapseLevel: 3,
+  },
 };
 
 export default themeConfig;
