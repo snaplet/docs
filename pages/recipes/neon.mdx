@@ -5,7 +5,7 @@ This guide will help you use Snaplet to create and subsequently restore a safe, 
 ## Prerequisites
 
 - You'll need a Neon account, and an existing Neon project with a PostgreSQL database, and that database's connection string. If you haven't set this up yet, Neon has a [tutorial](https://neon.tech/docs/tutorial/project-setup) to guide you through the getting started process.
-- You'll need a Snaplet account, and you'll need to have connected to your existing production database and captured a snapshot of it. If you're new to Snaplet, you can follow our [Getting Started](https://docs.snaplet.dev/getting-started/start-here) guide.
+- You'll need a Snaplet account, and you'll need to have connected to your existing production database and captured a snapshot of it. If you're new to Snaplet, you can follow our [Getting Started](/getting-started/quick-start) guide.
 
 ## Restoring your snapshot to Neon
 
@@ -14,7 +14,7 @@ Ensure you have an active snapshot of your production database - it's easiest to
 
 ![Snaplet snapshot ready to go](/recipes/neon/00-snaplet-snapshot.png)
 
-If you haven't previously created a snapshot at all, follow our [Getting Started](https://docs.snaplet.dev/getting-started/start-here) guide. Alternatively, you can follow along in the video guide below.
+If you haven't previously created a snapshot at all, follow our [Getting Started](/getting-started/quick-start) guide. Alternatively, you can follow along in the video guide below.
 
 <div style={{"position":"relative","paddingBottom":"64.98194945848375%","height":"0"}}>
   <iframe src="https://www.loom.com/embed/26f6aae49d8b425fb31358664d17e8a6" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{"position":"absolute","top":"0","left":"0","width":"100%","height":"100%"}}>
@@ -24,7 +24,7 @@ If you haven't previously created a snapshot at all, follow our [Getting Started
 
 ### Step 2: CLI installation and setup
 
-You'll need the Snaplet CLI to be installed and setup to restore your snapshot to Neon. If you haven't installed the Snaplet CLI, our [Getting Started](https://docs.snaplet.dev/getting-started/start-here) guide and our [Configuration](https://docs.snaplet.dev/getting-started/configuration) guide will take you through the process.
+You'll need the Snaplet CLI to be installed and setup to restore your snapshot to Neon. If you haven't installed the Snaplet CLI, our [Getting Started](/getting-started/quick-start) guide and our [Configuration](/reference/configuration) guide will take you through the process.
 
 At the point where you're prompted to provide a target database URL, instead of using a local development database URL, provide your Neon database connection string:
 ![Snaplet CLI config - providing the Neon database string](/recipes/neon/01-snaplet-cli.png)
