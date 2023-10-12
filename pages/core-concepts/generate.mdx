@@ -35,15 +35,45 @@ Let's see how it works.
 
 You can refer to the [Generate Quick Start Guide](/getting-started/quick-start/generate) to learn about the basics of the `snaplet generate` command.
 
-### Connecting to existing data
+### Inside Snaplet Data Client workflow
 
-Let's take a moment to understand what happened under the hood.
+The **plan** is what's returned by the methods of the Snaplet Data Client. It's a representation of the data you want to generate.
 
-You used the **snaplet data client** to define a **plan**. We then executed this plan to generate **SQL statements**. Finally, we executed these SQL statements to **persist the data in your database**.
+```ts
+const userPlan = snaplet.User({ email: 'snappy@snaplet.dev' })
+//    ^ the plan                ^ the plan's inputs
+```
 
-Internally, a plan persist the generated data in an in-memory object called a **store**. This is actually the store that is turned into SQL statements.
+When a plan is executed, triggered by `await`ing the plan, it stores the generated data in an in-memory object called a **store**.
+Each plan has its own store.
+Then, the store is turned into **SQL statements** that are executed to persist the data in your database.
 
-If we take our previous plan, its `store` would look like this:
+Given the plan from the [Generate Quick Start Guide](/getting-started/quick-start/generate):
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+import { copycat } from '@snaplet/copycat';
+
+export default defineConfig({
+  generate: {
+    async run(snaplet) {
+      await snaplet.Post({
+        title: 'Hello World!',
+        User: {
+          email: ({ seed }) =>
+            copycat.email(seed, {
+              domain: 'acme.org'
+            }),
+        },
+        Comment: (x) => x(3),
+      });
+    },
+  },
+});
+```
+
+Here is what its store looks like internally:
 
 ```ts
 const store = {
@@ -53,7 +83,9 @@ const store = {
 }
 ```
 
-This store is very useful when you want to `connect` your models together, reusing existing data instead of generating new one. Let's see how to do that.
+This store is very useful when you want to **connect** your models, reusing existing data instead of generating new one. Let's see how to do that.
+
+### Connecting to existing data
 
 #### Using `connect`
 
@@ -70,8 +102,8 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+    async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         User: {
           email: ({ seed }) =>
@@ -97,8 +129,8 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+     async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         User: {
           email: ({ seed }) =>
@@ -129,8 +161,8 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+     async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         User: {
           email: ({ seed }) =>
@@ -167,14 +199,11 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+     async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         User: {
-          email: ({ seed }) =>
-            copycat.email(seed, {
-              domain: 'acme.org'
-            }),
+          email: ({ seed }) => copycat.email(seed, { domain: 'acme.org' }),
         },
         Comment: (x) => x(3, () => ({
           // focus(1:4)
@@ -225,14 +254,11 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+     async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         User: {
-          email: ({ seed }) =>
-            copycat.email(seed, {
-              domain: 'acme.org'
-            }),
+          email: ({ seed }) => copycat.email(seed, { domain: 'acme.org' }),
         },
         Comment: (x) => x(3, () => ({
           // focus(1:4)
@@ -265,21 +291,20 @@ const branch = {
 
 We saw that a **plan** is persisting the generated data in a **store**, and the store will be turned into **SQL statements**.
 
-Sometimes, it's easier to break down your plan into multiple plans, and then merge them together. That's why we provide the `pipe` and `merge` functions.
+Sometimes, it's easier to break down your plan into multiple plans, and then merge them together. That's why we provide the `$pipe` and `$merge` functions.
 
-#### Using `pipe`
+#### Using `$pipe`
 
-The `pipe` operator allows you to chain multiple plans together, injecting the `store` of the previous plan into the next plan.
+The `$pipe` operator allows you to chain multiple plans together, injecting the `store` of the previous plan into the next plan.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
-import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet, pipe }) {
-      return pipe(
+    async run(snaplet) {
+      await snaplet.$pipe(
         snaplet.User((x) => x(3)),
         snaplet.Post({
           User: ({ store }) => {
@@ -304,12 +329,11 @@ In the following example, the `Post` model will be connected to one of the 3 `Us
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
-import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet, pipe }) {
-      return pipe(
+    async run(snaplet) {
+      await snaplet.$pipe(
         snaplet.User((x) => x(3)),
         // mark
         snaplet.Post({}, { autoConnect: true })
@@ -319,19 +343,19 @@ export default defineConfig({
 });
 ```
 
-#### Using `merge`
+#### Using `$merge`
 
-The `merge` operator allows you to merge multiple plans together, without injecting the `store` of the previous plan into the next plan. All stores stay independent and are merged together once all the plans are generated.
+The `$merge` operator allows you to merge multiple plans together, without injecting the `store` of the previous plan into the next plan.
+All stores stay independent and are merged together once all the plans are generated.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
-import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet, merge }) {
-      return merge(
+    async run(snaplet) {
+      await snaplet.$merge(
         snaplet.User((x) => x(3)),
         snaplet.Post({}),
         snaplet.Comment((x) => x(2))
