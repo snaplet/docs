@@ -39,7 +39,7 @@ export default defineConfig({
 ```
 
 ### `structure`
-You can also leverage the `structure` keyword to skip dumping data but still dump the sturcture of the table (columns, indexes, etc):
+You can also leverage the `structure` keyword to skip dumping data but still dump the structure of the table (columns, indexes, etc):
 
 ```ts snaplet.config.ts
 import { defineConfig } from "snaplet";
@@ -100,7 +100,7 @@ export default defineConfig({
 
 When a snapshot is captured the `email` column is transformed to the value `"my-new-email@example.org,"` which is exactly what we wanted, but you probably want to generate a bunch of emails so the data looks realistic.
 
-That's where [`@snaplet/copycat`](https://github.com/snaplet/copycat) comes in! It's a library that generates deterministic fake values: by supplying an input _(the original email address),_ copycat returns a static value (a fake email address). As long as the input remains the same, the output will remain the same.
+That's where [`@snaplet/copycat`](https://github.com/snaplet/copycat) comes in! It's a library that generates deterministic fake values: by supplying an input _(the original email address),_ Copycat returns a static value (a fake email address). As long as the input remains the same, the output will remain the same.
 
 Example:
 
@@ -124,7 +124,7 @@ export default defineConfig({
 });
 ```
 
-Each Transformation Function receives a `row` object that contains the original row's values, this allows you to perform conditional transformations, mutate a JSON object, or create deterministic faker values.
+Each Transformation Function receives a `row` object that contains the original row's values, this allows you to perform conditional transformations, mutate a JSON object, or create deterministic fake values.
 
 
 ```ts snaplet.config.ts
@@ -150,7 +150,7 @@ export default defineConfig({
 });
 ```
 
-Copycat is open-source and has templates for names, addresses, phone numbers and [many other common transformations!](https://github.com/snaplet/copycat/#api-reference)
+Copycat is open-source and has templates for names, addresses, phone numbers and [many other common transformations.](https://github.com/snaplet/copycat/#api-reference)
 
 ### Getting started
 
@@ -190,19 +190,19 @@ Please review them.
 Updated ".gitignore"
 ```
 
-The first thing Snaplet needs is a **connection string to your database**, we use this to **introspect your database** and make **transformation suggestions** for columns that could contain personally identifiable information.
+The first thing Snaplet needs is a **connection string to your source database**, we use this to **introspect your database** and make **transformation suggestions** for columns that could contain personally identifiable information.
 
 Regenerate these files with `snaplet config generate --type=typedefs --type=transform`
 
 You can add the `.snaplet/snaplet.d.ts` and `.snaplet/snapshots` to your `.gitignore` configuration.
 
 <Callout type="info">
-A user account is _not required_, you only need a user account if you want to share snapshots with your team.
+A user account is _not required_ - you only need a user account if you want to share snapshots with your team.
 </Callout>
 
 ### Choosing the transform mode
 
-The transformations you define in your config tell Snaplet how to transform your database data for the corresponding columns, but you might've noticed that Snaplet doesn't require you to specify each and every column, table and schema that is in your database. What Snaplet does for any values for columns that have not been given in the config depends on the _transform mode_:
+The transformations you define in your config tell Snaplet how to transform your database data for the corresponding columns, but Snaplet doesn't require you to specify each and every column, table and schema that is in your database. What Snaplet does for any values for columns that have not been given in the config depends on the _transform mode_:
 
 - **`unsafe`** (default): The data for columns not specified in the config is simply copied over as is without transformation.
 - **`strict`**: Fail the capture if any columns, tables or schemas have not been specified in the config.
@@ -438,7 +438,7 @@ We're still working on optimising auto-transform to be fast enough to be useful 
 
 This said, auto-transform still may well be efficient enough for use on your own database - it is worth trying it out to see for yourself first.
 
-If you find you are not able to capture snapshots fast enough with auto-transform mode for it to be useful on your own database, we'd like to know about it! Please feel free to reach out to us [on Discord](https://app.snaplet.dev/chat) about this.
+If you find you are not able to capture snapshots fast enough with auto-transform mode for it to be useful on your own database, we'd like to know about it! Please feel free to reach out to us on [Discord](https://app.snaplet.dev/chat) about this.
 
 ### Dealing with character limits
 
@@ -661,7 +661,7 @@ Some database providers (like Supabase) may set default timeout values for state
 
 To fix this, we recommend allowing longer running statements during the capture process. This can be achieved by setting the `statement_timeout` to a higher value or infinity in the database via the command `SET statement_timeout = 0;`.
 
-If you've created a dedicated role for Snaplet, as recommended [here](/guides/postgresql#create-a-read-only-role), you can set an infinite timeout specifically for the `snaplet` user role with the following command:
+If you've created a dedicated role for Snaplet, as recommended [here](/guides/postgresql), you can set an infinite timeout specifically for the `snaplet` user role with the following command:
 
 ```sql >_&nbsp;terminal
 ALTER ROLE snaplet_readonly SET statement_timeout = 0;

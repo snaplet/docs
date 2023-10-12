@@ -1,5 +1,6 @@
 {
   "overview": "Overview",
   "installation": "Installation",
-  "quick-start": "Quick Start"
+  "quick-start": "Snapshot Quick Start",
+  "quick-start-generate": "Generate Quick Start"  
 }
