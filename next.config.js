@@ -78,6 +78,11 @@ module.exports = withNextra({
         destination: "/reference/configuration#introspect",
         permanent: false,
       },
+      {
+        source: "/tutorials/prisma-seed",
+        destination: "/recipes/prisma",
+        permanent: false,
+      },
     ];
   },
 });
