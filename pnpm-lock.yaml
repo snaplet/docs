@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@code-hike/lighter':
-    specifier: 0.8.2
-    version: 0.8.2
+    specifier: 0.9.0
+    version: 0.9.0
   '@code-hike/mdx':
     specifier: 0.9.0
     version: 0.9.0(react@18.2.0)
@@ -15,8 +15,8 @@ dependencies:
     specifier: 4.6.0
     version: 4.6.0(monaco-editor@0.44.0)(react-dom@18.2.0)(react@18.2.0)
   '@snaplet/copycat':
-    specifier: 0.17.3
-    version: 0.17.3
+    specifier: 0.18.0-rc.6
+    version: 0.18.0-rc.6
   monaco-editor:
     specifier: 0.44.0
     version: 0.44.0
@@ -44,8 +44,8 @@ devDependencies:
     specifier: 20.8.4
     version: 20.8.4
   '@types/react':
-    specifier: 18.2.27
-    version: 18.2.27
+    specifier: 18.2.28
+    version: 18.2.28
   autoprefixer:
     specifier: 10.4.16
     version: 10.4.16(postcss@8.4.31)
@@ -118,8 +118,8 @@ packages:
     resolution: {integrity: sha512-64O07rIORKQLB+5T/GKAmKcD9sC0N9yHFJXa0Hs+0Aee1G+I4bSXxTccuDFP6c/G/3h5Pk7yv7PoX9/SpzaeiQ==}
     dev: false
 
-  /@code-hike/lighter@0.8.2:
-    resolution: {integrity: sha512-h7PA2+90rIRQWamxeHSpcgVLs9hwhz8UW8+RG+vYIYh2Y4F2GTa4c+7S5HQH/BKTyMPv5yrSCEwhCB605gO5og==}
+  /@code-hike/lighter@0.9.0:
+    resolution: {integrity: sha512-Ty8O6YdLcw32GDGqAQH+w/zVwcwYeTueiagX1BMuioy/fzzM0EjdPlv1Zi+M+om5UnRS1EdFtJRTz3vHtCCS7g==}
     dependencies:
       ansi-sequence-parser: 1.1.1
     dev: false
@@ -225,7 +225,7 @@ packages:
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.8
-      '@types/react': 18.2.27
+      '@types/react': 18.2.28
       react: 18.2.0
     dev: false
 
@@ -513,8 +513,8 @@ packages:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
-  /@snaplet/copycat@0.17.3:
-    resolution: {integrity: sha512-cwX6zphBd1KNuOPmILggXkddLf+juIrXsFhfOz0nMDIIAkWyoFQAqwt4pn5lS2RNMJTzT7IZRKplnFt/D2t8zw==}
+  /@snaplet/copycat@0.18.0-rc.6:
+    resolution: {integrity: sha512-PqoGtbAA04dXQ/9oNgHeygEhzxLBtuk/pgK78r2khYzV7kt41C+fokJ5e/ZmJXH3bEcfpCJ466lKoQW3hLe67w==}
     dependencies:
       '@faker-js/faker': 8.1.0
       fictional: 0.8.6
@@ -665,8 +665,8 @@ packages:
   /@types/prop-types@15.7.8:
     resolution: {integrity: sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==}
 
-  /@types/react@18.2.27:
-    resolution: {integrity: sha512-Wfv7B7FZiR2r3MIqbAlXoY1+tXm4bOqfz4oRr+nyXdBqapDBZ0l/IGcSlAfvxIHEEJjkPU0MYAc/BlFPOcrgLw==}
+  /@types/react@18.2.28:
+    resolution: {integrity: sha512-ad4aa/RaaJS3hyGz0BGegdnSRXQBkd1CCYDCdNjBPg90UUpLgo+WlJqb9fMYUxtehmzF3PJaTWqRZjko6BRzBg==}
     dependencies:
       '@types/prop-types': 15.7.8
       '@types/scheduler': 0.16.4

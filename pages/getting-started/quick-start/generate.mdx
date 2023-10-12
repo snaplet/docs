@@ -80,12 +80,13 @@ For your example blog application, let's assume we need the following data:
 
 It's worth noting what we're not explicitly defining  - that each comment needs to have a separate, unique author, for instance. We're assuming that Snaplet `generate` will fill in the blanks based on your schema and generate realistic data as needed.
 
-### Defining the data generation plan
+### Defining your first data generation plan
 In order to have Snaplet generate this data for your blog, we need to translate these requirements into a data generation plan.
 
-The data generation plan is a set of rules and conditions that guide the data generation process within the Snaplet Data Client. The Snaplet Data Client is in turn is a function that defines how data generation should proceed based on the user-defined data generation plan.
+The data generation plan is a set of rules and conditions that guide the data generation process within the Snaplet Data Client.
+The Snaplet Data Client, in turn, is a function that defines how data generation should proceed based on the user-defined data generation plan.
 
-Let's define your data generation plan.
+Let's define the data generation plan for our requirements.
 
 <CH.Scrollycoding className="generate-tutorial-configuration-file">
 
@@ -105,7 +106,7 @@ export default defineConfig({
 
 ---
 
-The `generate` key accepts a `plan` function in which an instance of the Snaplet Data Client is injected as `snaplet`.
+The `generate` key accepts a `run` function in which an instance of the Snaplet Data Client is injected, we usually call it `snaplet`.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -115,7 +116,7 @@ import { copycat } from '@snaplet/copycat';
 export default defineConfig({
   generate: {
     // focus(1:3)
-    plan({ snaplet }) {
+    async run(snaplet) {
 
     },
   },
@@ -124,7 +125,10 @@ export default defineConfig({
 
 ---
 
-The Snaplet Data Client exposes all your models as functions. These functions return a plan. You always start from a root model, here we start from the `Post` model.
+The Snaplet Data Client exposes all your models as functions.
+These functions return a plan.
+You always start from a root model, here we start from the `Post` model.
+`await`ing a plan will execute it.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -133,9 +137,9 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
+    async run(snaplet) {
       // focus(1:3)
-      return snaplet.Post({
+      await snaplet.Post({
 
       });
     },
@@ -154,8 +158,8 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+    async run(snaplet) {
+      await snaplet.Post({
         // focus
         title: 'Hello World!',
       });
@@ -166,7 +170,8 @@ export default defineConfig({
 
 ---
 
-You can also define the values of your model's relations. Here we define the author of the post represented by the `User` model.
+You can also define the values of your model's relationships.
+Here we define the author of the post represented by the `User` model.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -175,8 +180,8 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+    async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         // focus(1:6)
         User: {
@@ -193,7 +198,9 @@ export default defineConfig({
 
 ---
 
-Finally, we also define the comments of the post represented by the `Comment` model. As we need more than one comment, we use the `x` function. Again, note that we haven't defined any information about the comment authors, merely that we need three comments.
+Finally, we also define the comments of the post represented by the `Comment` model.
+As we need more than one comment, we can use the `x` function which will create a list of comments.
+You can read it as "Comment times 3".
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -202,8 +209,8 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+    async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         User: {
           email: ({ seed }) =>
@@ -221,7 +228,7 @@ export default defineConfig({
 
 ---
 
-We love it when a plan comes together!
+We're done!
 
 Copy the code and add it to your `snaplet.config.ts` file.
 
@@ -232,8 +239,8 @@ import { copycat } from '@snaplet/copycat';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
+    async run(snaplet) {
+      await snaplet.Post({
         title: 'Hello World!',
         User: {
           email: ({ seed }) =>
