@@ -4,5 +4,6 @@
   "guides": "Guides",
   "recipes": "Recipes",
   "reference": "Reference",
+  "migrations": "Migrations",
   "security": "Security"
 }

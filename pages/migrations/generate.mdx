@@ -1,0 +1,168 @@
+# Generate migration
+
+## From `0.66.0` and above
+
+The `generate` API is evolving! After a great number of feedbacks from the community during the alpha, we decided to make it more flexible and powerful.
+
+The new API is still in beta, but we encourage you to try it out and give us feedbacks.
+
+Here is a step-by-step guide to migrate your existing `generate` plan to the new API.
+
+You can start by regenerating your types by running:
+
+```bash >_&nbsp;terminal
+snaplet config generate
+```
+
+Now, let's edit your `snaplet.config.ts` file.
+
+<CH.Scrollycoding>
+
+This is what we had before version `0.66.0`.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    plan({ snaplet }) {
+      return snaplet.User({
+        count: 3,
+        data: {
+          email: ({ seed }) =>
+            copycat.email(seed),
+          Post: {
+            count: 10,
+          }
+        }
+      }),
+    },
+  },
+});
+```
+
+---
+
+Rename `plan` to `run`, and make it async. You are no longer required to return a plan. Calling `await` on a plan will automatically run it.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    // focus(1,2[7:12])
+    async run({ snaplet }) {
+      await snaplet.User({
+        count: 3,
+        data: {
+          email: ({ seed }) =>
+            copycat.email(seed),
+          Post: {
+            count: 10,
+          }
+        }
+      }),
+    },
+  },
+});
+```
+
+---
+
+We inject directly the `snaplet` data client in the `run` function.
+
+The utilities and operators are now available directly on the `snaplet` object: `snaplet.$pipe`, `snaplet.$merge` and `snaplet.$createStore`.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    // focus
+    async run(snaplet) {
+      await snaplet.User({
+        count: 3,
+        data: {
+          email: ({ seed }) =>
+            copycat.email(seed),
+          Post: {
+            count: 10,
+          }
+        }
+      }),
+    },
+  },
+});
+```
+
+---
+
+We no longer need `count` and `data`, you can pass the values directly.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    async run(snaplet) {
+      // focus(1:5)
+      await snaplet.User({
+          email: ({ seed }) =>
+            copycat.email(seed),
+        Post: {}
+      }),
+    },
+  },
+});
+```
+
+---
+
+To create lists of data, you can either pass an array or use our `x` helper function passed in a callback.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    async run(snaplet) {
+      // focus(1:5)
+      await snaplet.User((x) => x(3, () => ({
+        email: ({ seed }) =>
+          copycat.email(seed),
+        Post: (x) => x(10),
+      }))),
+    },
+  },
+});
+```
+
+---
+
+Congrats, you are now using the new API!
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    async run(snaplet) {
+      await snaplet.User((x) => x(3, () => ({
+        email: ({ seed }) =>
+          copycat.email(seed),
+        Post: (x) => x(10),
+      }))),
+    },
+  },
+});
+```
+
+</CH.Scrollycoding>
+
+To learn more about the new API, check out the [documentation](/core-concepts/generate#generating-data-with-snaplet-generate).
