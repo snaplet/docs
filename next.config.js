@@ -20,7 +20,42 @@ module.exports = withNextra({
         destination: "/getting-started/overview",
         permanent: true,
       },
-
+      // tutorials -> recipes
+      {
+        source: "/tutorials/aws-rds",
+        destination: "/recipes/aws",
+        permanent: false,
+      },
+      {
+        source: "/tutorials/github-actions",
+        destination: "/recipes/github-action",
+        permanent: false,
+      },
+      {
+        source: "/tutorials/neon",
+        destination: "/recipes/neon",
+        permanent: false,
+      },
+      {
+        source: "/guides/netlify-preview-plugin",
+        destination: "/recipes/netlify",
+        permanent: false,
+      },
+      {
+        source: "/tutorials/prisma-seed",
+        destination: "/recipes/prisma",
+        permanent: false,
+      },
+      {
+        source: "/tutorials/vercel-postgres",
+        destination: "/recipes/vercel",
+        permanent: false,
+      },
+      {
+        source: "/guides/visual-studio-code-extension",
+        destination: "/recipes/visual-studio-code",
+        permanent: false,
+      },
       // old doc links used in cli 0.63.6 and below
       {
         source: "/references/connection-strings",
