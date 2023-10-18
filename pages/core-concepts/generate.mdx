@@ -46,10 +46,10 @@ The [operators](/core-concepts/generate#manipulating-stores) are injecting their
 For example, these 2 users will have different values:
 
 ```ts
-await snaplet.$merge(
+await snaplet.$merge([
   snaplet.User({}),
   snaplet.User({}),
-);
+]);
 ```
 
 You can also use the `seed` option to specify a custom seed for a plan:
@@ -371,11 +371,11 @@ import { defineConfig } from 'snaplet';
 export default defineConfig({
   generate: {
     async run(snaplet) {
-      await snaplet.$pipe(
+      await snaplet.$pipe([
         snaplet.User((x) => x(3)),
         // mark
         snaplet.Post({}, { autoConnect: true })
-      );
+      ]);
     },
   },
 });
@@ -442,7 +442,7 @@ import { defineConfig } from 'snaplet';
 export default defineConfig({
   generate: {
     async run(snaplet) {
-      await snaplet.$pipe(
+      await snaplet.$pipe([
         snaplet.User((x) => x(3)),
         snaplet.Post({
           User: ({ store }) => {
@@ -450,7 +450,7 @@ export default defineConfig({
             return store.User[0];
           }
         })
-      );
+      ]);
     },
   },
 });
@@ -468,11 +468,11 @@ import { defineConfig } from 'snaplet';
 export default defineConfig({
   generate: {
     async run(snaplet) {
-      await snaplet.$merge(
+      await snaplet.$merge([
         snaplet.User((x) => x(3)),
         snaplet.Post({}),
         snaplet.Comment((x) => x(2))
-      );
+      ]);
     },
   },
 });

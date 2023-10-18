@@ -101,12 +101,12 @@ snaplet config setup
 ```ts snaplet.config.ts
 generate: {
     plan({ snaplet, pipe }) {
-      return pipe(
+      return pipe([
         // 10 users
         snaplet.users({ count: 10 }),
         // 20 todos, with one of the 10 users assigned to each todo
         snaplet.todos({ count: 20 }, { autoConnect: true })
-      );
+      ]);
     },
 },
 ```
