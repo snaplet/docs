@@ -485,7 +485,15 @@ In our context, inflection is about altering the form of a model, field or relat
 
 You can use the `inflection` option to provide your own rules to define the names of your models, fields and relationships.
 
-By default, we provide a "standard" implementation of the inflection rules, inspired by [PostGraphile](https://github.com/graphile/pg-simplify-inflector#graphile-contribpg-simplify-inflector), but you can override them if you want.
+By default, we provide a default and sensible implementation of the inflection rules, inspired by [PostGraphile](https://github.com/graphile/pg-simplify-inflector#graphile-contribpg-simplify-inflector), but you can override them if you want.
+
+These rules are:
+
+- **Model names:** pluralized and camelCased.
+- **Scalar field names:** camelCased.
+- **Parent field names (one to one relationships):** singularized and camelCased.
+- **Child field names (one to many relationships):** pluralized and camelCased.
+- We also support [prefix extraction and opposite baseName for foreign keys](https://github.com/graphile/pg-simplify-inflector#naming-your-foreign-key-fields).
 
 Given your tables being named `User`, `Post` and `Comment`, here is an example of how you can use the `inflection` option to change the names of your models:
 
