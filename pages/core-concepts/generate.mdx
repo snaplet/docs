@@ -473,3 +473,86 @@ export default defineConfig({
   },
 });
 ```
+
+## Customizing the Snaplet Data Client with aliases
+
+The models, fields and relationships names are fully customizable. You can use the `alias` option to change them.
+
+### Inflection
+
+Inflection generally refers to the modification of words to express different grammatical categories.
+In our context, inflection is about altering the form of a model, field or relationship name to fit its intended use or to adhere to certain conventions so your code is more readable.
+
+You can use the `inflection` option to provide your own rules to define the names of your models, fields and relationships.
+
+By default, we provide a "standard" implementation of the inflection rules, inspired by [PostGraphile](https://github.com/graphile/pg-simplify-inflector#graphile-contribpg-simplify-inflector), but you can override them if you want.
+
+Given your tables being named `User`, `Post` and `Comment`, here is an example of how you can use the `inflection` option to change the names of your models:
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    alias: {
+      inflection: {
+        modelName: (modelName) => `${modelName.toLowerCase()}s`,
+      }
+    },
+    async run(snaplet) {
+      // without alias, you would have to use snaplet.User(...)
+      await snaplet.users((x) => x(3))
+    },
+  },
+});
+```
+
+You can disable the inflection rules by setting the `inflection` option to `false`:
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    alias: {
+      inflection: false,
+    },
+    async run(snaplet) {
+      await snaplet.User((x) => x(3))
+    },
+  },
+});
+```
+
+### Override
+
+If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    alias: {
+      override: {
+        User: {
+          fields: {
+            Post_Post_validator_idToUser: 'validatedPosts',
+          }
+        }
+      }
+    },
+    async run(snaplet) {
+      await snaplet.users([{
+        // without override, it would be: postsByValidatorId: [...]
+        validatedPosts: [{ title: 'Hello World!' }]
+      }])
+    },
+  },
+});
+```
+
+The `override` option is applied on top of the `inflection` option, it's perfect for one-off changes.
