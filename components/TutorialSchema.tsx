@@ -116,7 +116,7 @@ const TutorialSchemaLight = (props) => (
           fill: "#fff",
         }}
       >
-        {"User"}
+        {"user"}
       </text>
     </svg>
     <svg y={33}>
@@ -229,7 +229,7 @@ const TutorialSchemaLight = (props) => (
           fill: "#fff",
         }}
       >
-        {"Post"}
+        {"post"}
       </text>
     </svg>
     <svg x={239.914} y={33}>
@@ -320,7 +320,7 @@ const TutorialSchemaLight = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#6f6f6f" }}
       >
-        {"createdBy"}
+        {"author_id"}
       </text>
       <path
         fill="#DEDEDE"
@@ -350,7 +350,7 @@ const TutorialSchemaLight = (props) => (
           fill: "#fff",
         }}
       >
-        {"Comment"}
+        {"comment"}
       </text>
     </svg>
     <svg x={482.996} y={33}>
@@ -416,7 +416,7 @@ const TutorialSchemaLight = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#6f6f6f" }}
       >
-        {"userId"}
+        {"author_id"}
       </text>
       <path
         fill="#DEDEDE"
@@ -441,7 +441,7 @@ const TutorialSchemaLight = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#6f6f6f" }}
       >
-        {"postId"}
+        {"post_id"}
       </text>
       <path
         fill="#DEDEDE"
@@ -466,7 +466,7 @@ const TutorialSchemaLight = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#6f6f6f" }}
       >
-        {"writtenAt"}
+        {"written_at"}
       </text>
       <path
         fill="#DEDEDE"
@@ -599,7 +599,7 @@ const TutorialSchemaDark = (props) => (
           fill: "#fff",
         }}
       >
-        {"User"}
+        {"user"}
       </text>
     </svg>
     <svg y={33}>
@@ -712,7 +712,7 @@ const TutorialSchemaDark = (props) => (
           fill: "#fff",
         }}
       >
-        {"Post"}
+        {"post"}
       </text>
     </svg>
     <svg x={239.914} y={33}>
@@ -803,7 +803,7 @@ const TutorialSchemaDark = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#d7d7d9" }}
       >
-        {"createdBy"}
+        {"author_id"}
       </text>
       <path
         fill="#666"
@@ -833,7 +833,7 @@ const TutorialSchemaDark = (props) => (
           fill: "#fff",
         }}
       >
-        {"Comment"}
+        {"comment"}
       </text>
     </svg>
     <svg x={482.996} y={33}>
@@ -899,7 +899,7 @@ const TutorialSchemaDark = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#d7d7d9" }}
       >
-        {"userId"}
+        {"author_id"}
       </text>
       <path
         fill="#666"
@@ -924,7 +924,7 @@ const TutorialSchemaDark = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#d7d7d9" }}
       >
-        {"postId"}
+        {"post_id"}
       </text>
       <path
         fill="#666"
@@ -949,7 +949,7 @@ const TutorialSchemaDark = (props) => (
         y={19.75}
         style={{ fontFamily: "&quot", fontSize: 13, fill: "#d7d7d9" }}
       >
-        {"writtenAt"}
+        {"written_at"}
       </text>
       <path
         fill="#666"

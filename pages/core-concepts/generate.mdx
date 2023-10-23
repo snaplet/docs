@@ -1,5 +1,4 @@
-import { Callout, Tabs, Tab } from "nextra/components"
-import { TutorialSchema } from "../../components/TutorialSchema"
+import { Callout } from "nextra/components"
 
 # Generate data
 
@@ -47,23 +46,23 @@ For example, these 2 users will have different values:
 
 ```ts
 await snaplet.$merge([
-  snaplet.User({}),
-  snaplet.User({}),
+  snaplet.users([{}]),
+  snaplet.users([{}]),
 ]);
 ```
 
 You can also use the `seed` option to specify a custom seed for a plan:
 
 ```ts
-await snaplet.User({
+await snaplet.users([{
   id: ({ seed }) => seed,
   email: 'alice@acme.com'
-}, { seed: 'hello' });
+}], { seed: 'hello' });
 
-await snaplet.User({
+await snaplet.users([{
   id: ({ seed }) => seed,
   email: 'bob@acme.com'
-}, { seed: 'world' });
+}], { seed: 'world' });
 ```
 
 #### Plans, stores and SQL statements
@@ -71,8 +70,8 @@ await snaplet.User({
 The **plan** is what's returned by the methods of the Snaplet Data Client. It's a representation of the data you want to generate.
 
 ```ts
-const userPlan = snaplet.User({ email: 'snappy@snaplet.dev' });
-//    ^ the plan                ^ the plan's inputs
+const userPlan = snaplet.users([{ email: 'snappy@snaplet.dev' }]);
+//    ^ the plan               ^ the plan's inputs
 ```
 
 When a plan is executed, triggered by `await`ing the plan, it stores the generated data in an in-memory object called a **store**.
@@ -89,16 +88,16 @@ import { copycat } from '@snaplet/copycat';
 export default defineConfig({
   generate: {
     async run(snaplet) {
-      await snaplet.Post({
+      await snaplet.posts([{
         title: 'Hello World!',
-        User: {
+        author: {
           email: ({ seed }) =>
             copycat.email(seed, {
               domain: 'acme.org',
             }),
         },
-        Comment: (x) => x(3),
-      });
+        comments: (x) => x(3),
+      }]);
     },
   },
 });
@@ -108,9 +107,9 @@ Here is what its store looks like internally:
 
 ```ts
 const store = {
-  User: [User, User, User, User],
-  Post: [Post],
-  Comment: [Comment, Comment, Comment],
+  users: [user, user, user, user],
+  posts: [post],
+  comments: [comment, comment, comment],
 }
 ```
 
@@ -119,15 +118,12 @@ This store is very useful when you want to [connect](/core-concepts/generate#con
 
 ### Static or dynamic data, we got you covered
 
-If you want to use static data, you can directly pass an object or an array to the models methods.
+If you want to use static data, you can directly an array to the models methods.
 As always, all the required fields and relationships will be automatically created for you based on your database schema.
 
 ```ts
-// a single User
-snaplet.User({ email: 'forever.alone@acme.com' });
-
-// an array of 2 Users
-snaplet.User([
+// an array of 2 users
+snaplet.users([
   { email: 'alice@acme.com' },
   { email: 'bob@acme.com' },
 ]);
@@ -136,11 +132,11 @@ snaplet.User([
 If you want to use dynamic data, you can pass a callback function to the models methods. We inject a function `x` that you can use to generate as many models as you want.
 
 ```ts
-// an array of 10 Users
-snaplet.User((x) => x(10));
+// an array of 10 users
+snaplet.users((x) => x(10));
 
-// an array of 10 Users with a custom email
-snaplet.User((x) => x(10, (index) => ({
+// an array of 10 users with a custom email
+snaplet.users((x) => x(10, (index) => ({
   email: `user${index}@snaplet.dev`,
 })));
 ```
@@ -148,8 +144,8 @@ snaplet.User((x) => x(10, (index) => ({
 And if you need both static and dynamic data, you can mix them together!
 
 ```ts
-// an array of 10 Users
-snaplet.User((x) => [
+// an array of 10 users
+snaplet.users((x) => [
   { email: 'first@acme.com' },
   ...x(8),
   { email: 'last@acme.com' },
@@ -172,16 +168,16 @@ import { copycat } from '@snaplet/copycat';
 export default defineConfig({
   generate: {
     async run(snaplet) {
-      await snaplet.Post({
+      await snaplet.posts([{
         title: 'Hello World!',
-        User: {
+        author: {
           email: ({ seed }) =>
             copycat.email(seed, {
               domain: 'acme.org',
             }),
         },
-        Comment: (x) => x(3),
-      });
+        comments: (x) => x(3),
+      }]);
     },
   },
 });
@@ -199,21 +195,21 @@ import { copycat } from '@snaplet/copycat';
 export default defineConfig({
   generate: {
      async run(snaplet) {
-      await snaplet.Post({
+      await snaplet.posts([{
         title: 'Hello World!',
-        User: {
+        author: {
           email: ({ seed }) =>
             copycat.email(seed, {
               domain: 'acme.org',
             }),
         },
-        Comment: (x) => x(3, () => ({
+        comments: (x) => x(3, () => ({
           // focus(1:3)
-          User: () => {
+          author: () => {
 
           }
         })),
-      });
+      }]);
     },
   },
 });
@@ -221,7 +217,7 @@ export default defineConfig({
 
 ---
 
-We can use the injected `store` to provide the `User` model we want to connect to. In this case the only generated `User` in the plan will be the author of the post.
+We can use the injected `store` to provide the `user` model we want to connect to. In this case the only generated `user` in the plan will be the author of the post.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -231,21 +227,21 @@ import { copycat } from '@snaplet/copycat';
 export default defineConfig({
   generate: {
      async run(snaplet) {
-      await snaplet.Post({
+      await snaplet.posts([{
         title: 'Hello World!',
-        User: {
+        author: {
           email: ({ seed }) =>
             copycat.email(seed, {
               domain: 'acme.org',
             }),
         },
-        Comment: (x) => x(3, () => ({
+        comments: (x) => x(3, () => ({
           // focus(1:3)
-          User: ({ store }) => {
-            return store.User[0];
+          author: ({ store }) => {
+            return store.users[0];
           }
         })),
-      });
+      }]);
     },
   },
 });
@@ -269,19 +265,19 @@ import { copycat } from '@snaplet/copycat';
 export default defineConfig({
   generate: {
      async run(snaplet) {
-      await snaplet.Post({
+      await snaplet.posts([{
         title: 'Hello World!',
-        User: {
+        author: {
           email: ({ seed }) => copycat.email(seed, { domain: 'acme.org' }),
         },
-        Comment: (x) => x(3, () => ({
+        comments: (x) => x(3, () => ({
           // focus(1:4)
           // we alias the graph to posts to make it more readable
-          User: ({ graph: posts }) => {
-            return posts[0].User;
+          author: ({ graph: posts }) => {
+            return posts[0].author;
           }
         })),
-      });
+      }]);
     },
   },
 });
@@ -290,14 +286,14 @@ export default defineConfig({
 Here is what the `graph` looks like for this plan:
 
 ```ts
-// as we started with snaplet.Post, the graph is an array of Post
+// as we started with snaplet.posts, the graph is an array of posts
 const graph = [
   {
-    User: User,
-    Comment: [
-      Comment,
-      Comment,
-      Comment
+    author: user,
+    comments: [
+      comment,
+      comment,
+      comment,
     ],
   },
 ];
@@ -310,7 +306,7 @@ Now let's complexify our plan a bit:
 - We want to generate 3 posts.
 - The author of each post should also be the author of the post's comments.
 
-It seems challenging to find the right User to connect to using `store` or `graph`. That's why we also provide the `branch` variable to the `connect` function.
+It seems challenging to find the right user to connect to using `store` or `graph`. That's why we also provide the `branch` variable to the `connect` function.
 
 The `branch` is a particular iteration of the `graph` that was generated. It matches the path to the `connect` function in which it is injected.
 
@@ -324,19 +320,19 @@ import { copycat } from '@snaplet/copycat';
 export default defineConfig({
   generate: {
      async run(snaplet) {
-      await snaplet.Post({
+      await snaplet.posts([{
         title: 'Hello World!',
-        User: {
+        author: {
           email: ({ seed }) => copycat.email(seed, { domain: 'acme.org' }),
         },
-        Comment: (x) => x(3, () => ({
+        comments: (x) => x(3, () => ({
           // focus(1:4)
-          // we alias the branch to post to make it more readable
-          User: ({ branch: post }) => {
-            return post.User;
+          // we alias the branch to "post" to make it more readable
+          author: ({ branch: post }) => {
+            return post.author;
           }
         })),
-      });
+      }]);
     },
   },
 });
@@ -349,10 +345,10 @@ In our above example, the `connect` function will receive the branch correspondi
 Here is what the `branch` looks like for this particular `connect` function:
 
 ```ts
-// as we started with snaplet.Post, the branch is a Post model
+// as we started with snaplet.posts, the branch is a post model
 const branch = {
-  User: User,
-  Comment: Comment,
+  author: user,
+  comments: [comment],
 };
 ```
 
@@ -362,7 +358,7 @@ We provide a special option that you can activate in the options of a plan, call
 
 When `true`, the plan will automatically connect models relationships to fulfill to the store if possible. The corresponding model will be picked randomly (but deterministically, we're using `copycat.oneOf` method under the hood).
 
-In the following example, the `Post` model will be connected to one of the 3 `User` in the store.
+In the following example, the `post` model will be connected to one of the 3 `users` in the store.
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -372,9 +368,9 @@ export default defineConfig({
   generate: {
     async run(snaplet) {
       await snaplet.$pipe([
-        snaplet.User((x) => x(3)),
+        snaplet.users((x) => x(3)),
         // mark
-        snaplet.Post({}, { autoConnect: true })
+        snaplet.posts([{}], { autoConnect: true })
       ]);
     },
   },
@@ -383,7 +379,7 @@ export default defineConfig({
 
 #### Augmenting external data with `$createStore`
 
-Sometimes, you want to augment external data with generated data. For example, you might want to generate 10 `Post` for a particular `User` in your database.
+Sometimes, you want to augment external data with generated data. For example, you might want to generate 10 `posts` for a particular `user` in your database.
 
 For this purpose, we provide the `$createStore` utility function. It allows you to create a store and pass it as a plan's option:
 
@@ -397,14 +393,14 @@ const prisma = new PrismaClient();
 export default defineConfig({
   generate: {
     async run(snaplet) {
-      const user = await prisma.User.findUnique({ where: { email: 'alice@acme.com' } });
+      const user = await prisma.users.findUnique({ where: { email: 'alice@acme.com' } });
 
       const store = snaplet.$createStore({
-        User: [user]
+        users: [user]
       });
 
-      // The 10 Posts will be connected to the unique User in the store
-      await snaplet.Post((x) => x(10), { autoConnect: true, store });
+      // The 10 posts will be connected to the unique user in the store
+      await snaplet.posts((x) => x(10), { autoConnect: true, store });
     },
   },
 });
@@ -417,12 +413,12 @@ You can use the `external` option if you want the data to be persisted:
 ```ts
 // the initial data is not marked as external and will be persisted
 const store = snaplet.$createStore({
-  User: [user]
+  users: [user]
 }, { external: false });
 
-// we add another User to the store, this time marked as external.
+// we add another user to the store, this time marked as external.
 // You can omit the external option, it defaults to true.
-store.add('User', anotherUser, { external: true });
+store.add('users', anotherUser, { external: true });
 ```
 
 ### Manipulating stores
@@ -443,13 +439,13 @@ export default defineConfig({
   generate: {
     async run(snaplet) {
       await snaplet.$pipe([
-        snaplet.User((x) => x(3)),
-        snaplet.Post({
-          User: ({ store }) => {
-            // this is the first User generated by the previous plan
-            return store.User[0];
+        snaplet.users((x) => x(3)),
+        snaplet.posts([{
+          author: ({ store }) => {
+            // this is the first user generated by the previous plan
+            return store.users[0];
           }
-        })
+        }])
       ]);
     },
   },
@@ -469,11 +465,102 @@ export default defineConfig({
   generate: {
     async run(snaplet) {
       await snaplet.$merge([
-        snaplet.User((x) => x(3)),
-        snaplet.Post({}),
-        snaplet.Comment((x) => x(2))
+        snaplet.users((x) => x(3)),
+        snaplet.posts([{}]),
+        snaplet.comments((x) => x(2))
       ]);
     },
   },
 });
 ```
+
+## Customizing the Snaplet Data Client with aliases
+
+The models, fields and relationships names are fully customizable. You can use the `alias` option to change them.
+
+### Inflection
+
+Inflection generally refers to the modification of words to express different grammatical categories.
+In our context, inflection is about altering the form of a model, field or relationship name to fit its intended use or to adhere to certain conventions so your code is more readable.
+
+You can use the `inflection` option to provide your own rules to define the names of your models, fields and relationships.
+
+By default, we provide a default and sensible implementation of the inflection rules, inspired by [PostGraphile](https://github.com/graphile/pg-simplify-inflector#graphile-contribpg-simplify-inflector), but you can override them if you want.
+
+These rules are:
+
+- **Model names:** pluralized and camelCased.
+- **Scalar field names:** camelCased.
+- **Parent field names (one to one relationships):** singularized and camelCased.
+- **Child field names (one to many relationships):** pluralized and camelCased.
+- We also support [prefix extraction and opposite baseName for foreign keys](https://github.com/graphile/pg-simplify-inflector#naming-your-foreign-key-fields).
+
+Given your tables being named `User`, `Post` and `Comment`, here is an example of how you can use the `inflection` option to change the names of your models:
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    alias: {
+      inflection: {
+        modelName: (modelName) => `${modelName.toLowerCase()}s`,
+      }
+    },
+    async run(snaplet) {
+      // without alias, you would have to use snaplet.User(...)
+      await snaplet.users((x) => x(3))
+    },
+  },
+});
+```
+
+You can disable the inflection rules by setting the `inflection` option to `false`:
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    alias: {
+      inflection: false,
+    },
+    async run(snaplet) {
+      await snaplet.User((x) => x(3))
+    },
+  },
+});
+```
+
+### Override
+
+If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    alias: {
+      override: {
+        User: {
+          fields: {
+            Post_Post_validator_idToUser: 'validatedPosts',
+          }
+        }
+      }
+    },
+    async run(snaplet) {
+      await snaplet.users([{
+        // without override, it would be: postsByValidatorId: [...]
+        validatedPosts: [{ title: 'Hello World!' }]
+      }])
+    },
+  },
+});
+```
+
+The `override` option is applied on top of the `inflection` option, it's perfect for one-off changes.
