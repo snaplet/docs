@@ -132,9 +132,9 @@ generate: {
   async run(snaplet) {
     await snaplet.$pipe([
       // 10 users
-      snaplet.users((x) => x(5)),
+      snaplet.users((x) => x(10)),
       // 20 todos, with one of the 10 users assigned to each todo
-      snaplet.todos((x) => x(10), { autoConnect: true }),
+      snaplet.todos((x) => x(20), { autoConnect: true }),
     ]);
   },
 },
