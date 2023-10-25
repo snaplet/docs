@@ -90,11 +90,11 @@ service_role key: eyJh......
 
 ```bash
 # select "yes" to create your `.snaplet/config.json`
-# input the DB URL copied from the previous step for your target database
-snaplet config setup
+# input the DB URL copied from the previous step for your source database
+snaplet setup
 ```
 
-> The target database credentials will be used to introspect your database and generate a base config
+> The source database credentials will be used to introspect your database and generate a base config
 
 **4.2.** In the `snaplet.config.ts` update the `generate` statement to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
@@ -211,7 +211,7 @@ service_role key: eyJh......
 You're now ready to restore your production snapshot into your Supabase development project.
 
 1. Navigate to your project directory
-2. Run `snaplet config setup`
+2. Run `snaplet setup`
 
    1. You will be shown a warning to write `.snaplet/config` in your project directory. Select yes (y) to create the file.
    2. Then you will be asked for a **target database connection string.** . Paste in the **DB URL** you copied in step 3.
