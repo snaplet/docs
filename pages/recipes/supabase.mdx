@@ -88,26 +88,55 @@ service_role key: eyJh......
 
 **4.1.** Create a `snaplet.config.ts` file in the root of your project.
 
-```bash
-# select "yes" to create your `.snaplet/config.json`
-# input the DB URL copied from the previous step for your target database
-snaplet config setup
+```bash >_&nbsp;terminal
+snaplet setup
 ```
 
-> The target database credentials will be used to introspect your database and generate a base config
+```bash >_&nbsp; terminal
+# mark
+✔ Do you have access to production data › No, I want to generate data locally
+
+Target database credentials
+This is where your development data resides, and is typically your local development database.
+Snaplet can import the generated data to your target database using the target database credentials.
+Snaplet will introspect this database schema to generate the snaplet client so ensure this database
+have the schemas setup and that you did the migrations on it.
+
+Read more: https://docs.snaplet.dev/guides/postgresql#connection-strings
+
+# mark
+✔ Target database connection string … postgresql://postgres:postgres@localhost:54322/postgres
+📡 Connected to database with "[secret]ql://postgres:postgres@localhost:54322/postgres"
+Generated snaplet client type definitions for generate: snaplet-client.d.ts (see: https://docs.snaplet.dev/core-concepts/generate#introducing-the-snaplet-data-client)
+Generated snaplet.config.ts type definitions: snaplet.d.ts (see: https://docs.snaplet.dev/reference/configuration#type-safe-configuration-based-on-your-database-structure)
+ℹ Database structure: Create generate config...
+Generated config: /name-of-new-app/snaplet.config.ts
+Youre all set! Take a look at our docs to find out what you can do from here:
+https://docs.snaplet.dev/core-concepts/generate
+
+Generate seeds:
+You can take a look at the sql statements that can be generated with:
+snaplet generate --sql
+
+Load generated data:
+To load the generated data into your database execute the command:
+snaplet generate
+```
+
+> The source database credentials will be used to introspect your database and generate a base config
 
 **4.2.** In the `snaplet.config.ts` update the `generate` statement to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
 ```ts snaplet.config.ts
 generate: {
-    plan({ snaplet, pipe }) {
-      return pipe([
-        // 10 users
-        snaplet.users({ count: 10 }),
-        // 20 todos, with one of the 10 users assigned to each todo
-        snaplet.todos({ count: 20 }, { autoConnect: true })
-      ]);
-    },
+  async run(snaplet) {
+    await snaplet.$pipe([
+      // 10 users
+      snaplet.users((x) => x(10)),
+      // 20 todos, with one of the 10 users assigned to each todo
+      snaplet.todos((x) => x(20), { autoConnect: true }),
+    ]);
+  },
 },
 ```
 
@@ -211,7 +240,7 @@ service_role key: eyJh......
 You're now ready to restore your production snapshot into your Supabase development project.
 
 1. Navigate to your project directory
-2. Run `snaplet config setup`
+2. Run `snaplet setup`
 
    1. You will be shown a warning to write `.snaplet/config` in your project directory. Select yes (y) to create the file.
    2. Then you will be asked for a **target database connection string.** . Paste in the **DB URL** you copied in step 3.

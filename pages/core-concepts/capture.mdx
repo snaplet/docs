@@ -163,31 +163,44 @@ To transform the data in your database Snaplet needs two things:
 1. A connection URL to the database that you want to transform (this can be your development or staging database).
 2. A `snaplet.config.ts` file.
 
-#### Setup: Generating transformation files
+#### Setup: Generating the `snaplet.config.ts` file
 
-Run `snaplet config setup` at the root of your codebase (in your git repo), so that the configuration and transformations files are shared with the rest of your team.
+Run `snaplet setup` at the root of your codebase (in your git repo), so that the configuration file is shared with the rest of your team.
 
 ```bash >_&nbsp;terminal
-No configuration found
-✔ Create "/Users/avallete/Documents/Programming/Snaplet/docs/.snaplet/config.json"? … yes
+# mark
+✔ Do you have access to production data › Yes, and I want to use it as my data source
+
+Target database credentials
+This is where your development data resides, and is typically your local development database.
+Snaplet restores data to your target database using the target database credentials.
+
+Read more: https://docs.snaplet.dev/guides/postgresql#connection-strings
+
+# mark
 ✔ Target database connection string … postgresql://postgres@localhost:5432/postgres
 📡 Connected to database with "postgresql://postgres@localhost:5432/postgres"
-Introspecting database...
-📡 Connected to database with "postgresql://postgres@localhost:5432/postgres"
-Generated transform type definitions: snaplet.d.ts
-⠋ Transform: Detecting PII fields...Smart shape prediciton failed
-ℹ Transform: Generate transform config...
-Generated transform config: snaplet.config.ts
-Generated private key: /Users/avallete/Documents/Programming/Snaplet/docs/.snaplet/id_rsa
-Added publicKey to project config: id_rsa
-Created .snaplet/snaplet.d.ts
-Created snaplet.config.ts
 
-😽 Snaplet has introspected your database structure and generated
-suggested transformations for your data in snaplet.config.ts
-Please review them.
+Link a project
+Linking a project allows you to restore snapshots you've captured for that project
 
-Updated ".gitignore"
+# mark
+✔ Select or create a project › Personal > My Project
+You're all set! Take a look at our docs to find out what you can do from here:
+https://docs.snaplet.dev/getting-started/start-here/
+
+Restore latest snapshot:
+To restore the latest snapshot in your project execute the command:
+snaplet ss restore --latest
+
+Local capture:
+You can learn more about self hosting here: https://docs.snaplet.dev/guides/self-hosting
+
+To capture a snapshot of your local database first pull the full configuration with:
+snaplet config pull
+
+Then capture the snapshot with:
+SNAPLET_SOURCE_DATABASE_URL=<database-url> snaplet ss capture
 ```
 
 The first thing Snaplet needs is a **connection string to your source database**, we use this to **introspect your database** and make **transformation suggestions** for columns that could contain personally identifiable information.

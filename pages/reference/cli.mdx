@@ -35,7 +35,7 @@ snaplet config [action]
 
 ### **generate**
 
-The `snaplet config generate` command is used to generate transform files.
+The `snaplet config generate` command is used to generate configuration files.
 
 **Usage**
 
@@ -45,11 +45,11 @@ snaplet config generate
 
 **Command Flags**
 
-| Name                | Alias | Description                                                 | Type    | Choices                 | Default  |
-| ------------------- | ----- | ----------------------------------------------------------- | ------- | ----------------------- | -------- |
-| --type              | -t    |                                                             | string  | typedefs,transform,keys | typedefs |
-| --dry-run           |       |                                                             | boolean |                         | false    |
-| --connection-string |       | The connection string to use for introspecting the database | string  |                         |          |
+| Name                | Alias | Description                                                 | Type    | Choices                          | Default  |
+| ------------------- | ----- | ----------------------------------------------------------- | ------- | -------------------------------- | -------- |
+| --type              | -t    |                                                             | string  | typedefs,transform,generate,keys | typedefs |
+| --dry-run           |       |                                                             | boolean |                                  | false    |
+| --connection-string |       | The connection string to use for introspecting the database | string  |                                  |          |
 
 ### **list**
 
@@ -73,9 +73,9 @@ snaplet config pull
 
 **Command Flags**
 
-| Name   | Alias | Type   | Choices                              | Default                              |
-| ------ | ----- | ------ | ------------------------------------ | ------------------------------------ |
-| --type | -t    | string | schemas,transform,typedefs,publicKey | schemas,transform,typedefs,publicKey |
+| Name   | Alias | Type   | Choices                   | Default                   |
+| ------ | ----- | ------ | ------------------------- | ------------------------- |
+| --type | -t    | string | config,typedefs,publicKey | config,typedefs,publicKey |
 
 ### **push**
 
@@ -89,26 +89,9 @@ snaplet config push
 
 **Command Flags**
 
-| Name   | Alias | Type   | Choices                                | Default                                |
-| ------ | ----- | ------ | -------------------------------------- | -------------------------------------- |
-| --type | -t    | string | schemas,transform,subsetting,publicKey | schemas,transform,subsetting,publicKey |
-
-### **setup**
-
-The `snaplet config setup` command is used to setup local project configuration.
-
-**Usage**
-
-```bash >_&nbsp;terminal
-snaplet config setup [targetDatabaseUrl]
-```
-
-**Command Flags**
-
-| Name       | Type    | Default |
-| ---------- | ------- | ------- |
-| --generate | boolean | true    |
-| --yes      | boolean | false   |
+| Name   | Alias | Type   | Choices          | Default          |
+| ------ | ----- | ------ | ---------------- | ---------------- |
+| --type | -t    | string | config,publicKey | config,publicKey |
 
 ## **dev**
 
@@ -465,44 +448,6 @@ snaplet snapshot share [snapshot-name|snapshot-path]
 | --no-encrypt | Disable encryption        | boolean | false   |
 | --tags       | Filter snapshots by tags  | array   |         |
 | --latest     | Share the latest snapshot | boolean | false   |
-
-### **subset**
-
-The `snaplet snapshot subset` command is used to create a subset of a database.
-
-**Usage**
-
-```bash >_&nbsp;terminal
-snaplet snapshot subset [destination-path]
-```
-
-**Command Flags**
-
-| Name          | Alias                | Description                                 | Type    | Choices     | Default |
-| ------------- | -------------------- | ------------------------------------------- | ------- | ----------- | ------- |
-| --env         | --environment        | Environment to use when slicing the databse | string  | cloud,local | local   |
-| --subset-path | --subset-config-path | Path to a subset config file                | string  |             |         |
-| --force       | -f                   | Force overwrite of existing subset file     | boolean |             | false   |
-
-## **subset**
-
-The `snaplet subset` command is used to manage subsetting.
-
-**Usage**
-
-```bash >_&nbsp;terminal
-snaplet subset [action]
-```
-
-### **setup**
-
-The `snaplet subset setup` command is used to configure subsetting.
-
-**Usage**
-
-```bash >_&nbsp;terminal
-snaplet subset setup
-```
 
 ## **team**
 
