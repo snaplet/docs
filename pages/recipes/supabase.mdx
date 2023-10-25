@@ -88,10 +88,46 @@ service_role key: eyJh......
 
 **4.1.** Create a `snaplet.config.ts` file in the root of your project.
 
-```bash
-# select "yes" to create your `.snaplet/config.json`
-# input the DB URL copied from the previous step for your source database
+```bash >_&nbsp;terminal
+# choose the project selected in step 1.
 snaplet setup
+```
+
+```bash >_&nbsp; terminal
+# mark
+✔ Do you have access to production data › Yes, and I want to use it as my data source
+
+Target database credentials
+This is where your development data resides, and is typically your local development database.
+Snaplet restores data to your target database using the target database credentials.
+
+Read more: https://docs.snaplet.dev/guides/postgresql#connection-strings
+
+# mark
+✔ Target database connection string … postgresql://postgres:postgres@localhost:54322/postgres
+📡 Connected to database with "postgresql://postgres:postgres@localhost:54322/postgres"
+
+Link a project
+Linking a project allows you to restore snapshots you've captured for that project
+
+# mark
+✔ Select or create a project › Personal > My Project
+
+You're all set! Take a look at our docs to find out what you can do from here:
+https://docs.snaplet.dev/getting-started/start-here/
+
+Restore latest snapshot:
+To restore the latest snapshot in your project execute the command:
+snaplet ss restore --latest
+
+Local capture:
+You can learn more about self hosting here: https://docs.snaplet.dev/guides/self-hosting
+
+To capture a snapshot of your local database first pull the full configuration with:
+snaplet config pull
+
+Then capture the snapshot with:
+SNAPLET_SOURCE_DATABASE_URL=<database-url> snaplet ss capture
 ```
 
 > The source database credentials will be used to introspect your database and generate a base config
