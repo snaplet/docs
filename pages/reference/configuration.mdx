@@ -45,15 +45,11 @@ import { defineConfig } from 'snaplet';
 
 export default defineConfig({
   generate: {
-    plan({ snaplet }) {
-      return snaplet.Post({
-        data: {
-          title: 'Hello World!',
-          Comment: {
-            count: 3,
-          },
-        },
-      });
+    run(snaplet) {
+      await snaplet.posts([{
+        title: 'Hello World!',
+        comments: (x) => x(3),
+      }]);
     },
   },
 });
