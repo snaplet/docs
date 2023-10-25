@@ -2,33 +2,33 @@
 
 Snaplet can be self-hosted within your own trusted infrastructure.
 
-## Bootstraping your configuration
+## Generate your configuration file
 
-In order to configure Snaplet, you need to generate a `snaplet.config.ts` file along with its types based on your database schema.
+In order to configure Snaplet, you need to generate a `snaplet.config.ts` file along with its types based on your source database schema.
 
 ```bash >_&nbsp;terminal
 SNAPLET_SOURCE_DATABASE_URL=<postgres://your-prod-url> npx snaplet config generate --type typedefs --type transform
 ```
 
-## Capturing snapshots
+## Capture snapshots
 
-Once you're happy with your configuration, you can capture a snapshot of your production database.
+Once you're happy with your configuration, you can capture a snapshot of your source database.
 
 ```bash >_&nbsp;terminal
 SNAPLET_SOURCE_DATABASE_URL=<postgres://your-prod-url> npx snaplet snapshot capture /tmp/my-snapshot
 ```
 
-## Sharing snapshots via Snaplet Cloud
+## Share snapshots via Snaplet Cloud
 
-You can share your snapshots via Snaplet Cloud so all your teamates can use restore them.
+You can share your snapshots via [Snaplet Cloud](/getting-started/quick-start/snapshot#sign-up-for-snaplet) so all your teamates can use restore them.
 
 ```bash >_&nbsp;terminal
 npx snaplet snapshot share /tmp/my-snapshot
 ```
 
-## Restoring snapshots
+## Restore snapshots
 
-You can restore a snapshot to a development database.
+You can restore a snapshot to a target database.
 
 ```bash >_&nbsp;terminal
 SNAPLET_TARGET_DATABASE_URL=<postgres://your-development-url> npx snaplet snapshot restore /tmp/my-snapshot
