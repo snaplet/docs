@@ -4,7 +4,7 @@ Snaplet can be self-hosted within your own trusted infrastructure.
 
 ## Generate your configuration file
 
-In order to configure Snaplet, you need to generate a `snaplet.config.ts` file along with its types based on your source database schema.
+In order to tell Snaplet how to select, transform and subset your data you need to generate a `snaplet.config.ts` file along with its types based on your source database schema.
 
 ```bash >_&nbsp;terminal
 SNAPLET_SOURCE_DATABASE_URL=<postgres://your-prod-url> npx snaplet config generate --type typedefs --type transform
