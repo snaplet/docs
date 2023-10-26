@@ -2,17 +2,34 @@
 
 Snaplet can be self-hosted within your own trusted infrastructure.
 
-## Hosting the capture process
+## Generate your configuration file
 
-The Snaplet CLI requires access to your `.snaplet` config directory in order to know how you want to modify your snapshots.
-Many people capture snapshots in CI/CD because it's already trusted, already has access to the `.snaplet` config directory via the source code and fits into a gitops development workflow.
+In order to tell Snaplet how to select, transform and subset your data you need to generate a `snaplet.config.ts` file along with its types based on your source database schema.
 
-1. Install Snaplet CLI
-2. Checkout your source code from repository
-3. Run `SNAPLET_DATABASE_URL=[secret] snaplet snapshot capture /tmp/my-snapshot`
+```bash >_&nbsp;terminal
+SNAPLET_SOURCE_DATABASE_URL=<postgres://your-prod-url> npx snaplet config generate --type typedefs --type transform
+```
 
-That's it, you have now a snapshot in `/tmp/my-snapshot` that you can upload and share with your team.
+## Capture snapshots
 
-## Sharing snapshot via a Snaplet Cloud Project
+Once you're happy with your configuration, you can capture a snapshot of your source database.
 
-Run `snaplet snapshot share /tmp/my-snapshot` to upload it to a Snaplet Cloud Project.
+```bash >_&nbsp;terminal
+SNAPLET_SOURCE_DATABASE_URL=<postgres://your-prod-url> npx snaplet snapshot capture /tmp/my-snapshot
+```
+
+## Share snapshots via Snaplet Cloud ☁️
+
+You can share your snapshots via [Snaplet Cloud](/getting-started/quick-start/snapshot#sign-up-for-snaplet) so all your teamates can restore them.
+
+```bash >_&nbsp;terminal
+npx snaplet snapshot share /tmp/my-snapshot
+```
+
+## Restore snapshots
+
+You can restore a snapshot to a target database.
+
+```bash >_&nbsp;terminal
+SNAPLET_TARGET_DATABASE_URL=<postgres://your-development-url> npx snaplet snapshot restore /tmp/my-snapshot
+```
