@@ -119,6 +119,11 @@ module.exports = withNextra({
         permanent: false,
       },
       {
+        source: "/getting-started/generate",
+        destination: "/getting-started/quick-start/generate",
+        permanent: false,
+      },
+      {
         source: "/getting-started/restoring",
         destination: "/getting-started/overview",
         permanent: false,
