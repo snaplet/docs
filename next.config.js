@@ -25,63 +25,113 @@ module.exports = withNextra({
       {
         source: "/references/connection-strings",
         destination: "/guides/postgresql#connection-strings",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/references/connection-strings/#troubleshooting",
         destination: "/guides/postgresql#troubleshooting-connection-strings",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/references/configuration-files",
         destination: "/reference/configuration",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/getting-started/start-here",
         destination: "/getting-started/overview",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/getting-started/data-operations",
         destination: "/core-concepts/reference/configuration",
-        permanent: false,
+        permanent: true,
       },
       {
         source:
           "/tutorials/supabase-clone-environments#step-6-restore-the-data-target",
         destination: "/recipes/supabase#6-restore-the-data-target",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/references/data-operations/generate",
         destination: "/reference/configuration#generate",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/references/data-operations/exclude",
         destination: "/reference/configuration#select",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/references/data-operations/transform",
         destination: "/reference/configuration#transform",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/references/data-operations/reduce",
         destination: "/reference/configuration#subset",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/references/data-operations/introspect",
         destination: "/reference/configuration#introspect",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/tutorials/prisma-seed",
         destination: "/recipes/prisma",
-        permanent: false,
+        permanent: true,
+      },
+      {
+        source: "/references/preview-databases",
+        destination: "/core-concepts/deploy#preview-databases-on-snaplet-cloud",
+        permanent: true,
+      },
+      {
+        source: "/guides/netlify-preview-plugin",
+        destination: "/recipes/netlify",
+        permanent: true,
+      },
+      {
+        source: "/getting-started/sharing",
+        destination: "/getting-started/overview",
+        permanent: true,
+      },
+      {
+        source: "/tutorials/supabase-clone-environments",
+        destination: "/recipes/supabase",
+        permanent: true,
+      },
+      {
+        source: "/getting-started/quick-start/guides/postgresql",
+        destination: "/guides/postgresql",
+        permanent: true,
+      },
+      {
+        source: "/getting-started/quick-start",
+        destination: "/getting-started/overview",
+        permanent: true,
+      },
+      {
+        source: "/getting-started/configuration",
+        destination: "/getting-started/overview",
+        permanent: true,
+      },
+      {
+        source: "/getting-started/generate",
+        destination: "/getting-started/quick-start/generate",
+        permanent: true,
+      },
+      {
+        source: "/getting-started/restoring",
+        destination: "/getting-started/overview",
+        permanent: true,
+      },
+      {
+        source: "/configuration/snaplet-config-file",
+        destination: "/reference/configuration",
+        permanent: true,
       },
     ];
   },
