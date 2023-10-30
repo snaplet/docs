@@ -83,6 +83,51 @@ module.exports = withNextra({
         destination: "/recipes/prisma",
         permanent: false,
       },
+      {
+        source: "/references/preview-databases",
+        destination: "/core-concepts/deploy#preview-databases-on-snaplet-cloud",
+        permanent: false,
+      },
+      {
+        source: "/guides/netlify-preview-plugin",
+        destination: "/recipes/netlify",
+        permanent: false,
+      },
+      {
+        source: "/getting-started/sharing",
+        destination: "/getting-started/overview",
+        permanent: false,
+      },
+      {
+        source: "/tutorials/supabase-clone-environments",
+        destination: "/recipes/supabase",
+        permanent: false,
+      },
+      {
+        source: "/getting-started/quick-start/guides/postgresql",
+        destination: "/guides/postgresql",
+        permanent: false,
+      },
+      {
+        source: "/getting-started/quick-start",
+        destination: "/getting-started/overview",
+        permanent: false,
+      },
+      {
+        source: "/getting-started/configuration",
+        destination: "/getting-started/overview",
+        permanent: false,
+      },
+      {
+        source: "/getting-started/restoring",
+        destination: "/getting-started/overview",
+        permanent: false,
+      },
+      {
+        source: "/configuration/snaplet-config-file",
+        destination: "/reference/configuration",
+        permanent: false,
+      },
     ];
   },
 });
