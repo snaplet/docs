@@ -1,10 +1,12 @@
 import { useConfig, type DocsThemeConfig } from "nextra-theme-docs";
 import { Logo } from "./components/Logo";
+import { useRouter } from "next/router";
 
 const themeConfig: DocsThemeConfig = {
   chat: {
     link: "https://app.snaplet.dev/chat",
   },
+  head: null,
   logo: <Logo />,
   project: {
     link: "https://snaplet.dev",
@@ -17,8 +19,13 @@ const themeConfig: DocsThemeConfig = {
   // @ts-expect-error httpEquiv: "Content-Language" is valid
   useNextSeoProps() {
     const { frontMatter } = useConfig();
+    const { asPath, defaultLocale, locale } = useRouter();
+    const url =
+      "https://docs.snaplet.dev" +
+      (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
     return {
       titleTemplate: "%s – Snaplet",
+      description: frontMatter.description || "Snaplet Documentation",
       additionalLinkTags: [
         {
           href: "/apple-touch-icon.png",
@@ -51,8 +58,8 @@ const themeConfig: DocsThemeConfig = {
         { content: "#b5bdf6", name: "msapplication-TileColor" },
         { content: "/ms-icon-150x150.png", name: "msapplication-TileImage" },
       ],
-      description: frontMatter.description || "Snaplet Documentation",
       openGraph: {
+        url,
         images: [
           { url: frontMatter.image || "https://docs.snaplet.dev/og.png" },
         ],
