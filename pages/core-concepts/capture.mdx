@@ -1,4 +1,4 @@
-import { Callout } from 'nextra/components'
+import { Callout } from "nextra/components";
 
 # Capture data
 
@@ -39,6 +39,7 @@ export default defineConfig({
 ```
 
 ### `structure`
+
 You can also leverage the `structure` keyword to skip dumping data but still dump the structure of the table (columns, indexes, etc):
 
 ```ts snaplet.config.ts
@@ -46,9 +47,9 @@ import { defineConfig } from "snaplet";
 
 export default defineConfig({
   select: {
-    private: 'structure', // Dump the structure (with all tables) but not the data
+    private: "structure", // Dump the structure (with all tables) but not the data
     public: {
-      EventLogs: 'structure', // Dump EventLogs structure but not the data (restore an empty table)
+      EventLogs: "structure", // Dump EventLogs structure but not the data (restore an empty table)
     },
   },
 });
@@ -64,13 +65,13 @@ import { defineConfig } from "snaplet";
 
 export default defineConfig({
   select: {
-    $default: 'structure', // Set the all the tables and schema to be dumped as structure only
+    $default: "structure", // Set the all the tables and schema to be dumped as structure only
     private: false, // Except for the private schema which will be completly excluded
     public: {
       $default: true, // Set all the tables in the public schema to be dumped as data
-      EventLogs: 'structure', // Except for the EventLogs table for wich we only want the structure
+      EventLogs: "structure", // Except for the EventLogs table for wich we only want the structure
       Logs: false, // And the Logs table which we want to exclude completly
-    }
+    },
   },
 });
 ```
@@ -90,7 +91,7 @@ export default defineConfig({
       User: () => {
         return {
           // mark
-          email: 'my-new-email@example.org',
+          email: "my-new-email@example.org",
         };
       },
     },
@@ -103,7 +104,6 @@ When a snapshot is captured the `email` column is transformed to the value `"my-
 That's where [`@snaplet/copycat`](https://github.com/snaplet/copycat) comes in! It's a library that generates deterministic fake values: by supplying an input _(the original email address),_ Copycat returns a static value (a fake email address). As long as the input remains the same, the output will remain the same.
 
 Example:
-
 
 ```ts snaplet.config.ts
 // mark
@@ -126,7 +126,6 @@ export default defineConfig({
 
 Each Transformation Function receives a `row` object that contains the original row's values, this allows you to perform conditional transformations, mutate a JSON object, or create deterministic fake values.
 
-
 ```ts snaplet.config.ts
 import { copycat } from "@snaplet/copycat";
 import { defineConfig } from "snaplet";
@@ -137,7 +136,7 @@ export default defineConfig({
       User: ({ row }) => {
         // Transform our user's data, not our developer's data.
         // mark
-        if (row.role !== 'SUPERUSER') {
+        if (row.role !== "SUPERUSER") {
           return {
             name: copcat.fullName(row.name),
             email: copycat.email(row.email),
@@ -167,7 +166,7 @@ To transform the data in your database Snaplet needs two things:
 
 Run `snaplet setup` at the root of your codebase (in your git repo), so that the configuration file is shared with the rest of your team.
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 # mark
 ✔ Do you have access to production data › Yes, and I want to use it as my data source
 
@@ -210,7 +209,8 @@ Regenerate these files with `snaplet config generate --type=typedefs --type=tran
 You can add the `.snaplet/snaplet.d.ts` and `.snaplet/snapshots` to your `.gitignore` configuration.
 
 <Callout type="info">
-A user account is _not required_ - you only need a user account if you want to share snapshots with your team.
+  A user account is _not required_ - you only need a user account if you want to
+  share snapshots with your team.
 </Callout>
 
 ### Choosing the transform mode
@@ -237,7 +237,7 @@ export default defineConfig({
 
 If you're capturing your snapshots locally with `snaplet snapshot capture`, you can also choose the transform mode using your config (located at `snaplet.config.ts`) the same way as above. Alternatively, you can use the `--transform-mode` CLI option:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 snaplet snapshot capture --transform-mode=auto
 
 # or the shorthand form:
@@ -252,7 +252,7 @@ If the option is given both via the config and with a CLI option, the option giv
 
 Lets say you have a `User` table with the columns `id`, `name` and `email`, with the original data in your production database looking like this:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 | id | name             |    email          |
 | -- | ---------------- | ------------------|
 | 1  | Susan Altenwerth | susan@example.org |
@@ -278,7 +278,7 @@ export default defineConfig({
 
 In this case, a transformation was given in the config for `email`, but not for `name` or `id`. The chosen mode is `unsafe` mode, so `name` and `id` are copied over as is, and the transformation in the config is used for `email`. The resulting snapshot would have data that looks something like this:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 | id | name             |    email           |
 | -- | ---------------- | ------------------ |
 | 1  | Susan Altenwerth | user_1@example.org |
@@ -291,7 +291,7 @@ In `strict` mode, Snaplet expects a transformation to be given in the config for
 
 Using the same example as above, lets say you have a `User` table with the columns `id`, `name` and `email`, with the original data in your production database looking like this:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 | id | name             |    email          |
 | -- | ---------------- | ------------------|
 | 1  | Susan Altenwerth | susan@example.org |
@@ -317,7 +317,7 @@ export default defineConfig({
 
 In this case, a transformation was given in the config for `email`, but not for `name` or `id`. The chosen mode is `strict` mode, so Snaplet will not capture the snapshot, but instead tell you that `name` is missing:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 The following schemas, tables or columns are missing from your transform config. ...
 * Columns: "public"."User"."name"
 ```
@@ -344,7 +344,7 @@ export default defineConfig({
 
 Snaplet now has everything it needs to create a snapshot in strict mode. The resulting data in the snapshot will look something like this:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 | id | name             |    email           |
 | -- | ---------------- | ------------------ |
 | 1  | User 1           | user_1@example.org |
@@ -357,7 +357,7 @@ In `auto` mode, if there are any columns not given in the config, Snaplet will t
 
 Using the same example as above, lets say you have a `User` table with the columns `id`, `name` and `email`, with the original data in your production database looking like this:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 | id | name             |    email          |
 | -- | ---------------- | ------------------|
 | 1  | Susan Altenwerth | susan@example.org |
@@ -365,7 +365,6 @@ Using the same example as above, lets say you have a `User` table with the colum
 ```
 
 Then lets keep the config the same, except now choose `auto` mode:
-
 
 ```ts snaplet.config.ts
 import { defineConfig } from "snaplet";
@@ -382,12 +381,11 @@ export default defineConfig({
 });
 ```
 
-
 In this case, a transformation was given in the config for `email`, but not for `name` or `id`. The chosen mode is `auto` mode, so Snaplet will use the transformation given for `email`, but transform data for `name` automatically. Data for `id` will be copied over as is - in `auto` mode, Snaplet does not do any transformations of its own to primary or foreign key columns.
 
 The resulting data in the snapshot will look something like this:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 | id | name             |    email           |
 | -- | ---------------- | ------------------ |
 | 1  | Oyhbz Bxctktpard | user_1@example.org |
@@ -401,15 +399,14 @@ import { defineConfig } from "snaplet";
 
 export default defineConfig({
   transform: {
-    $mode: "auto"
+    $mode: "auto",
   },
 });
 ```
 
-
 In which case, resulting data in the snapshot will look something like this:
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 | id | name             |    email           |
 | -- | ---------------- | ------------------ |
 | 1  | Oyhbz Bxctktpard | ahmai@gfngqph.vcx  |
@@ -462,7 +459,7 @@ For example, lets say you had an `address` column with the type `varchar(16)`. S
 In these cases, [`copycat.scramble`](https://github.com/snaplet/copycat#copycatscramblestring-options) might be more helpful for you: it transforms each character in the string, but preserves the string's length. Since the original value is less than the character limit, the transformed result will also be.
 
 ```ts snaplet.config.ts
-import { copycat } from '@snaplet/copycat';
+import { copycat } from "@snaplet/copycat";
 import { defineConfig } from "snaplet";
 
 export default defineConfig({
@@ -472,7 +469,7 @@ export default defineConfig({
         return {
           // mark
           address: copycat.scramble(row.address, {
-            preserve: [',', ' '],
+            preserve: [",", " "],
           }), // '741 Hazle Forks, Carmel 8164, Dominica' => 'tqynqduk@qjlrftv.fig'
         };
       },
@@ -495,7 +492,6 @@ To reduce the size of your next snapshot and get a small, representative subset 
 
 An example of a `snapshot.config.ts` file with a basic `subset` config:
 
-
 ```ts snaplet.config.ts
 import { defineConfig } from "snaplet";
 
@@ -504,7 +500,7 @@ export default defineConfig({
     targets: [
       {
         table: "public.User",
-        percent: 5
+        percent: 5,
       },
     ],
     keepDisconnectedTables: true,
@@ -513,33 +509,36 @@ export default defineConfig({
 ```
 
 When `snaplet snapshot capture` is run against the above example config the following will happen:
-* The `User` table is subsetted to roughly 5% of its original size.
-* Related rows in related tables connected to the `User` table via foreign key relationships are included in the new snapshot.
-* As `keepDisconnectedTables` is set to `true`, any tables not connected to the `User` table via foreign key relationships will be included in the new snapshot, and **won't** be subsetted.
+
+- The `User` table is subsetted to roughly 5% of its original size.
+- Related rows in related tables connected to the `User` table via foreign key relationships are included in the new snapshot.
+- As `keepDisconnectedTables` is set to `true`, any tables not connected to the `User` table via foreign key relationships will be included in the new snapshot, and **won't** be subsetted.
 
 ### Configuring subsetting
 
 Various commands permit more granular control over subsetting. Chat to us [on Discord](https://app.snaplet.dev/chat) if your use case isn't supported.
 
 #### Enabled (enabled: boolean)
+
 When set to true, subsetting will occur during `snaplet snapshot capture`.
 
 #### Targets (targets: array)
+
 The first table defined in `targets` is the starting point of subsetting. Subsetting specifics are controlled by the `percent` (or `rowLimit`), `where` and `orderBy` properties.
 
 Subset traverses tables related to the `target` table and selects all the rows that are connected to the `target` table via foreign key relationship. This process is repeated for each `target` table. At least one `target` must be defined.
 
 Each `target` requires:
-* A `table` name
-* One or more of the following subsetting properties:
-  * `percent` (percent of rows captured: number)
-  * `rowLimit` (limit on the number of rows captured: number)
-  * `where` (filter by string: string)
+
+- A `table` name
+- One or more of the following subsetting properties:
+  - `percent` (percent of rows captured: number)
+  - `rowLimit` (limit on the number of rows captured: number)
+  - `where` (filter by string: string)
 
 Optionally, you can also define an `orderBy` property to sort the rows before subsetting.
 
 Here is an example of a config with multiple targets:
-
 
 ```ts snaplet.config.ts
 import { defineConfig } from "snaplet";
@@ -550,12 +549,12 @@ export default defineConfig({
       {
         table: "public.User",
         orderBy: `"User"."createdAt" desc`,
-        percent: 5
+        percent: 5,
       },
       {
         table: "public.Project",
-        where: `"Project"."id" = 'xyz'`
-      }
+        where: `"Project"."id" = 'xyz'`,
+      },
     ],
   },
 });
@@ -571,32 +570,48 @@ When set to true, all tables (with all data) that are not connected via foreign 
 
 When set to true, subsetting will occur during `snaplet snapshot capture`. This allows you to turn off the subsetting with one single parameter.
 
-#### Follow Nullable Relations (followNullableRelations: boolean) (default=true)
+#### Follow Nullable Relations (followNullableRelations: boolean | { [tableName | '$default']: boolean | { [relationName | '$default']: boolean } }) (default=true)
 
 When set to true, Snaplet subsetting will follow nullable relations. This means that if a table has a nullable foreign key, Snaplet will include the related rows in the snapshot. If set to false, those foreign key relations will be marked as null. Useful if the algorithm overfetches data.
+You can also define table specific or relation specific behaviour by using the following syntax:
 
-#### Max cycles loop (maxCyclesLoop: number) (default=1)
+```ts
+{
+  $default: true, // Will set the default behaviour for all tables
+  'public.table_1': false, // Will set the behaviour for all the relations inside table_1
+  'public.table_2': {
+    $default: false, // Will set the default behaviour for all the relations inside table_2
+    'relation_1': true, // Will set the behaviour for relation_1 inside table_2
+  }
+}
+```
+
+#### Max cycles loop (maxCyclesLoop: number | { [tableName | '$default']: number | { [relationName | '$default']: number } }) (default=1)
 
 This parameter tells the subsetting algorithm how many times it's allowed to fetch "optional" data in the same table (cycles loop). This is useful to avoid an infinite loop in case of a circular relation.
 This is particularly useful in case of overfetching to early exit the fetching process after some point.
 
 <Callout type="info">
-When setting up Snaplet for the first time, we recommend setting this parameter to 0 and to gradually
-increment it until the subset of data you fetch trough a relationship is enough for your use case.
+  When setting up Snaplet for the first time, we recommend setting this
+  parameter to 0 and to gradually increment it until the subset of data you
+  fetch trough a relationship is enough for your use case.
 </Callout>
 
-#### Max Children Per Node (maxChildrenPerNode: number) (default=unlimited)
+#### Max Children Per Node (maxChildrenPerNode: number | | { [tableName | '$default']: number | { [relationName | '$default']: number } }) (default=unlimited)
+
 This parameter tells the subsetting algorithm how many optional data it's allowed to retrieve at a time.
 This can be useful in the case of 1 single row being linked to one millions rows in another table.
 In that case, setting a limit of 1000 will allow the algorithm to fetch only the first 1000 related rows from this relation.
 
 #### Eager (eager: boolean) (default=false)
+
 This parameter tells the subsetting algorithm to perform bi-directional relationship fetching.
 
 Let's take an example:
 
 Let's say you have the following database schema:
-```bash >_&nbsp;terminal
+
+```bash >_ terminal
 +-----------+                     +-----------+
 |   user    | ------------------->|   team    |
 +-----------+                     +-----------+
@@ -623,7 +638,10 @@ Resulting in the follwing data being fetched: `user: (1,2,3,4,5,8) and team (1)`
 To exclude specific tables from the snapshot see [select](/core-concepts/capture#select-data) documentation.
 
 <Callout type="info">
-Note that the `precent` / `rowLimit` specified in the subset config may not be exact. The actual row count of the data is affected by the relationships between the tables. As such, a 5% subset specified against a specific table may ultimately include more than 5% of the actual database.
+  Note that the `precent` / `rowLimit` specified in the subset config may not be
+  exact. The actual row count of the data is affected by the relationships
+  between the tables. As such, a 5% subset specified against a specific table
+  may ultimately include more than 5% of the actual database.
 </Callout>
 
 ## Capture a snapshot
@@ -636,7 +654,7 @@ At the end of this guide we'll go over different ways of capturing your producti
 
 To snapshot your database, run `snaplet snapshot capture`
 
-```bash >_&nbsp;terminal
+```bash >_ terminal
 # mark
 $ snaplet snapshot capture
 
@@ -676,7 +694,7 @@ To fix this, we recommend allowing longer running statements during the capture 
 
 If you've created a dedicated role for Snaplet, as recommended [here](/guides/postgresql), you can set an infinite timeout specifically for the `snaplet` user role with the following command:
 
-```sql >_&nbsp;terminal
+```sql >_ terminal
 ALTER ROLE snaplet_readonly SET statement_timeout = 0;
 ```
 
