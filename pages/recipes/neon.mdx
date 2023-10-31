@@ -49,7 +49,7 @@ Because you're not restoring a snapshot to a local database, Snaplet will prompt
 If you've already installed the Snaplet CLI and configured Snaplet to restore snapshots to a different development database, you can change this easily by either editing the `.snaplet/config.json` file for your current working directory, or using the `SNAPLET_TARGET_DATABASE_URL` environment variable when running the `snaplet snapshot restore` command:
 
 ```bash >_&nbsp;terminal
-SNAPLET_TARGET_DATABASE_URL=postgresql://username:password@hostname:5432/database_name snaplet ss restore
+SNAPLET_TARGET_DATABASE_URL='postgresql://username:password@hostname:5432/database_name' snaplet ss restore
 ```
 
 ## Conclusion

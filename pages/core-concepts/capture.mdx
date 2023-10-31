@@ -200,7 +200,7 @@ To capture a snapshot of your local database first pull the full configuration w
 snaplet config pull
 
 Then capture the snapshot with:
-SNAPLET_SOURCE_DATABASE_URL=<database-url> snaplet ss capture
+SNAPLET_SOURCE_DATABASE_URL='postgres://username:password@acme.com:5432/production_database' snaplet ss capture
 ```
 
 The first thing Snaplet needs is a **connection string to your source database**, we use this to **introspect your database** and make **transformation suggestions** for columns that could contain personally identifiable information.
