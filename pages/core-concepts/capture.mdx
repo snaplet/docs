@@ -571,26 +571,43 @@ When set to true, all tables (with all data) that are not connected via foreign 
 
 When set to true, subsetting will occur during `snaplet snapshot capture`. This allows you to turn off the subsetting with one single parameter.
 
-#### Follow Nullable Relations (followNullableRelations: boolean | { [tableName | '$default']: boolean | { [relationName | '$default']: boolean } }) (default=true)
+#### Follow Nullable Relations (followNullableRelations: boolean) (default=true)
 
 When set to true, Snaplet subsetting will follow nullable relations. This means that if a table has a nullable foreign key, Snaplet will include the related rows in the snapshot. If set to false, those foreign key relations will be marked as null. Useful if the algorithm overfetches data.
 You can also define table specific or relation specific behaviour by using the following syntax:
 
 ```ts
-{
-  $default: true, // Will set the default behaviour for all tables
-  'public.table_1': false, // Will set the behaviour for all the relations inside table_1
-  'public.table_2': {
-    $default: false, // Will set the default behaviour for all the relations inside table_2
-    'relation_1': true, // Will set the behaviour for relation_1 inside table_2
+subset: {
+  followNullableRelations: {
+    $default: true, // Will set the default behaviour for all tables
+    'public.table_1': false, // Will set the behaviour for all the relations inside table_1
+    'public.table_2': {
+      $default: false, // Will set the default behaviour for all the relations inside table_2
+      'relation_1': true, // Will set the behaviour for relation_1 inside table_2
+    }
   }
 }
 ```
 
-#### Max cycles loop (maxCyclesLoop: number | { [tableName | '$default']: number | { [relationName | '$default']: number } }) (default=1)
+#### Max cycles loop (maxCyclesLoop: number) (default=1)
 
 This parameter tells the subsetting algorithm how many times it's allowed to fetch "optional" data in the same table (cycles loop). This is useful to avoid an infinite loop in case of a circular relation.
 This is particularly useful in case of overfetching to early exit the fetching process after some point.
+You can also define table specific or relation specific behaviour by using the following syntax:
+
+```ts
+subset: {
+  maxCyclesLoop: {
+    $default: 1, // Will set the default behaviour for all tables
+    'public.table_1': 10, // Will set the behaviour for all the relations inside table_1
+    'public.table_2': {
+      $default: 3, // Will set the default behaviour for all the relations inside table_2
+      'relation_1': 0, // Will set the behaviour for relation_1 inside table_2
+    }
+  }
+}
+```
+
 
 <Callout type="info">
   When setting up Snaplet for the first time, we recommend setting this
@@ -598,11 +615,36 @@ This is particularly useful in case of overfetching to early exit the fetching p
   fetch trough a relationship is enough for your use case.
 </Callout>
 
-#### Max Children Per Node (maxChildrenPerNode: number | | { [tableName | '$default']: number | { [relationName | '$default']: number } }) (default=unlimited)
+#### Max Children Per Node (maxChildrenPerNode: number) (default=undefined (unlimited))
 
 This parameter tells the subsetting algorithm how many optional data it's allowed to retrieve at a time.
 This can be useful in the case of 1 single row being linked to one millions rows in another table.
 In that case, setting a limit of 1000 will allow the algorithm to fetch only the first 1000 related rows from this relation.
+
+You can also define table specific or relation specific behaviour by using the following syntax:
+
+```ts
+subset: {
+  maxChildrenPerNode: {
+    $default: 1000, // Will set the default behaviour for all tables
+    'public.table_1': 100, // Will set the behaviour for all the relations inside table_1
+    'public.table_2': {
+      $default: 10, // Will set the default behaviour for all the relations inside table_2
+      'relation_1': 1, // Will set the behaviour for relation_1 inside table_2
+    }
+  }
+}
+```
+
+
+### Task sort algorithm (taskSortAlgorithm: 'children' | 'idsCount' | undefined) (default=undefined)
+
+Can helps reduce over-fetching in cloud snapshot filtering by tweaking the crawling heuristic. It prioritizes task processing based on different criteria.
+
+- **undefined**: Tasks are processed in the order they are discovered.
+- **children**: Prioritizes tasks targeting tables with fewer child relationships, aiming to process less data-heavy tables first.
+- **idsCount**: Prioritizes tasks based on tables with fewer already retrieved rows, potentially speeding up the queue processing.
+
 
 #### Eager (eager: boolean) (default=false)
 This parameter tells the subsetting algorithm to perform bi-directional relationship fetching.
