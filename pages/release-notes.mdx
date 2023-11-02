@@ -1,0 +1,149 @@
+import { Step } from '../components/Step'
+import { Steps } from "nextra/components"
+
+# Release notes
+*The latest Snaplet product updates from the Snaplet team.*
+
+
+<Steps>
+
+<Step>
+## 31 October 2023 - v0.72.0
+
+#### 🛠️ Copycat improvements
+
+You can't scramble an omlette without breaking some eggs 🍳. We've made improvements to [@snaplet/copycat](https://github.com/snaplet/copycat) that introduce breaking changes with how Copycat "scrambles" data during transformation:
+
+* For the same input column value from your database, new snapshots will now be have different resulting values compared to what they used to be in previous snapshots.
+* Snaplet generate will generate values that are different to what they used to be.
+
+What this means is that if your tests were expecting to see deterministic values from your Copycat changes, these tests may break, as Copycat generates new deterministic values for all transformations. As such, this new improvement gets a 🚨 breaking change 🚨 flag.
+
+We've made this change in part to improvement the performace of Copycat, and so, the good news is if you've experienced slow snapshot captures in the past when capturing large column values, you may see an improvement in the time it now takes for your snapshots to capture.
+
+Capturing snapshots or generating with Snaplet will still be deterministic though! The data will only change with the next snapshot you capture or the next time you generate data - after which point it will remain the same across as long as the inputs do not change.
+
+If you rely on Snaplet generating data or transforming data that does not change if the inputs do not change, this release might affect you. More specifically, this change will affect you if you are:
+
+* Using "auto"-transform mode (if you have transform: `{ $mode: 'auto' }` in your Snaplet configuration as shown in the Data Editor on app.snaplet.dev).
+* Using Copycat in your Snaplet configuration to generate data or transform data when capturing snapshots.
+* Using our generate feature.
+
+
+</Step>
+
+<Step>
+## October 30 2023 - v0.71.0
+
+#### 🐛 Snapshot capture bug fix
+
+We squashed a long-standing bug 🐛 which impacts the snapshot files format for users using older versions of the Snaplet CLI.
+
+If you captured a snapshot with a version of Snaplet CLI prior to 0.71.0, you can either:
+
+Capture a new snapshot, which will save it to the new fixed format (recommended):
+
+`npx snaplet@latest snapshot capture`
+
+Or run the restore command with the last version of Snaplet CLI before the fix:
+
+`npx snaplet@0.70.1 snapshot restore`
+
+As this is a 🚨 breaking change 🚨 we added a notice in the console when running `snaplet snapshot restore` pointing to this [migration note](https://docs.snaplet.dev/migrations/snapshot#from-0710-and-above).
+
+*If you're having trouble with this change, come ask us for help on [Discord](https://app.snaplet.dev/chat).*
+
+</Step>
+
+<Step>
+## 25 October 2023 - v0.70.0
+
+#### 🧹 Removing deprecated commands
+
+Out with the old! In this release we wave goodbye to the following deprecated commands:
+
+👋 snaplet snapshot subset
+
+👋  snaplet subset command
+
+👋  snaplet config setup
+
+Note that the removal of the above commands is is a 🚨 breaking change 🚨.
+
+#### 🎁 New feature - JSDoc comments
+
+We added JSDoc comments everywhere in the data client so it's easier to discover its API and understand the options and your database schema.
+
+</Step>
+
+<Step>
+## 23 October 2023 - v0.69.0
+
+#### 🎁 New feature - Introducing aliases
+
+We are super excited to introduce a new configuration option for Generate called **`alias`**, which allows you to take full control over how your models, fields and relationships are named. We shipped a sensible default implementation which should cover the majority of the use cases but if you need more customization, you can!
+
+The default rules for the aliases:
+
+* Model names: pluralized and camelCased.
+* Scalar field names: camelCased.
+* Parent field names (one to one relationships): singularized and camelCased.
+* Child field names (one to many relationships): pluralized and camelCased.
+
+Docs: https://docs.snaplet.dev/core-concepts/generate#customizing-the-snaplet-data-client-with-aliases
+
+Don't forget to update your types after you have updated the CLI by running:
+
+`snaplet config generate`
+
+#### 🛠️ Aliases strategy applied by default
+
+With the introduction of alias above, and we will apply a default strategy so the client's code looks better and is easier to reason about.
+
+If you want to opt-out, you can by setting the new inflection option to `false`:
+
+```
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  generate: {
+    alias: {
+      inflection: false,
+    },
+    async run(snaplet) {
+      await snaplet.User((x) => x(3))
+    },
+  },
+});
+```
+
+#### 🧹 Removal of the object form shortcut for one-to-many relationships -
+
+We've changed the signature for one-to-many relationship, we removed the object form when you only want to generate 1 element. It was confusing to be able to use both object and array.
+
+```
+// previously
+// create a single user
+snaplet.User({})
+// create a user with a post
+snaplet.User({
+  Post: {}
+})
+
+// from 0.69.0 onwards
+// create a single user
+snaplet.User([{}])
+// create a user with a post
+snaplet.User([{
+  Post: [{}]
+}])
+```
+
+Note that this is a 🚨 breaking change 🚨 and you'll need to use aliases going forward.
+
+Questions? Come ask us for help on [Discord](https://app.snaplet.dev/chat).*
+
+</Step>
+
+</Steps>
