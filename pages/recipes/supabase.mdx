@@ -251,9 +251,7 @@ You're now ready to restore your production snapshot into your Supabase developm
 
 With all the above steps complete, we can now restore!
 
-1. Run `snaplet snapshot restore --no-reset` in your project path.
-
-> **Note on `--no-reset`**: This will skip the “reset” step of the restore command. So no existing schemas will be dropped. Learn more about data operations [here](/core-concepts/capture)
+1. Run `snaplet snapshot restore` in your project path.
 
 ![Supabase is fun!](/recipes/supabase/snappy-with-supabase-ball.svg)
 
@@ -306,13 +304,3 @@ defineConfig({
 ```
 
 During onboarding, this `select` option is automatically added to your config. In the web editor you will be shown a warning, if you choose to remove the `$default`
-
-#### Restoring into a Supabase project
-
-You may run into problems restoring to a Supabase project hosted in the cloud. This is because the snaplet restore command will drop your database first, before restoring any schemas and tables, which results in your project being in a broken state. The reason for this is that Snaplet was unable to restore schemas that Supabase requires a super user role to perform write operations.
-
-To get around this, run the `restore` command with the `--no-reset` flag, e.g:
-
-```bash >_&nbsp;terminal
-snaplet snapshot restore --no-reset
-```
