@@ -6,7 +6,66 @@ import { Steps } from "nextra/components"
 
 
 <Steps>
+<Step>
+## November 2nd 2023 - v0.73.0
 
+#### 🚨 Generate seeds change 🚨
+
+We've made a change to the way Snaplet generates seeds.
+
+We previously introduced a hash based on the plan's inputs to our seeding mechanism, but after many feedbacks, it's clear that it's not the right approach. We've decided to remove it and go back to the previous behavior.
+The issue with this approach is that if you alter your plan, the modification will impact all the models involved in the plan.
+
+Let's take this example:
+
+```ts
+await snaplet.users([
+  { name: 'John' }, // user id will be 42
+  { name: 'Jane' }, // user id will be 59
+  { name: 'Bob' }, // user id will be 14
+])
+```
+
+If you add an email to `Bob`, the user ids will change for all the users:
+
+```ts
+await snaplet.users([
+  { name: 'John' }, // user id will be 98
+  { name: 'Jane' }, // user id will be 35
+  { name: 'Bob', email: 'bob@acme.com' }, // user id will be 74
+])
+```
+
+This is because the seeds injected to each field generate function were constructed like this:
+
+`<hash of the plan inputs>/0/users/0/id`
+
+Now that we removed the hash, a field's value is entirely dependent on the model's location in the plan (basically its path):
+
+`0/users/0/id`
+
+So altering your plans will no longer impact the other models and fields ouputs.
+
+It unfortunately means that your generated data output will change with this release.
+
+#### 🚨 Alias strategy is now opt-in 🚨
+
+We recently introduced [aliases](/core-concepts/generate#customizing-the-snaplet-data-client-with-aliases) to customize the data client.
+
+At the time we shipped this feature, we also decided to apply a default alias strategy to the data client. We've decided to revert this change and make it opt-in instead so it's more predictable for you.
+
+To opt-in, you now need to set the `inflection` option to `true`:
+
+```ts
+defineConfig({
+  generate: {
+    alias: {
+      inflection: true,
+    },
+  },
+});
+```
+</Step>
 <Step>
 ## 31 October 2023 - v0.72.0
 
@@ -28,8 +87,6 @@ If you rely on Snaplet generating data or transforming data that does not change
 * Using "auto"-transform mode (if you have transform: `{ $mode: 'auto' }` in your Snaplet configuration as shown in the Data Editor on app.snaplet.dev).
 * Using Copycat in your Snaplet configuration to generate data or transform data when capturing snapshots.
 * Using our generate feature.
-
-
 </Step>
 
 <Step>
@@ -52,9 +109,7 @@ Or run the restore command with the last version of Snaplet CLI before the fix:
 As this is a 🚨 breaking change 🚨 we added a notice in the console when running `snaplet snapshot restore` pointing to this [migration note](https://docs.snaplet.dev/migrations/snapshot#from-0710-and-above).
 
 *If you're having trouble with this change, come ask us for help on [Discord](https://app.snaplet.dev/chat).*
-
 </Step>
-
 <Step>
 ## 25 October 2023 - v0.70.0
 
@@ -73,9 +128,7 @@ Note that the removal of the above commands is is a 🚨 breaking change 🚨.
 #### 🎁 New feature - JSDoc comments
 
 We added JSDoc comments everywhere in the data client so it's easier to discover its API and understand the options and your database schema.
-
 </Step>
-
 <Step>
 ## 23 October 2023 - v0.69.0
 
@@ -143,7 +196,5 @@ snaplet.User([{
 Note that this is a 🚨 breaking change 🚨 and you'll need to use aliases going forward.
 
 Questions? Come ask us for help on [Discord](https://app.snaplet.dev/chat).*
-
 </Step>
-
 </Steps>
