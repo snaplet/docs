@@ -1,5 +1,5 @@
 import { Step } from '../components/Step'
-import { Callout, Steps } from "nextra/components"
+import { Steps } from "nextra/components"
 
 # Release notes
 *The latest Snaplet product updates from the Snaplet team.*
@@ -8,16 +8,16 @@ import { Callout, Steps } from "nextra/components"
 <Steps>
 
 <Step>
-## 31 October 2023 - v0.72.0 
+## 31 October 2023 - v0.72.0
 
-#### 🛠️ Copycat improvements 
+#### 🛠️ Copycat improvements
 
 You can't scramble an omlette without breaking some eggs 🍳. We've made improvements to [@snaplet/copycat](https://github.com/snaplet/copycat) that introduce breaking changes with how Copycat "scrambles" data during transformation:
 
 * For the same input column value from your database, new snapshots will now be have different resulting values compared to what they used to be in previous snapshots.
 * Snaplet generate will generate values that are different to what they used to be.
 
-What this means is that if your tests were expecting to see deterministic values from your Copycat changes, these tests may break, as Copycat generates new deterministic values for all transformations. As such, this new improvement gets a 🚨 breaking change 🚨 flag.  
+What this means is that if your tests were expecting to see deterministic values from your Copycat changes, these tests may break, as Copycat generates new deterministic values for all transformations. As such, this new improvement gets a 🚨 breaking change 🚨 flag.
 
 We've made this change in part to improvement the performace of Copycat, and so, the good news is if you've experienced slow snapshot captures in the past when capturing large column values, you may see an improvement in the time it now takes for your snapshots to capture.
 
@@ -68,9 +68,9 @@ Out with the old! In this release we wave goodbye to the following deprecated co
 
 👋  snaplet config setup
 
-Note that the removal of the above commands is is a 🚨 breaking change 🚨.   
+Note that the removal of the above commands is is a 🚨 breaking change 🚨.
 
-#### 🎁 New feature - JSDoc comments 
+#### 🎁 New feature - JSDoc comments
 
 We added JSDoc comments everywhere in the data client so it's easier to discover its API and understand the options and your database schema.
 
@@ -116,9 +116,9 @@ export default defineConfig({
     },
   },
 });
-``` 
+```
 
-#### 🧹 Removal of the object form shortcut for one-to-many relationships -  
+#### 🧹 Removal of the object form shortcut for one-to-many relationships -
 
 We've changed the signature for one-to-many relationship, we removed the object form when you only want to generate 1 element. It was confusing to be able to use both object and array.
 
