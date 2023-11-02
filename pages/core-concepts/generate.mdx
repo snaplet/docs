@@ -478,6 +478,15 @@ export default defineConfig({
 
 The models, fields and relationships names are fully customizable. You can use the `alias` option to change them.
 
+<Callout type="info" emoji="ℹ️">
+  You need to regenerate your types after changing the alias option.
+
+  To do that, run this command in your terminal:
+  ```bash >_&nbsp;terminal
+  SNAPLET_SOURCE_DATABASE_URL='postgres://username:password@acme.com:5432/your_database' npx snaplet config generate --type typedefs
+  ```
+</Callout>
+
 ### Inflection
 
 Inflection generally refers to the modification of words to express different grammatical categories.
@@ -485,7 +494,7 @@ In our context, inflection is about altering the form of a model, field or relat
 
 You can use the `inflection` option to provide your own rules to define the names of your models, fields and relationships.
 
-By default, we provide a default and sensible implementation of the inflection rules, inspired by [PostGraphile](https://github.com/graphile/pg-simplify-inflector#graphile-contribpg-simplify-inflector), but you can override them if you want.
+We provide a default and sensible implementation of the inflection rules, inspired by [PostGraphile](https://github.com/graphile/pg-simplify-inflector#graphile-contribpg-simplify-inflector), but you can override them if you want.
 
 These rules are:
 
@@ -504,19 +513,18 @@ import { defineConfig } from 'snaplet';
 export default defineConfig({
   generate: {
     alias: {
-      inflection: {
-        modelName: (modelName) => `${modelName.toLowerCase()}s`,
-      }
+      // enable our standard inflection rules
+      inflection: true,
     },
     async run(snaplet) {
-      // without alias, you would have to use snaplet.User(...)
+      // without inflection, you would have to use snaplet.User(...)
       await snaplet.users((x) => x(3))
     },
   },
 });
 ```
 
-You can disable the inflection rules by setting the `inflection` option to `false`:
+And here is how you would change the inflection rules:
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
@@ -525,10 +533,13 @@ import { defineConfig } from 'snaplet';
 export default defineConfig({
   generate: {
     alias: {
-      inflection: false,
+      inflection: {
+        modelName: (modelName) => `Super${modelName}s`,
+      },
     },
     async run(snaplet) {
-      await snaplet.User((x) => x(3))
+      // without inflection, you would have to use snaplet.User(...)
+      await snaplet.SuperUsers((x) => x(3))
     },
   },
 });
@@ -545,6 +556,7 @@ import { defineConfig } from 'snaplet';
 export default defineConfig({
   generate: {
     alias: {
+      inflection: true,
       override: {
         User: {
           fields: {
