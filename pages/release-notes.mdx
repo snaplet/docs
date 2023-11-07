@@ -11,11 +11,7 @@ import { Steps } from "nextra/components"
 
 #### 🚨 Generate seeds breaking change 
 
-We've once again made a change to the way Snaplet generates seeds, which breaks previous data generations. Again. We're sorry about this, and while this functionality is still in Beta, we're cognisant of the impact breaking changes have on our users, and our intention is to minimize disruption.  
-
-We previously introduced a hash based on the plan's inputs to our seeding mechanism, but after user feedback, it's clear that it's not the right approach. The issue with this approach is that if you alter your plan, the modification will impact all the models involved in the plan.
-
-As such, we've decided to roll back it and revert back to the previous behavior.
+We've made a change to the way Snaplet generates seeds, which breaks previous data generations. We previously introduced a hash based on the plan's inputs to our seeding mechanism, but after user feedback, it's clear that it's not the right approach. The issue with this approach is that if you alter your plan, the modification will impact all the models involved in the plan. As such, we've decided to roll it back.
 
 If you're interested in the specifics, read on. 
 
