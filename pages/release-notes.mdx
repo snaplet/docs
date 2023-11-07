@@ -47,11 +47,11 @@ So altering your plans will no longer impact the other models and fields ouputs.
 
 It unfortunately means that your generated data output will change with this release.
 
-#### 🛠️ Alias strategy is now opt-in
+#### 🚨 Alias strategy is now opt-in
 
 We recently introduced [aliases](/core-concepts/generate#customizing-the-snaplet-data-client-with-aliases) to customize the data client.
 
-At the time we shipped this feature, we also decided to apply a default alias strategy to the data client. Based on feedback we've decided to revert this change and make it opt-in instead so it's more predictable for you.
+At the time we shipped this feature, we also decided to apply a default alias strategy to the data client. Based on feedback we've decided to revert this change and make it opt-in instead so it's more predictable for you. This is also a breaking change.
 
 To opt-in, you now need to set the `inflection` option to `true`:
 
