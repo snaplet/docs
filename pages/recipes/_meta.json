@@ -5,6 +5,5 @@
   "netlify": "Netlify",
   "prisma": "Prisma",
   "supabase": "Supabase",
-  "vercel": "Vercel",
-  "visual-studio-code": "VS Code Extension"
-}
+  "vercel": "Vercel"
+  }
