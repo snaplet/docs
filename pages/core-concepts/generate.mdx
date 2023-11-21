@@ -118,7 +118,7 @@ This store is very useful when you want to [connect](/core-concepts/generate#con
 
 ### Static or dynamic data, we got you covered
 
-If you want to use static data, you can directly an array to the models methods.
+If you want to use static data, you can directly pass an array to the models methods.
 As always, all the required fields and relationships will be automatically created for you based on your database schema.
 
 ```ts
@@ -272,7 +272,7 @@ export default defineConfig({
         },
         comments: (x) => x(3, () => ({
           // focus(1:4)
-          // we alias the graph to posts to make it more readable
+          // we alias the graph to "posts" to make it more readable
           author: ({ graph: posts }) => {
             return posts[0].author;
           }
