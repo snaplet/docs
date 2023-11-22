@@ -69,9 +69,9 @@ export default defineConfig({
 
 ---
 
-Create a new `seed.ts` file and import the Snaplet data client.
+Create a new `seed.mts` file and import the Snaplet data client.
 
-```ts seed.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/client';
 ```
 
@@ -79,7 +79,7 @@ import { SnapletClient } from '@snaplet/client';
 
 Create a new `snaplet` client instance.
 
-```ts seed.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/client';
 
 const snaplet = new SnapletClient();
@@ -89,7 +89,7 @@ const snaplet = new SnapletClient();
 
 Paste what you copied earlier from your `run` function.
 
-```ts seed.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/client';
 
 const snaplet = new SnapletClient();
@@ -105,12 +105,12 @@ The `snaplet` data client is automatically connected to your target database def
 You can now run your seed script with any TypeScript runner like [`tsx`](https://github.com/privatenumber/tsx) or [`ts-node`](https://typestrong.org/ts-node/).
 
 ```bash >_&nbsp;terminal
-npx tsx seed.ts
+npx tsx seed.mts
 ```
 
 If you were relying on the `--sql` option to generate a SQL file instead of having the data client writing directly to your database, you can now use the `dryRun` option in the data client.
 
-```ts seed.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/client';
 
 const snaplet = new SnapletClient({ dryRun: true });
