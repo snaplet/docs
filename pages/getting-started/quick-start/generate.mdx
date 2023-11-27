@@ -5,7 +5,7 @@ import { TutorialSchema } from '../../../components/TutorialSchema';
 
 ## Assumptions
 
-This guide will take you through the process of using `@snaplet/client` to create realistic, production-like data.
+This guide will take you through the process of using `@snaplet/seed` to create realistic, production-like data.
 
 <Callout emoji="📁">
   If you already have access to a database with production or production-like
@@ -61,15 +61,15 @@ For your example blog application, let's assume we need the following data:
 - A post author, with an email address that ends with "acme.org."
 - Three comments on the post.
 
-It's worth noting what we're not explicitly defining - that each comment needs to have a separate, unique author, for instance. We're assuming that `@snaplet/client` will fill in the blanks based on your schema and generate realistic data as needed.
+It's worth noting what we're not explicitly defining - that each comment needs to have a separate, unique author, for instance. We're assuming that `@snaplet/seed` will fill in the blanks based on your schema and generate realistic data as needed.
 
 ### Describing your requirements
 
-In order to have Snaplet generate this data for your blog, we need to describe these requirements to `@snaplet/client`.
+In order to have Snaplet generate this data for your blog, we need to describe these requirements to `@snaplet/seed`.
 
 <CH.Scrollycoding className="generate-tutorial-configuration-file">
 
-First, we need to create a new seed script file that imports `@snaplet/client`.
+First, we need to create a new seed script file that imports `@snaplet/seed`.
 
 This can be any javascript file that can be run by Node.js, but we recommend creating a typescript file for the best developer experience.
 
@@ -77,7 +77,7 @@ This can be any javascript file that can be run by Node.js, but we recommend cre
 - If you chose to not have Snaplet generate an example, create a `seed.mts` file in your project (the directory where you ran `snaplet setup`) that looks like this:
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 ```
@@ -93,7 +93,7 @@ These functions return what we call a _plan_. When describing a plan, you always
 Here we start from the `posts` models. `await`ing a plan will execute it.
 
 ```ts snaplet.config.ts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 
@@ -106,7 +106,7 @@ await snaplet.posts([{}]);
 You can directly define the values of your model.
 
 ```ts snaplet.config.ts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 
@@ -124,7 +124,7 @@ You can also define the values of your model's relationships.
 Here we define the author of the post represented by the `author` field.
 
 ```ts snaplet.config.ts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 
@@ -149,7 +149,7 @@ As we need more than one comment, we can use the `x` function which will create 
 You can read it as "comments times 3".
 
 ```ts snaplet.config.ts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 
@@ -174,7 +174,7 @@ Finally, we'll add a `dryRun` option when instantiating `SnapletClient`. When we
 to the console instead altering the database.
 
 ```ts snaplet.config.ts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient({
   // focus
@@ -202,7 +202,7 @@ We're done!
 Copy the code and add it to your `seed.mts` file.
 
 ```ts snaplet.config.ts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient({
   dryRun: Boolean(+process.env.DRY)
@@ -304,4 +304,4 @@ All done, you're now ready to code against your generated data!
 
 ## Next steps
 
-Learn more about how `@snaplet/client` works and define more complex plans in our [generate reference guide](/core-concepts/generate)
+Learn more about how `@snaplet/seed` works and define more complex plans in our [generate reference guide](/core-concepts/generate)
