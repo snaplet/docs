@@ -10,7 +10,7 @@ This guide assumes you have access to a database that has production data, or pr
 If you're just looking to demo Snaplet's snapshot feature, you can also use a Snaplet demo database as part of this guide.
 
 <Callout emoji="🤖">
-If you don't have access to a database with production data, and would prefer to generate production-like using Snaplet's AI `generate` feature, you should instead follow the [Generate Quick Start](/getting-started/quick-start/generate) guide.
+If you don't have access to a database with production data, and would prefer to seed production-like using Snaplet's AI `seed` feature, you should instead follow the [Seed Quick Start](/getting-started/quick-start/seed) guide.
 </Callout>
 
 
@@ -35,7 +35,7 @@ First off, you'll need a free Snaplet account. Sign up to [Snaplet Cloud](https:
 
 ### Follow the Snapshot workflow
 <Step image={{ src: "/getting-started/quick-start/quick-start-01-5.png", alt: "select snapshot"}}>
-Snaplet allows you to generate production-like data using the [`generate`]((/getting-started/quick-start/generate)) feature, or create a snapshot from an existing production database. 
+Snaplet allows you to seed production-like data using the [`seed`]((/getting-started/quick-start/seed)) feature, or create a snapshot from an existing production database. 
 
 We'll be doing the latter, so select **'Continue'** to proceed with creating a snapshot. 
 </Step>
@@ -51,7 +51,7 @@ The first step is to choose the **source database** you're going to connect to S
 
 *If you're uncomfortable connecting to your actual production database, use your staging or QA database, or the Snaplet demo database. Supabase users should select the Supabase option and follow the [Supabase tutorial](/recipes/supabase) for assistance.*
 
-{/* *No database? Use Snaplet's `generate` feature to create fake production-like data. Follow the [generate quick start guide](/getting-started/quick-start/generate) instead of this guide.* */}
+{/* *No database? Use Snaplet's `seed` feature to create fake production-like data. Follow the [seed quick start guide](/getting-started/quick-start/seed) instead of this guide.* */}
 </Step>
 
 ### Provide source database credentials
@@ -179,6 +179,6 @@ You can modify each step of the Snaplet snapshot workflow to exercise more granu
 
 For more control over how your snapshot captures data from your source database, including selecting and excluding specific tables, check out the [capture guide](/core-concepts/capture#select-data)
 
-To learn how to modify your data transformations, including how to use [`@snaplet/copycat`](https://github.com/snaplet/copycat) to generate realistic, deterministic values, check out the [data transformation guide](/core-concepts/capture#select-data)
+To learn how to modify your data transformations, including how to use [`@snaplet/copycat`](https://github.com/snaplet/copycat) to seed realistic, deterministic values, check out the [data transformation guide](/core-concepts/capture#select-data)
 
 For more options and granular control over snapshot restoration, check out the Snaplet [restore guide](/core-concepts/restore#more-granular-control-over-restorations).
