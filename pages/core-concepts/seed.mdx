@@ -78,7 +78,7 @@ Then, the store is turned into **SQL statements** that are executed to persist t
 
 Given the plan from the [Seed Quick Start Guide](/getting-started/quick-start/seed):
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
@@ -152,7 +152,7 @@ snaplet.users((x) => [
 
 Let's start from our previous plan.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
@@ -174,7 +174,7 @@ await snaplet.posts([{
 
 We specify that the author of each comment will be provided from an external source rather than being generated using the `connect` callback function.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
@@ -201,7 +201,7 @@ await snaplet.posts([{
 
 We can use the injected `store` to provide the `user` model we want to connect to. In this case the only generated `user` in the plan will be the author of the post.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
@@ -232,7 +232,7 @@ The `graph` contains all the data that was generated as part of the plan, arrang
 
 And here is how you can use it:
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
@@ -282,7 +282,7 @@ The `branch` is a particular iteration of the `graph` that was generated. It mat
 
 Let's take a look at the `branch` for our previous plan, adapted to our new requirements:
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
@@ -325,7 +325,7 @@ When `true`, the plan will automatically connect models relationships to fulfill
 
 In the following example, the `post` model will be connected to one of the 3 `users` in the store.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient()
@@ -385,7 +385,7 @@ Sometimes, it's easier to break down your plan into multiple plans, and then mer
 
 The `$pipe` operator allows you to chain multiple plans together, injecting the `store` of the previous plan into the next plan.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient()
@@ -406,7 +406,7 @@ await snaplet.$pipe([
 The `$merge` operator allows you to merge multiple plans together, without injecting the `store` of the previous plan into the next plan.
 All stores stay independent and are merged together once all the plans are generated.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient()
@@ -450,7 +450,7 @@ These rules are:
 
 Given your tables being named `User`, `Post` and `Comment`, here is an example of how you can use the `inflection` option to change the names of your models:
 
-```ts snaplet.config.ts
+```ts seed.mts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -475,7 +475,7 @@ await snaplet.users((x) => x(3))
 
 And here is how you would change the inflection rules:
 
-```ts snaplet.config.ts
+```ts seed.mts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -503,7 +503,7 @@ await snaplet.SuperUsers((x) => x(3))
 
 If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
 
-```ts snaplet.config.ts
+```ts seed.mts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 

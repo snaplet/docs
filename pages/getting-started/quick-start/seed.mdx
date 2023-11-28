@@ -92,7 +92,7 @@ These functions return what we call a _plan_. When describing a plan, you always
 
 Here we start from the `posts` models. `await`ing a plan will execute it.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
@@ -105,7 +105,7 @@ await snaplet.posts([{}]);
 
 You can directly define the values of your model.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
@@ -123,7 +123,7 @@ await snaplet.posts([
 You can also define the values of your model's relationships.
 Here we define the author of the post represented by the `author` field.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
@@ -148,7 +148,7 @@ Next, we also define the comments of the post represented by the `comments` fiel
 As we need more than one comment, we can use the `x` function which will create a list of similar comments.
 You can read it as "comments times 3".
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
@@ -173,7 +173,7 @@ await snaplet.posts([
 Finally, we'll add a `dryRun` option when instantiating `SnapletClient`. When we run our script with a `DRY` environment variable set, we'll log the sql statements
 to the console instead altering the database.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient({
@@ -201,7 +201,7 @@ We're done!
 
 Copy the code and add it to your `seed.mts` file.
 
-```ts snaplet.config.ts
+```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient({
