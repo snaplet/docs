@@ -52,14 +52,15 @@ export default defineConfig({
 
 ---
 
-Copy the content of your `run` function and remove it.
+* Copy the content of your `run` function and remove it.
+* Rename the `generate` key in your config to `seed`:
 
 ```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
 export default defineConfig({
-  generate: {
+  seed: {
     alias: {
       inflection: true,
     },
