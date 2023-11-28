@@ -4,7 +4,7 @@
 
 In this version, we are removing the `run` function from the `generate` configuration.
 
-Instead, we're introducing a new package called `@snaplet/client`.
+Instead, we're introducing a new package called `@snaplet/seed`.
 
 We extracted the data client into its own package so you can use it everywhere in your codebase!
 
@@ -13,7 +13,7 @@ Seed scripts or tests, data are now one import away! Let's see how to migrate to
 First, install the new package:
 
 ```bash >_&nbsp;terminal
-npm install -D @snaplet/client
+npm install -D @snaplet/seed
 ```
 
 Like the [Prisma Client](https://www.prisma.io/docs/concepts/components/prisma-client), this package is in fact a proxy to the local data client you will generate with Snaplet CLI based on your database schema.
@@ -121,7 +121,7 @@ await snaplet.users((x) => x(3, () => ({
 })));
 ```
 
-To know more about the data client, check out the [documentation](/getting-started/quick-start/generate).
+To know more about the data client, check out the [documentation](/getting-started/quick-start/seed).
 
 ## From `0.66.0` and above
 
@@ -148,7 +148,7 @@ This is what we had before version `0.66.0`.
 import { defineConfig } from 'snaplet';
 
 export default defineConfig({
-  seed: {
+  generate: {
     plan({ snaplet }) {
       return snaplet.User({
         count: 3,
