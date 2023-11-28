@@ -36,26 +36,11 @@ export default defineConfig({
 })
 ```
 
-### Generate
+### Seed
 
-If you don't have access to production data, or if you want to generate a fake dataset for development/testing purposes, you can use the `generate` section to define how Snaplet should generate your data.
+If you don't have access to production data, or if you want to generate a fake dataset for development/testing purposes, you can use the `seed` section to define how Snaplet should generate your data.
 
-```ts snaplet.config.ts
-import { defineConfig } from 'snaplet';
-
-export default defineConfig({
-  generate: {
-    run(snaplet) {
-      await snaplet.posts([{
-        title: 'Hello World!',
-        comments: (x) => x(3),
-      }]);
-    },
-  },
-});
-```
-
-For an in-depth guide on how to use the `generate` section, check out the [Generate data](/core-concepts/generate) page.
+For an in-depth guide on how to use the `seed` section, check out the [Seed](/core-concepts/seed) page.
 
 ### Capture
 
