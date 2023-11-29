@@ -307,7 +307,9 @@ snaplet project setup [project-id]
 
 ## **generate**
 
-The `snaplet generate` command is used to regenerate the assets needed by [`@snaplet/seed`](/core-concepts/seed).
+The `snaplet generate` command is used to:
+* regenerate the assets needed by [`@snaplet/seed`](/core-concepts/seed)
+* regenerate the typedefs needed for `snaplet.config.ts`.
 
 You would typically run this whenever you have changed your database structure, so that the assets used by `@snaplet/seed` correspond to your new database structure.
 
