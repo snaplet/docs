@@ -79,3 +79,16 @@ We look for a package manager lockfile for npm, pnpm, yarn, or bun. If you do no
   ```
   </Tab>
 </Tabs>
+
+
+### Generating @snaplet/seed assets
+
+Once `@snaplet/seed` has been installed as a dependency, we still need to generate the assets that `@snaplet/seed` uses - snaplet looks at your database and generates a library that corresponds to your database structure.
+
+If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
+
+This can be done by running:
+
+```
+npx snaplet generate
+```

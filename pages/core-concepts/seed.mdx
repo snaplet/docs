@@ -535,3 +535,17 @@ await snaplet.users([{
 ```
 
 The `override` option is applied on top of the `inflection` option, it's perfect for one-off changes.
+
+### Regenerating `@snaplet/seed` assets
+
+`@snaplet/seed` provides you with a client library that corresponds to your database structure. To do this, snaplet generates looks at your database structure and uses this to generates assets that `@snaplet/seed` can use to provide this client library.
+
+Whenever your database structure changes, `@snaplet/seed` will need these assets to be regenerated so that they are in sync with your new database structure.
+
+If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
+
+You can regenerate these assets by running:
+
+```
+npx snaplet generate
+```
