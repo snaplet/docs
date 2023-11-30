@@ -24,7 +24,7 @@ In order to do that, we repurposed the command `snaplet generate` to generate th
 npx snaplet generate
 ```
 
-It will create a folder containing your data client source code under `node_modules/.snaplet`. This package is then re-exported by `@snaplet/client`.
+It will create a folder containing your data client source code under `node_modules/.snaplet`. This package is then re-exported by `@snaplet/seed`.
 
 Now, let's edit your `snaplet.config.ts` and port your `run` function to a seed script.
 
@@ -73,7 +73,7 @@ export default defineConfig({
 Create a new `seed.mts` file and import the Snaplet data client.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 ```
 
 ---
@@ -81,7 +81,7 @@ import { SnapletClient } from '@snaplet/client';
 Create a new `snaplet` client instance.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 ```
@@ -91,7 +91,7 @@ const snaplet = new SnapletClient();
 Paste what you copied earlier from your `run` function.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 
@@ -112,7 +112,7 @@ npx tsx seed.mts
 If you were relying on the `--sql` option to generate a SQL file instead of having the data client writing directly to your database, you can now use the `dryRun` option in the data client.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/client';
+import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient({ dryRun: true });
 
