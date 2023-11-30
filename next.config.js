@@ -144,6 +144,11 @@ module.exports = withNextra({
         destination: '/getting-started/quick-start/seed',
         permanent: true,
       },
+      {
+        source: '/migrations/generate',
+        destination: '/migrations/seed',
+        permanent: true,
+      },
     ];
   },
 });
