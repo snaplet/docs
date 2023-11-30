@@ -80,10 +80,14 @@ import { SnapletClient } from '@snaplet/seed';
 
 Create a new `snaplet` client instance.
 
+If you were relying on snaplet to clear any existing data from your database first, you now do this explicitly with `snaplet.$resetDatabase()`.
+
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
+
+snaplet.$resetDatabase();
 ```
 
 ---
@@ -94,6 +98,8 @@ Paste what you copied earlier from your `run` function.
 import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
+
+snaplet.$resetDatabase();
 
 await snaplet.users((x) => x(3, () => ({
   posts: (x) => x(10),
