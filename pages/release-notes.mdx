@@ -7,6 +7,35 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+  ## 30 November 2023 - v0.76.0
+  #### 🌟 New Features
+
+**Snaplet Generate becomes `@snaplet/seed`**: You can now use the full power of Snaplet Seed everywhere in your codebase! Here is a sneak peek:
+
+```ts
+// seed.mts
+import { SnapletClient } from "@snaplet/seed";
+
+const snaplet = new SnapletClient();
+
+await snaplet.users(x => x(3, () => ({
+  posts: (x) => x(10)
+})));
+```
+
+To know more about `@snaplet/seed`, read our [quick start guide](https://docs.snaplet.dev/getting-started/quick-start/seed).
+
+#### 🚨 Breaking change in 'snaplet generate'
+
+With the publishing of `@snaplet/seed, there is no more `generate.run` function in the Snaplet configuration file.
+
+The `snaplet generate` command is repurposed to generate the code needed to use `@snaplet/seed`.
+
+You can follow this migration guide: https://docs.snaplet.dev/migrations/generate#from-0760-and-above
+
+ Thank you for being a part of our journey! 💚
+  </Step>
+  <Step>
   ## 7 November 2023 - v0.74.0
 
   #### 🚨 Breaking change: Preview databases
