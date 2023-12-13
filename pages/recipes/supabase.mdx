@@ -36,7 +36,7 @@ Create a new Supabase database by navigating to your Supabase dashboard.
 2.1. Create a Next.js app using the starter template by running the `npx` command:
 
 ```bash
-npx create-next-app -e with-supabase &&
+npx create-next-app -e with-supabase
 ```
 
 **2.2.** Use `cd` to change into the newly created directory:
@@ -45,23 +45,29 @@ npx create-next-app -e with-supabase &&
 cd name-of-new-app
 ```
 
-#### 3. Apply your migrations to the Supabase project.
+#### 3. Setup your Supabase project and apply migrations
 
-**3.1.** Link the recently created Nextjs app to your Supabase project
+**3.1.** Initialize the configuration for your Supabase local development project.
 
 ```bash
 supabase init
 ```
 
-**3.2.** Apply the migrations in the `/supabase/migrations` directory, to your local development project.
-
-> Migrations should be applied to your local development database before seeding it with data. This is because `snaplet generate` will use the database structure to generate a data model.
+**3.2** Link your local development project to your Supabase project in the cloud.
 
 ```bash
-snaplet db push
+supabase link --project-ref=<reference-id>
 ```
 
-**3.3.** Start your Supabase local stack
+> Copy the project ref by navigating to your Supabase dashboard, clicking on "Settings", then copying the "Reference ID" in the "General settings" section.
+
+**3.3.** Sync your local development database with your Supabase project in the cloud.
+
+```bash
+supabase db pull
+```
+
+**3.4.** Start your Supabase local stack. This will run the latest migrations against your local database.
 
 ```bash
 supabase start
@@ -84,65 +90,51 @@ service_role key: eyJh......
 
 #### 4. Set up your generate config
 
-**4.1.** Create a `snaplet.config.ts` file in the root of your project.
+**4.1.** Create a `seed.mts` file in your root directory.
 
 ```bash >_&nbsp;terminal
-snaplet setup
+npx snaplet setup
 ```
 
 ```bash >_&nbsp; terminal
 # mark
-✔ Do you have access to production data › No, I want to generate data locally
-
-Target database credentials
-This is where your development data resides, and is typically your local development database.
-Snaplet can import the generated data to your target database using the target database credentials.
-Snaplet will introspect this database schema to generate the snaplet client so ensure this database
-have the schemas setup and that you did the migrations on it.
-
-Read more: https://docs.snaplet.dev/guides/postgresql#connection-strings
+✔ Welcome to Snaplet! 😸 Choose your adventure: › I want to generate seed data 🌱
 
 # mark
 ✔ Target database connection string … postgresql://postgres:postgres@localhost:54322/postgres
-📡 Connected to database with "[secret]ql://postgres:postgres@localhost:54322/postgres"
-Generated snaplet client type definitions for generate: snaplet-client.d.ts (see: https://docs.snaplet.dev/core-concepts/generate#introducing-the-snaplet-data-client)
-Generated snaplet.config.ts type definitions: snaplet.d.ts (see: https://docs.snaplet.dev/reference/configuration#type-safe-configuration-based-on-your-database-structure)
-ℹ Database structure: Create generate config...
-Generated config: /name-of-new-app/snaplet.config.ts
-Youre all set! Take a look at our docs to find out what you can do from here:
-https://docs.snaplet.dev/core-concepts/generate
 
-Generate seeds:
-You can take a look at the sql statements that can be generated with:
-snaplet generate --sql
+# mark
+✔ Database URL … postgresql://postgres:postgres@localhost:54322/postgres
 
-Load generated data:
-To load the generated data into your database execute the command:
-snaplet generate
+# mark
+✔ Would you like to link your account from Snaplet Cloud to have more realistic data using our AI model? 🤖 … no
+
+⠹ Collecting information from your database
+For the best AI-enhanced data generation experience, create a free Snaplet account and login with: snaplet auth login.
+
+Snaplet uses details about your database to improve our generation results.
+
+⠧ Generating assets for @snaplet/seed
 ```
 
-> The source database credentials will be used to introspect your database and generate a base config
+> For this guide we assumed you have not linked your Snaplet account. To connect your account `snaplet auth setup` and follow the steps. 
 
-**4.2.** In the `snaplet.config.ts` update the `generate` statement to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
+**4.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
-```ts snaplet.config.ts
-generate: {
-  async run(snaplet) {
-    await snaplet.$pipe([
-      // 10 users
-      snaplet.users((x) => x(10)),
-      // 20 todos, with one of the 10 users assigned to each todo
-      snaplet.todos((x) => x(20), { autoConnect: true }),
-    ]);
-  },
-},
+```ts seed.mts
+await snaplet.$pipe([
+  // create 10 users
+  snaplet.users((x) => x(10)),
+  // create 20 todos, for each of the 10 users
+  snaplet.todos((x) => x(20)),
+]);
 ```
 
 You are now ready to seed your database.
 
 #### 5. Reset and seed your local development database
 
-**5.1** Run `snaplet generate` in your terminal to populate your project's `supabase/seed.sql` file.
+**5.1** Run `npx tsx seed.mts` and pipe the output to your `supabase/seed.sql` file.
 
 ```bash
 snaplet generate --sql > supabase/seed.sql
