@@ -307,7 +307,13 @@ snaplet project setup [project-id]
 
 ## **generate**
 
-The `snaplet generate` command is used to populate an empty database with generated data.
+The `snaplet generate` command is used to:
+* regenerate the assets needed by [`@snaplet/seed`](/core-concepts/seed)
+* regenerate the typedefs needed for `snaplet.config.ts`.
+
+Snaplet will look at your database and generates a library that corresponds to your database structure. You would typically run this whenever you have changed your database structure, so that the assets used by `@snaplet/seed` correspond to your new database structure.
+
+If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
 
 **Usage**
 
@@ -317,12 +323,10 @@ snaplet generate
 
 **Command Flags**
 
-| Name        | Description                                                        | Type    | Default |
-| ----------- | ------------------------------------------------------------------ | ------- | ------- |
-| --sql       | Send the sql statements to stdout instead of executing them        | boolean | false   |
-| --output    | Write the sql statements to a file at the specified path           | string  |         |
-| --keep-data | Do not clear existing data in the db when inserting generated data | boolean | false   |
-| --yes       | Bypass interactive prompts                                         | boolean | false   |
+| Name                | Description                                                 | Type    | Default |
+| ------------------- | ----------------------------------------------------------- | ------- | ------- |
+| --output            | A custom directory path to output the generated assets to   | string  |         |
+| --connection-string | The connection string to use for introspecting the database | boolean | false   |
 
 ## **setup**
 

@@ -5,7 +5,7 @@ import {
   snapletClientTypes,
   snapletConfig,
   snapletTypes,
-} from "./generate-tutorial";
+} from "./seed-tutorial";
 import type { editor } from "monaco-editor";
 import { AutoTypings, LocalStorageCache } from "monaco-editor-auto-typings";
 
@@ -30,7 +30,7 @@ export function Editor(props: ComponentProps<typeof MonacoEditor>) {
   );
 }
 
-export function GenerateTutorialEditor() {
+export function SeedTutorialEditor() {
   const monacoRef = useRef<Monaco>();
 
   const handleBeforeMount = useCallback((monaco: Monaco) => {
