@@ -21,7 +21,7 @@ In this short guide, we will use the [Nextjs + Supabase template](https://vercel
 
 ### Prerequisites
 
-- Supabase account
+- [Docker installed](https://docs.docker.com/get-docker/)
 - [Supabase CLI installed](https://supabase.com/docs/guides/cli/getting-started)
 - [Snaplet CLI installed](/getting-started/installation)
 
@@ -74,7 +74,7 @@ service_role key: eyJh......
 
 **3.3.** Copy the DB URL - we will use this in the next step **(step 4)** to generate data into (referred to as the target database).
 
-#### 4. Set up your generate config
+#### 4. Set up your Snaplet seed config
 
 **4.1.** Create a `seed.mts` file in your root directory.
 
@@ -95,15 +95,24 @@ npx snaplet setup
 # mark
 ✔ Would you like to link your account from Snaplet Cloud to have more realistic data using our AI model? 🤖 … no
 
-⠹ Collecting information from your database
 For the best AI-enhanced data generation experience, create a free Snaplet account and login with: snaplet auth login.
 
 Snaplet uses details about your database to improve our generation results.
 
-⠧ Generating assets for @snaplet/seed
-```
+✔ You're all set!
 
-> For this guide we assumed you have not linked your Snaplet account. To connect your account `snaplet auth setup` and follow the steps. 
+📝 Edit your seed script:
+You can describe how you would like to generate seed data by editing the example seed script:
+code seed.mts
+
+👁️  Preview seed statements:
+You can take a look at the sql statements that can be generated with:
+npx tsx seed.mts
+
+✨ Apply seeds:
+To load the generated data into your database execute the command:
+DRY=0 npx tsx seed.mts
+```
 
 **4.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
@@ -112,7 +121,7 @@ await snaplet.$pipe([
   // create 10 users
   snaplet.users((x) => x(10)),
   // create 20 todos, for each of the 10 users
-  snaplet.todos((x) => x(20)),
+  snaplet.todos((x) => x(20), { autoConnect: true }),
 ]);
 ```
 
