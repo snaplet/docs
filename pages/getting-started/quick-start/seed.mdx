@@ -64,15 +64,13 @@ npx snaplet setup
 
 ### Describing your requirements
 
-We now have a database with structure in it, and we have snaplet set up to use this database and its structure.
-
-We still do not yet have data though. In order to have Snaplet generate this data, you'll need to tell Snaplet _how_ to generate the data.
+We now have a database with structure in it, and Snaplet set up to use it. We still do not yet have data though.
+In order to have Snaplet generate this data, you'll need to tell Snaplet _how_ to generate the data.
 
 This is where `@snaplet/seed` comes in: it gives you a programmatic interface to describe your seeding requirements.
 
-`snaplet setup` would have generated an example script file called `seed.mts` in your project, which imports and uses `@snaplet/seed`.
-
-It should look something like this:
+`snaplet setup` would have generated an example script file called `seed.mts` in your project, which imports and
+uses `@snaplet/seed`. It should look something like this:
 
 <CH.Scrollycoding className="seed-tutorial-configuration-file">
 
