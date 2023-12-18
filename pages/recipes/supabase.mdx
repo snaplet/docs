@@ -17,7 +17,7 @@ If you experience any issues with any of the paths, reach out to us on [Discord]
 
 Supabase makes it easy to set up a local development environment linked to your Supabase project. Snaplet can improve your local development by seeding your local database with data, making coding and testing more efficient and accurate.
 
-In this short guide, we will use the [Nextjs + Supabase template](https://vercel.com/templates/next.js/supabase), to demonstrate how you could use the `snaplet seed` command to seed a local Supabase stack.
+In this short guide, we use the `snaplet seed` command to seed a local Supabase stack. We will use the [Nextjs + Supabase template](https://vercel.com/templates/next.js/supabase) as an example.
 
 ### Prerequisites
 
@@ -25,35 +25,29 @@ In this short guide, we will use the [Nextjs + Supabase template](https://vercel
 - [Supabase CLI installed](https://supabase.com/docs/guides/cli/getting-started)
 - [Snaplet CLI installed](/getting-started/installation)
 
-#### 1. Create a Supabase project
+#### 1. Clone the Nextjs + Supabase template
 
-Create a new Supabase database by navigating to your Supabase dashboard.
-
-![Creating a supabase project](/recipes/supabase/supabase_new_project.webp)
-
-#### 2. Clone the Nextjs + Supabase template
-
-2.1. Create a Next.js app using the starter template by running the `npx` command:
+**1.1.** Create a Next.js app using the starter template by running the `npx` command:
 
 ```bash
 npx create-next-app -e with-supabase
 ```
 
-**2.2.** Use `cd` to change into the newly created directory:
+**1.2.** Use `cd` to change into the newly created directory:
 
 ```bash
 cd name-of-new-app
 ```
 
-#### 3. Setup your Supabase project and apply migrations
+#### 2. Setup your Supabase project and apply migrations
 
-**3.1.** Initialize the configuration for your Supabase local development project.
+**2.1.** Initialize the configuration for your Supabase local development project.
 
 ```bash
 supabase init
 ```
 
-**3.2.** Start your Supabase local stack. This will run the latest migrations against your local database.
+**2.2.** Start your Supabase local stack. This will run the latest migrations against your local database.
 
 ```bash
 supabase start
@@ -72,11 +66,11 @@ Started supabase local development setup.
 service_role key: eyJh......
 ```
 
-**3.3.** Copy the DB URL - we will use this in the next step **(step 4)** to generate data into (referred to as the target database).
+**2.3.** Copy the DB URL - we will use this in the next step **(step 4)** to generate data into (referred to as the target database).
 
-#### 4. Set up your Snaplet seed config
+#### 3. Set up your Snaplet seed config
 
-**4.1.** Create a `seed.mts` file in your root directory.
+**3.1.** Create a `seed.mts` file in your root directory.
 
 ```bash >_&nbsp;terminal
 npx snaplet setup
@@ -114,7 +108,7 @@ To load the generated data into your database execute the command:
 DRY=0 npx tsx seed.mts
 ```
 
-**4.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
+**3.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
 ```ts seed.mts
 await snaplet.$pipe([
@@ -127,21 +121,21 @@ await snaplet.$pipe([
 
 You are now ready to seed your database.
 
-#### 5. Reset and seed your local development database
+#### 4. Reset and seed your local development database
 
-**5.1** Run `npx tsx seed.mts` and pipe the output to your `supabase/seed.sql` file.
+**4.1** Run `npx tsx seed.mts` and pipe the output to your `supabase/seed.sql` file.
 
 ```bash
 npx tsx seed.mts > supabase/seed.sql
 ```
 
-**5.2** Reset your local development database. This will run all the existing migrations and apply the seed script (at `supabase/seed.sql`).
+**4.2** Reset your local development database. This will run all the existing migrations and apply the seed script (at `supabase/seed.sql`).
 
 ```bash
 supabase db reset
 ```
 
-**5.3** Check your local database to see if the result of your seed script.
+**4.3** Check your local database to see if the result of your seed script.
 
 Now if you visit the Supabase Studio URL hosted locally (http://localhost:54323) and inspect the **"todo"** table, you should see 20 todo items.
 
