@@ -149,6 +149,16 @@ module.exports = withNextra({
         destination: '/migrations/seed',
         permanent: true,
       },
+      {
+        source: '/references/snapshots',
+        destination: '/core-concepts/capture',
+        permanent: true,
+      },
+      {
+        source: '/core-concepts/reference/configuration',
+        destination: '/reference/configuration',
+        permanent: true,
+      },
     ];
   },
 });
