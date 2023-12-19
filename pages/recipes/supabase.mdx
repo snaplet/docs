@@ -291,8 +291,29 @@ During onboarding, this `select` option is automatically added to your config. I
 
 You may run into problems restoring to a Supabase project hosted in the cloud. This is because the snaplet restore command will drop your database first, before restoring any schemas and tables, which results in your project being in a broken state. The reason for this is that Snaplet was unable to restore schemas that Supabase requires a super user role to perform write operations.
 
+By default Snaplet drop the database before Restoring. This may include privileges or roles that are required for your Supabase project to function correctly. 
 To get around this, run the `restore` command with the `--no-reset` flag, e.g:
 
 ```bash >_&nbsp;terminal
 snaplet snapshot restore --no-reset
+```
+
+If you wish to restore without the `--no-reset` flag, you can run the following script in your SQL editor after restoring:
+
+```sql
+grant usage on schema public to postgres, anon, authenticated, service_role;
+
+grant all privileges on all tables in schema public to postgres, anon, authenticated, service_role;
+grant all privileges on all functions in schema public to postgres, anon, authenticated, service_role;
+grant all privileges on all sequences in schema public to postgres, anon, authenticated, service_role;
+
+alter default privileges in schema public grant all on tables to postgres, anon, authenticated, service_role;
+alter default privileges in schema public grant all on functions to postgres, anon, authenticated, service_role;
+alter default privileges in schema public grant all on sequences to postgres, anon, authenticated, service_role;
+```
+
+Running this script after restoring will prevent you from running into warnings like:
+
+```
+permission denied for schema public
 ```
