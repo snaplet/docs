@@ -22,17 +22,64 @@ Here's why it's beneficial:
 
 While generated data might be the unsung hero of early development, it can get a bit needy as software evolves. But don't sweat it! Our mission is to save you from the never-ending saga of maintaining those seed scripts. Who has time for that, right?
 
-## Introducing `@snaplet/seed`
+## The workflow at a glance
 
-The key to effortless generated data is a tool that deeply understands your database's schema. By introspecting your database, we are able to create a fully-typed client dedicated to data generation.
+Using Snaplet to seed data will typically look something like this:
 
-Let's see how it works.
+1. Initial setup with `npx snaplet setup`
+2. Using `@snaplet/seed` to generate seed data
+3. Regenerating assets as your database changes with `npx snaplet generate`
+
+You can also refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed) for a practical example of the workflow.
+
+### 1. Initial setup with `npx snaplet setup`
+
+At the start, you'll setup Snaplet for your project with `npx snaplet setup`, and follow the interactive prompts.
+
+`snaplet setup` will look at your database and its structure, and use it to generate the configuration files and assets needed by `@snaplet/seed`.
+
+### 2. Using `@snaplet/seed` to generate seed data
+
+`@snaplet/seed` is what you'll use to _actually_ generate data. It is a javascript library, giving you a fully-typed programmatic interface tailored to your database structure, which you'll use to describe _how_ data should be generated.
+
+Most commonly you'll write and run seed scripts that use `@snaplet/seed`. If you write your seed scripts in typescript, [tsx](https://www.npmjs.com/package/tsx) might come in handy for running your scripts:
+
+```bash >_&nbsp;terminal
+npx tsx seed.mts
+```
+
+Writing and running vanilla javascript works too:
+
+```bash >_&nbsp;terminal
+# a vanilla javascript file that uses `@snaplet/seed`
+node seed.js
+```
+
+You can also use `@snaplet/seed` in other scenarios - for example, in your tests.
+
+For more detail on using `@snaplet/seed`, check out [Generating data with `@snaplet/seed`](#generating-data-with-snapletseed) below.
+
+### 3. Regenerating assets as your database changes with `npx snaplet generate`
+
+`@snaplet/seed` provides you with a client library that corresponds to your database structure. To do this, snaplet looks at your database structure and uses this to generate assets that `@snaplet/seed` can use to provide this client library.
+
+Whenever your database structure changes, `@snaplet/seed` will need these assets to be regenerated so that they are in sync with your new database structure.
+
+You can regenerate these assets by running:
+
+```bash >_&nbsp;terminal
+npx snaplet generate
+```
+
+If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
 
 ## Generating data with `@snaplet/seed`
 
 You can refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed) to learn about the basics of `@snaplet/seed`.
 
-### Inside the workflow
+For more, check out the [Seed Quick Start Guide](/getting-started/quick-start/seed).
+
+### Inside the `@snaplet/seed` workflow
 
 #### Deterministic data generation
 
@@ -535,17 +582,3 @@ await snaplet.users([{
 ```
 
 The `override` option is applied on top of the `inflection` option, it's perfect for one-off changes.
-
-## Regenerating `@snaplet/seed` assets
-
-`@snaplet/seed` provides you with a client library that corresponds to your database structure. To do this, snaplet looks at your database structure and uses this to generates assets that `@snaplet/seed` can use to provide this client library.
-
-Whenever your database structure changes, `@snaplet/seed` will need these assets to be regenerated so that they are in sync with your new database structure.
-
-If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
-
-You can regenerate these assets by running:
-
-```
-npx snaplet generate
-```
