@@ -317,3 +317,16 @@ Running this script after restoring will prevent you from running into warnings 
 ```
 permission denied for schema public
 ```
+
+#### Reset supabase database
+
+Use the `supabase db reset` command to reset the state of your Supabase project. 
+This is useful for cases a snapshot breaks your project, or you want to start from a clean slate.
+
+```bash >_&nbsp;terminal
+# reset your supabase database
+supabase db reset
+
+# restore your snapshot
+supabase snapshot restore
+```
