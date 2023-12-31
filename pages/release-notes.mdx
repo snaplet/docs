@@ -7,6 +7,14 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+  ## 31 December 2023 - v0.77.3
+
+  #### Fix `faker is not defined`
+When generating the assets required for `@snaplet/seed` (which we do as part of b oth `snaplet setup` and `snaplet generate`), we were accidentally referencing `faker` when generating the default value for fields that we detected as being having the shape of a URL or a MAC address.
+
+We now replaced these cases with the copycat equivalent to avoid referencing faker.
+  </Step>
+  <Step>
   ## 14 December 2023 - v0.77.0
 
 #### 🚨 **BREAKING CHANGES in** `@snaplet/seed`
