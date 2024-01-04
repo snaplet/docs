@@ -80,6 +80,11 @@ module.exports = withNextra({
         permanent: true,
       },
       {
+        source: '/tutorials/neon',
+        destination: '/recipes/neon',
+        permanent: true,
+      },
+      {
         source: '/tutorials/prisma-seed',
         destination: '/recipes/prisma',
         permanent: true,

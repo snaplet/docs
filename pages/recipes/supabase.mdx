@@ -216,23 +216,54 @@ service_role key: eyJh......
 
 #### 5: Config setup
 
-You're now ready to restore your production snapshot into your Supabase development project.
+1. Navigate to your project directory.
 
-1. Navigate to your project directory
-2. Run `snaplet setup`
+2. Set up your snaplet config.
 
-   1. You will be shown a warning to write `.snaplet/config` in your project directory. Select yes (y) to create the file.
-   2. Then you will be asked for a **target database connection string.** . Paste in the **DB URL** you copied in step 3.
+```bash >_&nbsp;terminal
+snaplet setup
+```
 
-3. Run `snaplet project setup` - you will be presented with a list of projects, these are databases that are connected to your Snaplet account. Choose the project that contains the snapshot you created in step 2.
+```bash >_&nbsp; terminal
+# mark
+✔ Welcome to Snaplet! 😸 Choose your adventure: › I want to capture or restore a snapshot 💾
+
+Target database credentials
+Snaplet restores data to your target database using the target database credentials.
+
+Read more: https://docs.snaplet.dev/guides/postgresql#connection-strings
+
+# mark
+✔ Target database connection string … postgresql://postgres:postgres@localhost:54322/postgres
+📡 Connected to database with "[secret]ql://postgres:postgres@localhost:54322/postgres"
+
+# mark
+✔ Select or create a project › My Team > My Project
+
+You're all set! Take a look at our docs to find out what you can do from here:
+https://docs.snaplet.dev/getting-started/start-here/
+
+Restore latest snapshot:
+To restore the latest snapshot in your project execute the command:
+snaplet ss restore --latest
+
+Local capture:
+You can learn more about self hosting here: https://docs.snaplet.dev/guides/self-hosting
+
+To capture a snapshot of your local database first pull the full configuration with:
+snaplet config pull
+
+Then capture the snapshot with:
+SNAPLET_SOURCE_DATABASE_URL=<database-url> snaplet ss capture
+```
 
 #### 6: Restore the data target
 
 You are now ready to restore!
 
-1. Run `snaplet snapshot restore --no-reset` in your project path.
+1. Run `snaplet snapshot restore` in your project path.
 
-> **Note on `--no-reset`**: This will skip the “reset” step of the restore command. So no existing schemas will be dropped. Learn more about data operations [here](/core-concepts/capture)
+> **Note:** for supabase projects we automatically include the `--no-reset` flag when running `snaplet snapshot restore`. So no existing schemas will be dropped. Learn more about data operations [here](/core-concepts/capture)
 
 ![Supabase is fun!](/recipes/supabase/snappy-with-supabase-ball.svg)
 
@@ -287,12 +318,15 @@ defineConfig({
 
 During onboarding, this `select` option is automatically added to your config. In the web editor you will be shown a warning, if you choose to remove the `$default` field.
 
-#### Restoring into a Supabase project
+#### Reset supabase database
 
-You may run into problems restoring to a Supabase project hosted in the cloud. This is because the snaplet restore command will drop your database first, before restoring any schemas and tables, which results in your project being in a broken state. The reason for this is that Snaplet was unable to restore schemas that Supabase requires a super user role to perform write operations.
-
-To get around this, run the `restore` command with the `--no-reset` flag, e.g:
+Use the `supabase db reset` command to reset the state of your Supabase project. 
+This is useful for cases a snapshot breaks your project, or you want to start from a clean slate.
 
 ```bash >_&nbsp;terminal
-snaplet snapshot restore --no-reset
+# reset your supabase database
+supabase db reset
+
+# restore your snapshot
+supabase snapshot restore
 ```
