@@ -6,195 +6,463 @@ import { Steps } from "nextra/components"
 
 
 <Steps>
-<Step>
-## November 2nd 2023 - v0.73.0
+  <Step>
+  ## 4 January 2024 - v0.78.1
+  #### `@snaplet/copycat` BREAKING CHANGE NOTICE**
+`copycat.float()` method has been rewritten: previously, output values would stay close to the `min` value give. With this release, output values will distribute more evenly across the (min, max) range of values.
 
-#### 🚨 Generate seeds change
+**When will the change happen?**
+We are planning on releasing the change on **23 January 2024** at 12:00pm (noon) UTC
 
-We've made a change to the way Snaplet generates seeds.
+**Who will be affected?**
+You might be impacted by this change if:
+* If you use snapshots, and you used `copycat.float()` in your `transform` configuration: https://docs.snaplet.dev/core-concepts/capture#transform-data
+* If you use `@snaplet/seed`, and you have floating-point column types (e.g. `float4`) in a table for which you use `@snaplet/seed` to generate data
 
-We previously introduced a hash based on the plan's inputs to our seeding mechanism, but after many feedbacks, it's clear that it's not the right approach. We've decided to remove it and go back to the previous behavior.
-The issue with this approach is that if you alter your plan, the modification will impact all the models involved in the plan.
+**How to prepare:**
+To preview the impact of this change, you can modify your `copycat` import in your configuration.
+From: `import { copycat } from '@snaplet/copycat'`
+To: `import { copycat } from '@snaplet/copycat/next'`.
 
-Let's take this example:
-
-```ts
-await snaplet.users([
-  { name: 'John' }, // user id will be 42
-  { name: 'Jane' }, // user id will be 59
-  { name: 'Bob' }, // user id will be 14
-])
+If you are using `@snaplet/seed`, you'll also need to first update your snaplet dependencies:
+```
+yarn up snaplet @snaplet/seed
 ```
 
-If you add an email to `Bob`, the user ids will change for all the users:
-
-```ts
-await snaplet.users([
-  { name: 'John' }, // user id will be 98
-  { name: 'Jane' }, // user id will be 35
-  { name: 'Bob', email: 'bob@acme.com' }, // user id will be 74
-])
-```
-
-This is because the seeds injected to each field generate function were constructed like this:
-
-`<hash of the plan inputs>/0/users/0/id`
-
-Now that we removed the hash, a field's value is entirely dependent on the model's location in the plan (basically its path):
-
-`0/users/0/id`
-
-So altering your plans will no longer impact the other models and fields ouputs.
-
-It unfortunately means that your generated data output will change with this release.
-
-#### 🚨 Alias strategy is now opt-in
-
-We recently introduced [aliases](/core-concepts/generate#customizing-the-snaplet-data-client-with-aliases) to customize the data client.
-
-At the time we shipped this feature, we also decided to apply a default alias strategy to the data client. We've decided to revert this change and make it opt-in instead so it's more predictable for you.
-
-To opt-in, you now need to set the `inflection` option to `true`:
-
-```ts
-defineConfig({
-  generate: {
-    alias: {
-      inflection: true,
-    },
-  },
-});
-```
-</Step>
-<Step>
-## 31 October 2023 - v0.72.0
-
-#### 🛠️ Copycat improvements
-
-You can't scramble an omlette without breaking some eggs 🍳. We've made improvements to [@snaplet/copycat](https://github.com/snaplet/copycat) that introduce breaking changes with how Copycat "scrambles" data during transformation:
-
-* For the same input column value from your database, new snapshots will now be have different resulting values compared to what they used to be in previous snapshots.
-* Snaplet generate will generate values that are different to what they used to be.
-
-What this means is that if your tests were expecting to see deterministic values from your Copycat changes, these tests may break, as Copycat generates new deterministic values for all transformations. As such, this new improvement gets a 🚨 breaking change 🚨 flag.
-
-We've made this change in part to improvement the performace of Copycat, and so, the good news is if you've experienced slow snapshot captures in the past when capturing large column values, you may see an improvement in the time it now takes for your snapshots to capture.
-
-Capturing snapshots or generating with Snaplet will still be deterministic though! The data will only change with the next snapshot you capture or the next time you generate data - after which point it will remain the same across as long as the inputs do not change.
-
-If you rely on Snaplet generating data or transforming data that does not change if the inputs do not change, this release might affect you. More specifically, this change will affect you if you are:
-
-* Using "auto"-transform mode (if you have transform: `{ $mode: 'auto' }` in your Snaplet configuration as shown in the Data Editor on app.snaplet.dev).
-* Using Copycat in your Snaplet configuration to generate data or transform data when capturing snapshots.
-* Using our generate feature.
-</Step>
-
-<Step>
-## October 30 2023 - v0.71.0
-
-#### 🐛 Snapshot capture bug fix
-
-We squashed a long-standing bug 🐛 which impacts the snapshot files format for users using older versions of the Snaplet CLI.
-
-If you captured a snapshot with a version of Snaplet CLI prior to 0.71.0, you can either:
-
-Capture a new snapshot, which will save it to the new fixed format (recommended):
-
-`npx snaplet@latest snapshot capture`
-
-Or run the restore command with the last version of Snaplet CLI before the fix:
-
-`npx snaplet@0.70.1 snapshot restore`
-
-As this is a 🚨 breaking change 🚨 we added a notice in the console when running `snaplet snapshot restore` pointing to this [migration note](https://docs.snaplet.dev/migrations/snapshot#from-0710-and-above).
-
-*If you're having trouble with this change, come ask us for help on [Discord](https://app.snaplet.dev/chat).*
-</Step>
-<Step>
-## 25 October 2023 - v0.70.0
-
-#### 🧹 Removing deprecated commands
-
-Out with the old! In this release we wave goodbye to the following deprecated commands:
-
-👋 snaplet snapshot subset
-
-👋  snaplet subset command
-
-👋  snaplet config setup
-
-Note that the removal of the above commands is is a 🚨 breaking change 🚨.
-
-#### 🎁 New feature - JSDoc comments
-
-We added JSDoc comments everywhere in the data client so it's easier to discover its API and understand the options and your database schema.
-</Step>
-<Step>
-## 23 October 2023 - v0.69.0
-
-#### 🎁 New feature - Introducing aliases
-
-We are super excited to introduce a new configuration option for Generate called **`alias`**, which allows you to take full control over how your models, fields and relationships are named. We shipped a sensible default implementation which should cover the majority of the use cases but if you need more customization, you can!
-
-The default rules for the aliases:
-
-* Model names: pluralized and camelCased.
-* Scalar field names: camelCased.
-* Parent field names (one to one relationships): singularized and camelCased.
-* Child field names (one to many relationships): pluralized and camelCased.
-
-Docs: https://docs.snaplet.dev/core-concepts/generate#customizing-the-snaplet-data-client-with-aliases
-
-Don't forget to update your types after you have updated the CLI by running:
-
-`snaplet config generate`
-
-#### 🛠️ Aliases strategy applied by default
-
-With the introduction of alias above, and we will apply a default strategy so the client's code looks better and is easier to reason about.
-
-If you want to opt-out, you can by setting the new inflection option to `false`:
+Then use the `--copycat-next` flag when regenerating assets:
 
 ```
-/// <reference path=".snaplet/snaplet.d.ts" />
-import { defineConfig } from 'snaplet';
+# to switch to `@snaplet/copycat/next`
+npx snaplet generate --copycat-next
 
+# to switch back to `@snaplet/copycat`
+npx snaplet generate
+```
+
+**Need More Time?**
+If the scheduled update time doesn’t suit your schedule, please let us know. We are sorry for any inconvenience this may cause and are here to assist with a smoother transition. Thank you for your attention to this matter.
+  </Step>
+
+  <Step>
+  ## 4 January 2024 - v0.78.0
+  #### Alpha release of `snaplet fingerprint`**
+This release adds some of the basics for a feature we're working on called `snaplet fingerprint`.
+
+A new command has been added:
+```
+snaplet fingerprint <database-url>
+```
+
+When run, `snaplet fingerprint` will inspect the database url given (typically this would be a production database url), collect some statistical details from a sample of data in your database, and store them in a `.snaplet/fingerprint.json` file. When running a seed script (e.g. `npx tsx seed.mts`), `@snaplet/seed` will try read from this file - if it exists, it will use it to generate data that is more closely matching the kind of data you have in your production database.
+
+The data it generates is still entirely fake - it will just now be closer to how your production data looks. For example, if a date column, `snaplet fingerprint` would find the minimum and maximum values from a sample of the data, which in turn allows `@snaplet/seed` to generate data within this same date range.
+
+**note** This still is an experimental feature - docs, improvements and much more coming soon!
+  </Step>
+
+  <Step>
+  ## 4 January 2024 - v0.77.4
+  #### Allow using `@snaplet/copycat/next` with `@snaplet/seed`**
+
+We preview upcoming breaking changes in copycat by exporting the latest change for the upcoming copycat release as `@snaplet/copycat/next`.
+
+If you are using `@snaplet/seed`, you can now pass a `--copycat-next` flag when regenerating assets so that these generated assets use `@snaplet/copycat/next`:
+
+```
+# to switch to `@snaplet/copycat/next`
+npx snaplet generate --copycat-next
+
+# to switch back to `@snaplet/copycat`
+npx snaplet generate
+```
+  </Step>
+  <Step>
+  ## 31 December 2023 - v0.77.3
+
+  #### Fix `faker is not defined`
+When generating the assets required for `@snaplet/seed` (which we do as part of b oth `snaplet setup` and `snaplet generate`), we were accidentally referencing `faker` when generating the default value for fields that we detected as being having the shape of a URL or a MAC address.
+
+We now replaced these cases with the copycat equivalent to avoid referencing faker.
+  </Step>
+  <Step>
+  ## 14 December 2023 - v0.77.0
+
+#### 🚨 **BREAKING CHANGES in** `@snaplet/seed`
+
+We've made improvements to some of the default values we generate for each field (column). We regenerate these defaults each time `snaplet setup` or `snaplet generate` is run.
+
+This means that after upgrading, when running `snaplet generate`, the same field (column in a table) might now have a different default value generated for it compared to before `snaplet generate` was run. Subsequent runs of `snaplet generate` afterwards will *not* cause different values to be generated though - just the first `snaplet generate` after the upgrade.
+
+In this context, a default value means a value that was not explicitly given to `@snaplet/seed` for a field (column in a table).
+
+For example:
+
+```
+// name given explicitly
+snaplet.users({ name: 'Garnet Harley' })
+
+// name not given explicitly
+// => the generated value might have now changed
+// (after the first `snaplet generate` after upgrading)
+snaplet.users({})
+```
+
+#### 🐛 **Bug fixes**
+
+`process` **types in** `seed.mts`
+At the moment, the `seed.mts` example generated by `snaplet setup` references `process`. If the projects does not have `@types/node` as a dependency, vscode will show that it does not know about any types for `process`. This releases fixes this by having  `@snaplet/seed` now depends on and references `@types/node` for type definitions. This means that any new projects will get all the type definitions needed for the generated `seed.mts` example, even if they do not have `@types/node` as a dependency**.**
+
+`snaplet.$resetDatabase()` **now respects** `select` **in** `snaplet.config.ts`
+
+If you chose to exclude some schemas or tables in `snaplet.config.ts` with `select`, `snaplet.$resetDatabase()` will now exclude them, and truncate all the remaining tables of the remaining schemas in your database:
+
+```
+// snaplet.config.ts
+import { defineConfig } from 'snaplet'
 export default defineConfig({
-  generate: {
-    alias: {
-      inflection: false,
-    },
-    async run(snaplet) {
-      await snaplet.User((x) => x(3))
-    },
-  },
-});
-```
-
-#### 🧹 Removal of the object form shortcut for one-to-many relationships -
-
-We've changed the signature for one-to-many relationship, we removed the object form when you only want to generate 1 element. It was confusing to be able to use both object and array.
-
-```
-// previously
-// create a single user
-snaplet.User({})
-// create a user with a post
-snaplet.User({
-  Post: {}
+  select: {
+    public: {
+      $default: true,
+      _prisma_migrations: false
+    }
+  }
 })
-
-// from 0.69.0 onwards
-// create a single user
-snaplet.User([{}])
-// create a user with a post
-snaplet.User([{
-  Post: [{}]
-}])
 ```
 
-Note that this is a 🚨 breaking change 🚨 and you'll need to use aliases going forward.
+```
+// seed.mts
+import { SnapletClient } from '@snaplet/seed'
+const snaplet = new SnapletClient()
+// `_prisma_migrations` table will be left as-is and not be truncated
+await snaplet.$resetDatabase()
+```
 
-Questions? Come ask us for help on [Discord](https://app.snaplet.dev/chat).*
+**Fix** `Unhandled error: column "<name>" does not exist`
+
+During `snaplet setup` or `snaplet generate`, we collect information from your database in order to generate the assets needed for `@snaplet/seed`. There was a bug in these flows that was sometimes causing us to look up the incorrect column name.
+  </Step>
+  <Step>
+  ## 30 November 2023 - v0.76.0
+  #### 🌟 New Features
+
+**Snaplet Generate becomes `@snaplet/seed`**: You can now use the full power of Snaplet Seed everywhere in your codebase! Here is a sneak peek:
+
+```ts
+// seed.mts
+import { SnapletClient } from "@snaplet/seed";
+
+const snaplet = new SnapletClient();
+
+await snaplet.users(x => x(3, () => ({
+  posts: (x) => x(10)
+})));
+```
+
+To know more about `@snaplet/seed`, read our [quick start guide](https://docs.snaplet.dev/getting-started/quick-start/seed).
+
+#### 🚨 Breaking change in 'snaplet generate'
+
+With the publishing of `@snaplet/seed`, there is no more `generate.run` function in the Snaplet configuration file.
+
+The `snaplet generate` command is repurposed to generate the code needed to use `@snaplet/seed`.
+
+You can follow this migration guide: https://docs.snaplet.dev/migrations/seed#from-0760-and-above
+
+ Thank you for being a part of our journey! 💚
+  </Step>
+  <Step>
+  ## 7 November 2023 - v0.74.0
+
+  #### 🚨 Breaking change: Preview databases
+
+  **Preview Database Handling Overhaul.**  We've revamped how we handle preview databases. It's crucial that if you're using preview databases that you upgrade your Snaplet CLI to the latest version to ensure compatibility. Run `snaplet upgrade` to upgrade.
+
+  </Step>
+  <Step>
+  ## 7 November 2023 - v0.73.1
+
+  #### 🛠️ CLI improvements
+
+  This version introduces several fixes to enhance your command-line interface experience.
+
+  **Restoration Behavior on Interruption**: If you press Ctrl+C during a restoration prompt, it defaults to a 'no' response to continue the restoration process without interruption.
+
+  **Integer Collision Generation**: The `generate` command has been improved to produce a larger number of values with very low conflict probabilities.
+
+  **Snapshot Support in PDB Creation**: We've made it easier to identify early on if a snapshot won't restore successfully into a preview database by marking unsupported snapshots during PDB creation.
+
+  </Step>
+  <Step>
+  ## 2 November 2023 - v0.73.0
+
+  #### 🚨 Generate seeds breaking change 
+
+  We've made a change to the way Snaplet generates seeds, which breaks previous data generations. We previously introduced a hash based on the plan's inputs to our seeding mechanism, but after user feedback, it's clear that it's not the right approach. The issue with this approach is that if you alter your plan, the modification will impact all the models involved in the plan. As such, we've decided to roll it back.
+
+  If you're interested in the specifics, read on. 
+
+  Let's take this example:
+
+  ```ts
+  await snaplet.users([
+    { name: 'John' }, // user id will be 42
+    { name: 'Jane' }, // user id will be 59
+    { name: 'Bob' }, // user id will be 14
+  ])
+  ```
+
+  If you add an email to `Bob`, the user ids will change for all the users:
+
+  ```ts
+  await snaplet.users([
+    { name: 'John' }, // user id will be 98
+    { name: 'Jane' }, // user id will be 35
+    { name: 'Bob', email: 'bob@acme.com' }, // user id will be 74
+  ])
+  ```
+
+  This is because the seeds injected to each field generate functions which were constructed like this:
+
+  `<hash of the plan inputs>/0/users/0/id`
+
+  Now that we removed the hash, a field's value is entirely dependent on the model's location in the plan (basically its path):
+
+  `0/users/0/id`
+
+  So altering your plans will no longer impact the other models and fields ouputs.
+
+  It unfortunately means that your generated data output will change with this release.
+
+  #### 🚨 Alias strategy is now opt-in
+
+  We recently introduced [aliases](/core-concepts/generate#customizing-the-snaplet-data-client-with-aliases) to customize the data client.
+
+  At the time we shipped this feature, we also decided to apply a default alias strategy to the data client. Based on feedback we've decided to revert this change and make it opt-in instead so it's more predictable for you. This is also a breaking change.
+
+  To opt-in, you now need to set the `inflection` option to `true`:
+
+  ```ts
+  defineConfig({
+    generate: {
+      alias: {
+        inflection: true,
+      },
+    },
+  });
+  ```
+  </Step>
+  <Step>
+
+  ## 31 October 2023 - v0.72.0
+
+  #### 🛠️ Copycat improvements
+
+  You can't scramble an omlette without breaking some eggs 🍳. We've made improvements to [@snaplet/copycat](https://github.com/snaplet/copycat) that introduce breaking changes with how Copycat "scrambles" data during transformation:
+
+  * For the same input column value from your database, new snapshots will now be have different resulting values compared to what they used to be in previous snapshots.
+  * Snaplet generate will generate values that are different to what they used to be.
+
+  What this means is that if your tests were expecting to see deterministic values from your Copycat changes, these tests may break, as Copycat generates new deterministic values for all transformations. As such, this new improvement gets a 🚨 breaking change 🚨 flag.
+
+  We've made this change in part to improvement the performace of Copycat, and so, the good news is if you've experienced slow snapshot captures in the past when capturing large column values, you may see an improvement in the time it now takes for your snapshots to capture.
+
+  Capturing snapshots or generating with Snaplet will still be deterministic though! The data will only change with the next snapshot you capture or the next time you generate data - after which point it will remain the same across as long as the inputs do not change.
+
+  If you rely on Snaplet generating data or transforming data that does not change if the inputs do not change, this release might affect you. More specifically, this change will affect you if you are:
+
+  * Using "auto"-transform mode (if you have transform: `{ $mode: 'auto' }` in your Snaplet configuration as shown in the Data Editor on app.snaplet.dev).
+  * Using Copycat in your Snaplet configuration to generate data or transform data when capturing snapshots.
+  * Using our generate feature.
+  </Step>
+  <Step>
+  ## October 30 2023 - v0.71.0
+
+  #### 🐛 Snapshot capture bug fix
+
+  We squashed a long-standing bug 🐛 which impacts the snapshot files format for users using older versions of the Snaplet CLI.
+
+  If you captured a snapshot with a version of Snaplet CLI prior to 0.71.0, you can either:
+
+  Capture a new snapshot, which will save it to the new fixed format (recommended):
+
+  `npx snaplet@latest snapshot capture`
+
+  Or run the restore command with the last version of Snaplet CLI before the fix:
+
+  `npx snaplet@0.70.1 snapshot restore`
+
+  As this is a 🚨 breaking change 🚨 we added a notice in the console when running `snaplet snapshot restore` pointing to this [migration note](https://docs.snaplet.dev/migrations/snapshot#from-0710-and-above).
+
+  *If you're having trouble with this change, come ask us for help on [Discord](https://app.snaplet.dev/chat).*
+  </Step>
+  <Step>
+  ## 25 October 2023 - v0.70.0
+
+  #### 🧹 Removing deprecated commands
+
+  Out with the old! In this release we wave goodbye to the following deprecated commands:
+
+  👋 snaplet snapshot subset
+
+  👋  snaplet subset command
+
+  👋  snaplet config setup
+
+  Note that the removal of the above commands is is a 🚨 breaking change.
+
+  #### 🎁 New feature - JSDoc comments
+
+  We added JSDoc comments everywhere in the data client so it's easier to discover its API and understand the options and your database schema.
+  </Step>
+  <Step>
+  ## 23 October 2023 - v0.69.0
+
+  #### 🎁 New feature - Introducing aliases
+
+  We are super excited to introduce a new configuration option for Generate called **`alias`**, which allows you to take full control over how your models, fields and relationships are named. We shipped a sensible default implementation which should cover the majority of the use cases but if you need more customization, you can!
+
+  The default rules for the aliases:
+
+  * Model names: pluralized and camelCased.
+  * Scalar field names: camelCased.
+  * Parent field names (one to one relationships): singularized and camelCased.
+  * Child field names (one to many relationships): pluralized and camelCased.
+
+  Docs: https://docs.snaplet.dev/core-concepts/generate#customizing-the-snaplet-data-client-with-aliases
+
+  Don't forget to update your types after you have updated the CLI by running:
+
+  `snaplet config generate`
+
+  #### 🛠️ Aliases strategy applied by default
+
+  With the introduction of alias above, and we will apply a default strategy so the client's code looks better and is easier to reason about.
+
+  If you want to opt-out, you can by setting the new inflection option to `false`:
+
+  ```
+  /// <reference path=".snaplet/snaplet.d.ts" />
+  import { defineConfig } from 'snaplet';
+
+  export default defineConfig({
+    generate: {
+      alias: {
+        inflection: false,
+      },
+      async run(snaplet) {
+        await snaplet.User((x) => x(3))
+      },
+    },
+  });
+  ```
+
+  #### 🧹 Removal of the object form shortcut for one-to-many relationships -
+
+  We've changed the signature for one-to-many relationship, we removed the object form when you only want to generate 1 element. It was confusing to be able to use both object and array.
+
+  ```
+  // previously
+  // create a single user
+  snaplet.User({})
+  // create a user with a post
+  snaplet.User({
+    Post: {}
+  })
+
+  // from 0.69.0 onwards
+  // create a single user
+  snaplet.User([{}])
+  // create a user with a post
+  snaplet.User([{
+    Post: [{}]
+  }])
+  ```
+
+  Note that this is a 🚨 breaking change and you'll need to use aliases going forward.
+
+  Questions? Come ask us for help on [Discord](https://app.snaplet.dev/chat).*
+  </Step>
+  <Step>
+  ## 18 October 2023 - v0.68.0
+
+  #### 🚨 Breaking Change: `pipe` and `merge`
+
+  We've changed the signature for the `pipe` and `merge` operators to take in an array of plans instead of using variadic arguments for plans:
+
+  ```
+  // previously
+  snaplet.$pipe(snaplet.User({}), snaplet.Post({}))
+  snaplet.$merge(snaplet.User({}), snaplet.Post({}))
+  snaplet.User({}).pipe(snaplet.Post({}))
+  snaplet.User({}).merge(snaplet.Post({}))
+
+  // from 0.68.1 onwards
+  snaplet.$pipe([snaplet.User({}), snaplet.Post({})])
+  snaplet.$merge([snaplet.User({}), snaplet.Post({}))
+  snaplet.User({}).pipe([snaplet.Post({})])
+  snaplet.User({}).merge([snaplet.Post({})])
+  ```
+
+  #### 🎁 New Feature: options supported for `pipe` and `merge` operators
+
+  As you may expect, with this change, we now also support options to be provided for these operators in our Generate API. 
+
+  ```
+  snaplet.$merge([/* ... plans */], {
+    models: {
+      Post: {
+        data: {
+          // This title will be used for all plans
+          // being combined by this merge
+          title: 'A title for posts in the merged plans'
+        }
+      }
+    }
+  })
+  ```
+
+  Options given to these operators will be passed down to the plans they are combining. If these plans provide their own options, they will take precedence over the corresponding pipe/merge options.
+
+  #### 🐛 Bug fixes - Generate 
+  We were were not detecting identity columns correctly, and `generate` was not able to generate and insert rows for tables with identity columns. `Snaplet generate` is now able to correctly detect if it is dealing with an identity column, and uses `OVERRIDING SYSTEM VALUE` when outputting `INSERT` statements in order to work with these columns.
+  </Step>
+  <Step>
+  ## 16 October 2023 - v0.67.0
+
+  #### 🚨 Breaking Change: Better seeding values
+
+  For Snaplet `generate` we've modified the `seed` values generated to be more logically consistent and aligned with users' expectations.
+
+  By way of demonstration, before this release, the same id would be returned for these two users:
+
+  ```
+  await  snaplet.User({ email: 'alice@acme.com' })
+  await snaplet.User({ email: 'bob@acme.com' })
+  ``` 
+
+  Doen't make much sense, right? This was because the seed value injected per column was only relying on your plan's paths (here the seed for the User's id would be `0/User/id`).
+
+  We produce a hash based on the inputs you provide to `snaplet.<modelName>(inputs)` so the output will always depends on the inputs. It's the same behaviour as Snaplet [Copycat](https://github.com/snaplet/copycat), and we think it's more predictable and logical that way.
+
+  #### 🎁 New Features: `generate` improvements 
+
+  We've added the `--output` option to `generate` so you can safely write the SQL statement to a file without being bothered by eventual other messages logged to stdout (like our auto upgrade message). [Read more](https://docs.snaplet.dev/reference/cli#generate-1). 
+
+  We've also added more ways of handling `tags` attached to a snapshot to the CLI. [Read more](https://docs.snaplet.dev/reference/cli).  
+  </Step>
+  <Step>
+## 12 October 2023 - v0.66.0
+
+#### ✅ `Generate` in Beta 
+
+A major milestone for our `generate` feature, which officially enters beta status!
+
+With this release, we have totally reworked the `generate` API so it can be both more powerful and flexible. It goes from alpha to beta status, and we'd love to hear your feedback! 
+
+If you've been using `generate` you'll need to migrate to use the latest version. We have a [migration guide here](https://docs.snaplet.dev/migrations/generate#from-0660-and-above). 
+
+Just getting started? If you want to know more about how to generate data you can refer to our [quick start guide](https://docs.snaplet.dev/getting-started/quick-start/generate) or our [`generate` core concept](https://docs.snaplet.dev/core-concepts/generate) page where we dig deeper into `generate` and its options.
+
+Happy generating!
 </Step>
 </Steps>

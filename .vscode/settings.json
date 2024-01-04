@@ -1,10 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[mdx]": {
-    "editor.defaultFormatter": "unifiedjs.vscode-remark",
-    "editor.formatOnSave": true
-  },
+  "editor.defaultFormatter": "unifiedjs.vscode-remark",
   "javascript.format.enable": false,
   "typescript.format.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib"

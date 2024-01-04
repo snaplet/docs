@@ -4,72 +4,56 @@ import { Callout } from "nextra/components";
 
 ![I absolutely love Supabase!](/recipes/supabase/snappy-holding-supabase-logo.svg)
 
-Snaplet can provide data for your Supabase project!
-
-Pick your own path:
+Snaplet gives you two options for getting data into your Supabase project. Pick your own path:
 
 - [Generate data for your Supabase local development stack](/recipes/supabase#seeding-a-supabase-local-development-stack)
 - [Restore data from your production Supabase project to your local development stack](/recipes/supabase#restoring-to-a-supabase-local-development-stack)
 
 <Callout>
-We've spent a lot of time ensuring that Snaplet works seamlessly with Supabase, however, if you experience any issues with this integration or this guide, feel free to come chat with us on [Discord](https://app.snaplet.dev/chat).
+If you experience any issues with any of the paths, reach out to us on [Discord](https://app.snaplet.dev/chat).
 </Callout>
 
 ## Generate data for your Supabase local development stack
 
-Supabase makes it easy to set up a [local environment](https://supabase.com/docs/guides/cli/local-development) linked to your Supabase project. Snaplet can improve your local development by seeding your local database with data, making coding and testing more efficient and accurate.
+Supabase makes it easy to set up a local development environment linked to your Supabase project. Snaplet can improve your local development by seeding your local database with data, making coding and testing more efficient and accurate.
 
-In this short guide, we will use the [Nextjs + Supabase template](https://vercel.com/templates/next.js/supabase), to demonstrate how one could use the `snaplet generate` command to seed their local Supabase stack.
+In this short guide, we use the `snaplet seed` command to seed a local Supabase stack. We will use the [Nextjs + Supabase template](https://vercel.com/templates/next.js/supabase) as an example.
 
 ### Prerequisites
 
-- Supabase account
+- [Docker installed](https://docs.docker.com/get-docker/)
 - [Supabase CLI installed](https://supabase.com/docs/guides/cli/getting-started)
 - [Snaplet CLI installed](/getting-started/installation)
 
-#### 1. Create a Supabase project
+#### 1. Clone the Nextjs + Supabase template
 
-Create a new project in the Supabase Dashboard by visiting https://supabase.com/
-
-![Creating a supabase project](/recipes/supabase/supabase_new_project.webp)
-
-#### 2. Clone the Nextjs + Supabase template
-
-2.1. Create a Next.js app using the Supabase starter template by running the `npx` command:
+**1.1.** Create a Next.js app using the starter template by running the `npx` command:
 
 ```bash
 npx create-next-app -e with-supabase
 ```
 
-**2.2.** Use `cd` to change into the newly created directory:
+**1.2.** Use `cd` to change into the newly created directory:
 
 ```bash
 cd name-of-new-app
 ```
 
-#### 3. Apply your migrations to the Supabase project.
+#### 2. Setup your Supabase project and apply migrations
 
-**3.1.** Link your Nextjs starter template to your Supabase project
+**2.1.** Initialize the configuration for your Supabase local development project.
 
 ```bash
 supabase init
 ```
 
-**3.2.** Apply the migrations in `/supabase/migrations` to your project
-
-> Migrations are required to be applied to your target database, as the `snaplet generate` needs a database structure to generate data for.
-
-```bash
-supabase db push
-```
-
-**3.3.** Start your Supabase local stack
+**2.2.** Start your Supabase local stack. This will run the latest migrations against your local database.
 
 ```bash
 supabase start
 ```
 
-This command will print out your the following:
+This command will print out the following output:
 
 ```bash
 Started supabase local development setup.
@@ -82,140 +66,135 @@ Started supabase local development setup.
 service_role key: eyJh......
 ```
 
-**3.4.** Copy the DB URL - we will use this in the next step (step 4) as your target database credentials.
+**2.3.** Copy the DB URL - we will use this in the next step **(step 4)** to generate data into (referred to as the target database).
 
-#### 4. Set up your generate config
+#### 3. Set up your Snaplet seed config
 
-**4.1.** Create a `snaplet.config.ts` file in the root of your project.
+**3.1.** Create a `seed.mts` file in your root directory.
 
 ```bash >_&nbsp;terminal
-snaplet setup
+npx snaplet setup
 ```
 
 ```bash >_&nbsp; terminal
 # mark
-✔ Do you have access to production data › No, I want to generate data locally
-
-Target database credentials
-This is where your development data resides, and is typically your local development database.
-Snaplet can import the generated data to your target database using the target database credentials.
-Snaplet will introspect this database schema to generate the snaplet client so ensure this database
-have the schemas setup and that you did the migrations on it.
-
-Read more: https://docs.snaplet.dev/guides/postgresql#connection-strings
+✔ Welcome to Snaplet! 😸 Choose your adventure: › I want to generate seed data 🌱
 
 # mark
 ✔ Target database connection string … postgresql://postgres:postgres@localhost:54322/postgres
-📡 Connected to database with "[secret]ql://postgres:postgres@localhost:54322/postgres"
-Generated snaplet client type definitions for generate: snaplet-client.d.ts (see: https://docs.snaplet.dev/core-concepts/generate#introducing-the-snaplet-data-client)
-Generated snaplet.config.ts type definitions: snaplet.d.ts (see: https://docs.snaplet.dev/reference/configuration#type-safe-configuration-based-on-your-database-structure)
-ℹ Database structure: Create generate config...
-Generated config: /name-of-new-app/snaplet.config.ts
-Youre all set! Take a look at our docs to find out what you can do from here:
-https://docs.snaplet.dev/core-concepts/generate
 
-Generate seeds:
+# mark
+✔ Database URL … postgresql://postgres:postgres@localhost:54322/postgres
+
+# mark
+✔ Would you like to link your account from Snaplet Cloud to have more realistic data using our AI model? 🤖 … no
+
+For the best AI-enhanced data generation experience, create a free Snaplet account and login with: snaplet auth login.
+
+Snaplet uses details about your database to improve our generation results.
+
+✔ You're all set!
+
+📝 Edit your seed script:
+You can describe how you would like to generate seed data by editing the example seed script:
+code seed.mts
+
+👁️  Preview seed statements:
 You can take a look at the sql statements that can be generated with:
-snaplet generate --sql
+npx tsx seed.mts
 
-Load generated data:
+✨ Apply seeds:
 To load the generated data into your database execute the command:
-snaplet generate
+DRY=0 npx tsx seed.mts
 ```
 
-> The source database credentials will be used to introspect your database and generate a base config
+**3.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
-**4.2.** In the `snaplet.config.ts` update the `generate` statement to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
-
-```ts snaplet.config.ts
-generate: {
-  async run(snaplet) {
-    await snaplet.$pipe([
-      // 10 users
-      snaplet.users((x) => x(10)),
-      // 20 todos, with one of the 10 users assigned to each todo
-      snaplet.todos((x) => x(20), { autoConnect: true }),
-    ]);
-  },
-},
+```ts seed.mts
+await snaplet.$pipe([
+  // create 10 users
+  snaplet.users((x) => x(10)),
+  // create 20 todos, for each of the 10 users
+  snaplet.todos((x) => x(20), { autoConnect: true }),
+]);
 ```
 
-Once you have gone through all the steps, you are now ready to seed your database.
+You are now ready to seed your database.
 
-#### 5. Reset and seed your local development database
+#### 4. Reset and seed your local development database
 
-**5.1.** Run the `snaplet generate` to populate the project seed script in the `supabase/seed.sql` file.
+**4.1** Run `npx tsx seed.mts` and pipe the output to your `supabase/seed.sql` file.
 
 ```bash
-snaplet generate --sql > supabase/seed.sql
+npx tsx seed.mts > supabase/seed.sql
 ```
 
-**5.2** Reset your local development database, this will run all the existing migrations and applu the seed script.
+**4.2** Reset your local development database. This will run all the existing migrations and apply the seed script (at `supabase/seed.sql`).
 
 ```bash
 supabase db reset
 ```
 
-**5.3** Check your local database to see if the seed script was applied.
+**4.3** Check your local database to see if the result of your seed script.
 
-Now if you visit the local studio URL (http://localhost:54323) and inspect the **"todo"** table, you should see 20 todo items.
+Now if you visit the Supabase Studio URL hosted locally (http://localhost:54323) and inspect the **"todo"** table, you should see 20 todo items.
 
 ![20 todos in the studio dashboard](/recipes/supabase/20_todos.webp)
 
-In your project if you move the `app/_examples/client-component/page.tsx` to `app/todos/page.tsx` and then visit http://localhost:3000/todos you should see the following:
+In your project folder, if you move `app/_examples/client-component/page.tsx` to `app/todos/page.tsx` and then visit `http://localhost:3000/todos` you should see all the todos created.
 
 ![list of todos in nextjs app](/recipes/supabase/nextjs_todos.webp)
 
 ### All done!
 
-You have now successfully seeded your local Supabase development stack. You can now use the `snaplet generate` command to seed your local database with any data you need.
+You have now successfully seeded your Supabase local development stack. As well as use the `snaplet seed` command to seed your local database with the data you need.
 
-If you have any questions or feedback, please feel free to reach out to us on [Discord](https://app.snaplet.dev/chat).
+If you have any questions or feedback, reach out to us on [Discord](https://app.snaplet.dev/chat).
 
 ## Restoring to a Supabase local development stack
 
 Supabase makes it easy to start a project with a dedicated PostgreSQL database. However, achieving a development environment populated with data closely resembling producation, still requires some set up.
-This guide will help you integrate Snaplet with your Supabase project, allowing you to restore a snapshot of your production database into your local development stack.
+This guide will help you restore a snapshot of your production database into your local development stack.
 
 #### 1. Connect your source database (Production Database)
 
-The first thing you'll want to do is navigate to https://www.snaplet.dev and sign up for a new account (it's free). Once you have successfully signed up for a new account, you'll begin the onboarding process...
+Navigate to https://www.snaplet.dev and sign up for a new account (it's free). Once you have successfully signed up for a new account, you'll begin the onboarding process...
 
 ![Snaplet onboarding select team name](/recipes/supabase/onboarding_start.webp)
 
-On the “Connect database” step click on "Connect Supabase" to connect your Supabase account to Snaplet. Proceed through all the steps of authorizing your Supabase organization, selecting a Supabase project and giving us the password associated to the project.
+On the “Connect database” step click on "Connect Supabase" to connect your Supabase account to Snaplet. Proceed through all the steps of authorizing your Supabase organization, select a project and then enter the password associated to the project.
 
 ![Snaplet onboarding connect your database](/recipes/supabase/connect_to_supabase.webp)
 
-> The snapshots for your Supabase project will be set to only capture the `public` and `auth` schemas. Learn more [below](#excluding-specific-schemas-from-snapshots).
+> The snapshot configuration generated during onboarding will be set to only capture the `public` and `auth` schemas. Learn more [below](#excluding-specific-schemas-from-snapshots).
 
 #### 2: Create a snapshot
 
-Once that is done, continue to the next steps:
+Continue to the next steps:
 
 - Subsetting (skipping will create a snapshot with all your data).
 - Transforming (skipping will leave all your table columns untouched).
 
-Once you have gone through those steps, a new snapshot process will start and you will now be on the “capture step.” Wait for it to finish - this is the snapshot you will restore into your **target database.**
+Once you have gone through all these steps, a new snapshot process will start and you will now be on the “capture step.” Wait for it to finish - this is the snapshot you will restore into your **target database.**
 
 ![Snaplet onboarding capturing your database](/recipes/supabase/onboarding_capture.webp)
 
 #### 3: Set up your Supabase local development stack
 
-Below is a summary of commands you will have to run in your terminal to get Supabase set up on your local machine. For a more detailed steps you can visit the Supabase docs [here](https://supabase.com/docs/guides/cli/local-development).
+Below is a summary of commands you will have to run in your terminal to get Supabase set up on your local machine. For more detailed steps you can visit the Supabase docs [here](https://supabase.com/docs/guides/cli/local-development).
 
 ```bash >_&nbsp;terminal
 # log in to the Supabase CLI
 supabase login
 
-# initial your Supabase configuration in your project folder
+# initialize your Supabase configuration in your project folder
 supabase init
 
 # with docker running, start your Supabase services
 supabase start
 ```
 
-Running `supabase start` will output your Supabase credentials, copy the **DB_URL** field, as we will use it in your snaplet configuration file (step 5).
+Running `supabase start` will output your Supabase credentials, copy the **DB_URL** field, as we will paste it in your `snaplet.config.ts` file (step 5).
 
 ```bash >_&nbsp;terminal
 Started supabase local development setup.
@@ -237,19 +216,50 @@ service_role key: eyJh......
 
 #### 5: Config setup
 
-You're now ready to restore your production snapshot into your Supabase development project.
+1. Navigate to your project directory.
 
-1. Navigate to your project directory
-2. Run `snaplet setup`
+2. Set up your snaplet config.
 
-   1. You will be shown a warning to write `.snaplet/config` in your project directory. Select yes (y) to create the file.
-   2. Then you will be asked for a **target database connection string.** . Paste in the **DB URL** you copied in step 3.
+```bash >_&nbsp;terminal
+snaplet setup
+```
 
-3. Run `snaplet project setup` - you will be presented with a list of projects, these are databases that are connected to your Snaplet account. Choose the project that contains the snapshot you created in step 2.
+```bash >_&nbsp; terminal
+# mark
+✔ Welcome to Snaplet! 😸 Choose your adventure: › I want to capture or restore a snapshot 💾
+
+Target database credentials
+Snaplet restores data to your target database using the target database credentials.
+
+Read more: https://docs.snaplet.dev/guides/postgresql#connection-strings
+
+# mark
+✔ Target database connection string … postgresql://postgres:postgres@localhost:54322/postgres
+📡 Connected to database with "[secret]ql://postgres:postgres@localhost:54322/postgres"
+
+# mark
+✔ Select or create a project › My Team > My Project
+
+You're all set! Take a look at our docs to find out what you can do from here:
+https://docs.snaplet.dev/getting-started/start-here/
+
+Restore latest snapshot:
+To restore the latest snapshot in your project execute the command:
+snaplet ss restore --latest
+
+Local capture:
+You can learn more about self hosting here: https://docs.snaplet.dev/guides/self-hosting
+
+To capture a snapshot of your local database first pull the full configuration with:
+snaplet config pull
+
+Then capture the snapshot with:
+SNAPLET_SOURCE_DATABASE_URL=<database-url> snaplet ss capture
+```
 
 #### 6: Restore the data target
 
-With all the above steps complete, we can now restore!
+You are now ready to restore!
 
 1. Run `snaplet snapshot restore` in your project path.
 
@@ -257,7 +267,7 @@ With all the above steps complete, we can now restore!
 
 ### All done!
 
-If you want to learn more about Snaplet, you can explore our docs. If you have any questions, feel free to reach out on [Discord](https://app.snaplet.dev/chat).
+If you want to learn more about Snaplet, you can explore our docs. If you have any questions, reach out to us on [Discord](https://app.snaplet.dev/chat).
 
 That's it! You're all done, and should have restored a version of your Supabase production database with transformed data into your target database. You can now code against production-realistic data.
 
@@ -286,7 +296,7 @@ If you aren't actually needing the data for some of these schemas, you can stop 
 
 #### Excluding specific schemas from snapshots
 
-We recommand excluding the `storage` and `supabase_functions` schemas from your snapshots. This is because these schemas contain data that may not have relevant context of the target project you are restoring to.
+We recommand excluding the `storage` and `supabase_functions` schemas from your snapshots. This is because these schemas contain data that may not have the relevant context of the target project you are restoring to.
 > e.g: the storage schema may contain files that belong to your production project, but may not be relevant to your development project.
 
 Your snapshot config should look something like this:
@@ -297,10 +307,24 @@ defineConfig({
     $default: false,
     public: true,
     auth: true,
-    // when you enable an extension in your supabase project and have to create
-    // a schema for it, you can manually include it here.
+    // you can manually include schemas here, e.g: when you enable an extension and that
+    // extension creates a schema. Note: including any other schemas other than the "public"
+    // and "auth" schemas, is not a supported use case for this integratiion.
   }
 })
 ```
 
-During onboarding, this `select` option is automatically added to your config. In the web editor you will be shown a warning, if you choose to remove the `$default`
+During onboarding, the `select` option is automatically added to your config. In the web editor you will be shown a warning, if you choose to remove the `$default` field.
+
+#### Reset supabase database
+
+Use the `supabase db reset` command to reset the state of your Supabase project. 
+This is useful for cases a snapshot breaks your project, or you want to start from a clean slate.
+
+```bash >_&nbsp;terminal
+# reset your supabase database
+supabase db reset
+
+# restore your snapshot
+supabase snapshot restore
+```

@@ -1,10 +1,9 @@
 {
   "aws": "AWS",
-  "github-action": "Github Action",
+  "github-action": "GitHub Action",
   "neon": "Neon",
   "netlify": "Netlify",
   "prisma": "Prisma",
   "supabase": "Supabase",
-  "vercel": "Vercel",
-  "visual-studio-code": "VS Code Extension"
+  "vercel": "Vercel"
 }
