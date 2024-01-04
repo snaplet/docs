@@ -7,6 +7,22 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+  ## 4 January 2024 - v0.77.4
+  #### Allow using `@snaplet/copycat/next` with `@snaplet/seed`**
+
+We preview upcoming breaking changes in copycat by exporting the latest change for the upcoming copycat release as `@snaplet/copycat/next`.
+
+If you are using `@snaplet/seed`, you can now pass a `--copycat-next` flag when regenerating assets so that these generated assets use `@snaplet/copycat/next`:
+
+```
+# to switch to `@snaplet/copycat/next`
+npx snaplet generate --copycat-next
+
+# to switch back to `@snaplet/copycat`
+npx snaplet generate
+```
+  </Step>
+  <Step>
   ## 31 December 2023 - v0.77.3
 
   #### Fix `faker is not defined`
