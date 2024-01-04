@@ -7,6 +7,23 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+  ## 4 January 2024 - v0.78.0
+  #### Alpha release of `snaplet fingerprint`**
+This release adds some of the basics for a feature we're working on called `snaplet fingerprint`.
+
+A new command has been added:
+```
+snaplet fingerprint <database-url>
+```
+
+When run, `snaplet fingerprint` will inspect the database url given (typically this would be a production database url), collect some statistical details from a sample of data in your database, and store them in a `.snaplet/fingerprint.json` file. When running a seed script (e.g. `npx tsx seed.mts`), `@snaplet/seed` will try read from this file - if it exists, it will use it to generate data that is more closely matching the kind of data you have in your production database.
+
+The data it generates is still entirely fake - it will just now be closer to how your production data looks. For example, if a date column, `snaplet fingerprint` would find the minimum and maximum values from a sample of the data, which in turn allows `@snaplet/seed` to generate data within this same date range.
+
+**note** This still is an experimental feature - docs, improvements and much more coming soon!
+  </Step>
+
+  <Step>
   ## 4 January 2024 - v0.77.4
   #### Allow using `@snaplet/copycat/next` with `@snaplet/seed`**
 
