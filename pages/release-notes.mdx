@@ -7,6 +7,43 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+  ## 4 January 2024 - v0.78.1
+  #### `@snaplet/copycat` BREAKING CHANGE NOTICE**
+`copycat.float()` method has been rewritten: previously, output values would stay close to the `min` value give. With this release, output values will distribute more evenly across the (min, max) range of values.
+
+**When will the change happen?**
+We are planning on releasing the change on **23 December 2024** at 12:00pm (noon) UTC
+
+**Who will be affected?**
+You might be impacted by this change if:
+* If you use snapshots, and you used `copycat.float()` in your `transform` configuration: https://docs.snaplet.dev/core-concepts/capture#transform-data
+* If you use `@snaplet/seed`, and you have floating-point column types (e.g. `float4`) in a table for which you use `@snaplet/seed` to generate data
+
+**How to prepare:**
+To preview the impact of this change, you can modify your `copycat` import in your configuration.
+From: `import { copycat } from '@snaplet/copycat'`
+To: `import { copycat } from '@snaplet/copycat/next'`.
+
+If you are using `@snaplet/seed`, you'll also need to first update your snaplet dependencies:
+```
+yarn up snaplet @snaplet/seed
+```
+
+Then use the `--copycat-next` flag when regenerating assets:
+
+```
+# to switch to `@snaplet/copycat/next`
+npx snaplet generate --copycat-next
+
+# to switch back to `@snaplet/copycat`
+npx snaplet generate
+```
+
+**Need More Time?**
+If the scheduled update time doesn’t suit your schedule, please let us know. We are sorry for any inconvenience this may cause and are here to assist with a smoother transition. Thank you for your attention to this matter.
+  </Step>
+
+  <Step>
   ## 4 January 2024 - v0.78.0
   #### Alpha release of `snaplet fingerprint`**
 This release adds some of the basics for a feature we're working on called `snaplet fingerprint`.
