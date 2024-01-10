@@ -6,7 +6,7 @@
 
 The `SnapletClient` is now stateful.
 
-It means that a global seed is now incremented every time you call a function on the data client.
+It means that a global seed is now incremented every time you call a model function on the data client.
 
 ```ts seed.mts
 // calling a model multiple times works and will continue the id sequences
@@ -39,7 +39,7 @@ await snaplet.$transaction(async (snaplet) => {
 });
 ```
 
-### Stores as a first-class citizen
+### Store as a first-class citizen
 
 Everytime you call a model function, it now returns the generated data as a store.
 
