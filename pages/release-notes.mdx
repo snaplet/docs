@@ -6,19 +6,83 @@ import { Steps } from "nextra/components"
 
 
 <Steps>
+<Step>
+## 11 January 2024 - v0.81.0
+
+This is a big one for `@snaplet/seed`! 🌱
+
+🚨 **Breaking Changes**
+
+**1. Stateful data client**
+
+The `SnapletClient` is now stateful, meaning that it holds global seeds so you can execute multiple plans generating different data.
+
+This now works:
+```ts
+await snaplet.users((x) => x(2));
+await snaplet.users((x) => x(2));
+```
+
+You can clear the state of the client using the new `snaplet.$reset` function.
+
+**2. Global and local stores**
+
+Stores are now first class citizens!
+
+Each plan executed returns the data it produced as a local store.
+
+```ts
+const usersStore = await snaplet.users((x) => x(2))
+// { users: [user, user] }
+console.log(usersStore)
+```
+
+A new **global** store is introduced as part of the client's state, accessible at `snaplet.$store`. This store contains all the data generated so far. You can reset its state as part of `snaplet.$reset()`.
+
+**3. Fine-grained auto connections**
+
+We reworked the `autoConnect` feature. The option is renamed to simply `connect` and accepts either `true` or a store. When using `true`, it will connect the plan to what was already generated in the global store.
+
+Before:
+```ts
+await snaplet.$pipe([
+  snaplet.organizations(x => x(2)),
+  snaplet.users(x => x(10), { autoConnect: true })
+]);
+```
+
+Now:
+```ts
+await snaplet.organizations(x => x(2));
+// the 10 users will be automatically connected to one of the 2 previously generated organizations contained in snaplet.$store
+snaplet.users(x => x(10), { connect: true });
+```
+
+You can also pass a store:
+```ts
+const externalStore = { users: [{ id: 42 }, { id: 5432 }]} };
+await snaplet.posts(x => x(3), { connect: externalStore });
+```
+
+**4. Operators `pipe` and `merge` are gone** 🫡
+
+Due to the changes above, the operators are now obsolete and gone. 👋
+
+Full migration docs: https://docs.snaplet.dev/migrations/seed#from-0810-and-above
+</Step>
   <Step>
 ## 11 January 2024 - v0.80.0
-### Bugfixes
-#### Import `@snaplet/copycat` in `seed.mts` example
+#### Bugfixes
+##### Import `@snaplet/copycat` in `seed.mts` example
 In the case of`@snaplet/seed`, `npx snaplet setup` now also adds `@snaplet/copycat` as a dependency to your project. The example `seed.mts` file we generate as part of `npx snaplet setup` now also includes an import to `@snaplet/copycat`. Since `@snaplet/copycat` is typically used as part of writing a seed script with `@snaplet/seed`, this change saves you needing to jump through these unnecessary hoops.
 
-### Improvements
-#### Handle invalid `system-manifest.json` files gracefully
+#### Improvements
+##### Handle invalid `system-manifest.json` files gracefully
 We keep some internal state in a file called `system-manifest.json`. For different reasons, this file might be corrupt. This shouldn't prevent you from using Snaplet though, so we now recover from this case gracefully.
   </Step>
   <Step>
   ## 5 January 2024 - v0.78.3
-#### Fix `Missing semicolon` error in `snaplet setup` and `snaplet generate`
+##### Fix `Missing semicolon` error in `snaplet setup` and `snaplet generate`
 For some databases, we had an issue preventing generating  the assets needed by `@snaplet/seed`.
   </Step>
   <Step>
@@ -214,11 +278,11 @@ You can follow this migration guide: https://docs.snaplet.dev/migrations/seed#fr
   <Step>
   ## 2 November 2023 - v0.73.0
 
-  #### 🚨 Generate seeds breaking change 
+  #### 🚨 Generate seeds breaking change
 
   We've made a change to the way Snaplet generates seeds, which breaks previous data generations. We previously introduced a hash based on the plan's inputs to our seeding mechanism, but after user feedback, it's clear that it's not the right approach. The issue with this approach is that if you alter your plan, the modification will impact all the models involved in the plan. As such, we've decided to roll it back.
 
-  If you're interested in the specifics, read on. 
+  If you're interested in the specifics, read on.
 
   Let's take this example:
 
@@ -424,7 +488,7 @@ You can follow this migration guide: https://docs.snaplet.dev/migrations/seed#fr
 
   #### 🎁 New Feature: options supported for `pipe` and `merge` operators
 
-  As you may expect, with this change, we now also support options to be provided for these operators in our Generate API. 
+  As you may expect, with this change, we now also support options to be provided for these operators in our Generate API.
 
   ```
   snaplet.$merge([/* ... plans */], {
@@ -442,7 +506,7 @@ You can follow this migration guide: https://docs.snaplet.dev/migrations/seed#fr
 
   Options given to these operators will be passed down to the plans they are combining. If these plans provide their own options, they will take precedence over the corresponding pipe/merge options.
 
-  #### 🐛 Bug fixes - Generate 
+  #### 🐛 Bug fixes - Generate
   We were were not detecting identity columns correctly, and `generate` was not able to generate and insert rows for tables with identity columns. `Snaplet generate` is now able to correctly detect if it is dealing with an identity column, and uses `OVERRIDING SYSTEM VALUE` when outputting `INSERT` statements in order to work with these columns.
   </Step>
   <Step>
@@ -457,28 +521,28 @@ You can follow this migration guide: https://docs.snaplet.dev/migrations/seed#fr
   ```
   await  snaplet.User({ email: 'alice@acme.com' })
   await snaplet.User({ email: 'bob@acme.com' })
-  ``` 
+  ```
 
   Doen't make much sense, right? This was because the seed value injected per column was only relying on your plan's paths (here the seed for the User's id would be `0/User/id`).
 
   We produce a hash based on the inputs you provide to `snaplet.<modelName>(inputs)` so the output will always depends on the inputs. It's the same behaviour as Snaplet [Copycat](https://github.com/snaplet/copycat), and we think it's more predictable and logical that way.
 
-  #### 🎁 New Features: `generate` improvements 
+  #### 🎁 New Features: `generate` improvements
 
-  We've added the `--output` option to `generate` so you can safely write the SQL statement to a file without being bothered by eventual other messages logged to stdout (like our auto upgrade message). [Read more](https://docs.snaplet.dev/reference/cli#generate-1). 
+  We've added the `--output` option to `generate` so you can safely write the SQL statement to a file without being bothered by eventual other messages logged to stdout (like our auto upgrade message). [Read more](https://docs.snaplet.dev/reference/cli#generate-1).
 
-  We've also added more ways of handling `tags` attached to a snapshot to the CLI. [Read more](https://docs.snaplet.dev/reference/cli).  
+  We've also added more ways of handling `tags` attached to a snapshot to the CLI. [Read more](https://docs.snaplet.dev/reference/cli).
   </Step>
   <Step>
 ## 12 October 2023 - v0.66.0
 
-#### ✅ `Generate` in Beta 
+#### ✅ `Generate` in Beta
 
 A major milestone for our `generate` feature, which officially enters beta status!
 
-With this release, we have totally reworked the `generate` API so it can be both more powerful and flexible. It goes from alpha to beta status, and we'd love to hear your feedback! 
+With this release, we have totally reworked the `generate` API so it can be both more powerful and flexible. It goes from alpha to beta status, and we'd love to hear your feedback!
 
-If you've been using `generate` you'll need to migrate to use the latest version. We have a [migration guide here](https://docs.snaplet.dev/migrations/generate#from-0660-and-above). 
+If you've been using `generate` you'll need to migrate to use the latest version. We have a [migration guide here](https://docs.snaplet.dev/migrations/generate#from-0660-and-above).
 
 Just getting started? If you want to know more about how to generate data you can refer to our [quick start guide](https://docs.snaplet.dev/getting-started/quick-start/generate) or our [`generate` core concept](https://docs.snaplet.dev/core-concepts/generate) page where we dig deeper into `generate` and its options.
 
