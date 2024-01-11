@@ -77,8 +77,6 @@ If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/
 
 You can refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed) to learn about the basics of `@snaplet/seed`.
 
-For more, check out the [Seed Quick Start Guide](/getting-started/quick-start/seed).
-
 ### Inside the `@snaplet/seed` workflow
 
 #### Plans, stores and SQL statements
@@ -101,7 +99,7 @@ import { SnapletClient } from '@snaplet/seed';
 
 const snaplet = new SnapletClient();
 
-await snaplet.posts([{
+const postsStore = await snaplet.posts([{
   title: 'Hello World!',
   author: {
     email: ({ seed }) =>
@@ -116,14 +114,14 @@ await snaplet.posts([{
 Here is what its store looks like internally:
 
 ```ts
-const store = {
+const postsStore = {
   users: [user, user, user, user],
   posts: [post],
   comments: [comment, comment, comment],
 }
 ```
 
-This store is very useful when you want to [connect](/core-concepts/seed#connecting-to-existing-data) your models, reusing existing data instead of generating new one.
+This store is very useful when you want to [connect](/core-concepts/seed#connecting-data) your models, reusing existing data instead of generating new one.
 
 
 ### Static or dynamic data, we got you covered
@@ -164,7 +162,44 @@ snaplet.users((x) => [
 
 ### Connecting data
 
+#### Using `connect` option
+
+We provide a special option that you can activate in the options of a plan, called `connect`.
+
+When `true`, the plan will automatically connect models relationships to fulfill to the client's global store if possible. The corresponding model will be picked randomly (but deterministically, we're using `copycat.oneOf` method under the hood).
+
+In the following example, the `post` model will be connected to one of the 3 `users` in the store.
+
+```ts seed.mts
+import { SnapletClient } from '@snaplet/seed';
+
+const snaplet = new SnapletClient();
+
+await snaplet.users((x) => x(3));
+// mark
+await snaplet.posts([{}], { connect: true });
+```
+
+You can also provide a store to the `connect` option, in which case the plan will connect to the models in the store instead of the client's global store.
+
+```ts seed.mts
+import { SnapletClient } from '@snaplet/seed';
+
+const snaplet = new SnapletClient();
+
+await snaplet.users((x) => x(3));
+const heroesStore = await snaplet.users([
+  { email: 'bruce@wayne-enterprises.com' },
+  { email: 'peter.parker@gmail.com' }
+]);
+await snaplet.posts([{}], { connect: heroesStore });
+```
+
+In the above case, the `post` model will be connected to one of the user in the `heroesStore`.
+
 #### Using `connect` callback function
+
+If you need a more fine-grained control over the connection, you can use the `connect` callback function.
 
 <CH.Scrollycoding className="seed-tutorial-configuration-file">
 
@@ -334,41 +369,6 @@ const branch = {
   comments: [comment],
 };
 ```
-
-#### Using `connect` option
-
-We provide a special option that you can activate in the options of a plan, called `connect`.
-
-When `true`, the plan will automatically connect models relationships to fulfill to the client's global store if possible. The corresponding model will be picked randomly (but deterministically, we're using `copycat.oneOf` method under the hood).
-
-In the following example, the `post` model will be connected to one of the 3 `users` in the store.
-
-```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
-
-const snaplet = new SnapletClient();
-
-await snaplet.users((x) => x(3));
-// mark
-await snaplet.posts([{}], { connect: true });
-```
-
-You can also provide a store to the `connect` option, in which case the plan will connect to the models in the store instead of the client's global store.
-
-```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
-
-const snaplet = new SnapletClient();
-
-await snaplet.users((x) => x(3));
-const heroesStore = await snaplet.users([
-  { email: 'bruce@wayne-enterprises.com' },
-  { email: 'peter.parker@gmail.com' }
-]);
-await snaplet.posts([{}], { connect: heroesStore });
-```
-
-In the above case, the `post` model will be connected to one of the user in the `heroesStore`.
 
 ## Customizing `@snaplet/seed` with aliases
 
