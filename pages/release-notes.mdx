@@ -7,6 +7,16 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+## 11 January 2024 - v0.80.0
+### Bugfixes
+#### Import `@snaplet/copycat` in `seed.mts` example
+In the case of`@snaplet/seed`, `npx snaplet setup` now also adds `@snaplet/copycat` as a dependency to your project. The example `seed.mts` file we generate as part of `npx snaplet setup` now also includes an import to `@snaplet/copycat`. Since `@snaplet/copycat` is typically used as part of writing a seed script with `@snaplet/seed`, this change saves you needing to jump through these unnecessary hoops.
+
+### Improvements
+#### Handle invalid `system-manifest.json` files gracefully
+We keep some internal state in a file called `system-manifest.json`. For different reasons, this file might be corrupt. This shouldn't prevent you from using Snaplet though, so we now recover from this case gracefully.
+  </Step>
+  <Step>
   ## 5 January 2024 - v0.78.3
 #### Fix `Missing semicolon` error in `snaplet setup` and `snaplet generate`
 For some databases, we had an issue preventing generating  the assets needed by `@snaplet/seed`.
