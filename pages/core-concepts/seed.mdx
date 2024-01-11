@@ -178,6 +178,14 @@ await snaplet.$transaction((snaplet) => {
 
 The `snaplet.$transaction` function can be used in tests to ensure that each test is executed with a clean state.
 
+If you need a fully deterministic plan execution, you can provide your own seed which will override the global seed counter.
+
+```ts
+// These statements will produce the exact same results
+await snaplet.posts(x => x(3), { seed: '42' });
+await snaplet.posts(x => x(3), { seed: '42' })
+```
+
 ### Static or dynamic data, we got you covered
 
 If you want to use static data, you can directly pass an array to the models functions.
@@ -224,11 +232,7 @@ When `true`, the plan will automatically connect models relationships to fulfill
 
 In the following example, the `post` model will be connected to one of the 3 `users` in the store.
 
-```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
-
-const snaplet = new SnapletClient();
-
+```ts
 await snaplet.users((x) => x(3));
 // mark
 await snaplet.posts([{}], { connect: true });
@@ -236,20 +240,28 @@ await snaplet.posts([{}], { connect: true });
 
 You can also provide a store to the `connect` option, in which case the plan will connect to the models in the store instead of the client's global store.
 
-```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
-
-const snaplet = new SnapletClient();
-
+```ts
 await snaplet.users((x) => x(3));
+
 const heroesStore = await snaplet.users([
   { email: 'bruce@wayne-enterprises.com' },
   { email: 'peter.parker@gmail.com' }
 ]);
+
 await snaplet.posts([{}], { connect: heroesStore });
 ```
 
 In the above case, the `post` model will be connected to one of the user in the `heroesStore`.
+
+The store can also be manually constructed, for example if you want to connect to existing records in your database.
+
+```ts
+const users = await prisma.users.findMany({
+  where: { status: 'HERO' }
+})
+
+await snaplet.posts([{}], { connect: { users } });
+```
 
 #### Using `connect` callback function
 
