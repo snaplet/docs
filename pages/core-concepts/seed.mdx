@@ -81,7 +81,7 @@ You can refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed)
 
 #### Plans, stores and SQL statements
 
-The **plan** is what's returned by the methods of `@snaplet/seed`. It's a representation of the data you want to seed.
+The **plan** is what's returned by the functions of `@snaplet/seed`. It's a representation of the data you want to seed.
 
 ```ts
 const userPlan = snaplet.users([{ email: 'snappy@snaplet.dev' }]);
@@ -121,12 +121,66 @@ const postsStore = {
 }
 ```
 
-This store is very useful when you want to [connect](/core-concepts/seed#connecting-data) your models, reusing existing data instead of generating new one.
+#### The global store
 
+The global store is a special store which contains all the data that was generated as part of the plans you executed.
+It is accessible under the `$store` property of the data client.
+
+```ts
+await snaplet.posts(x => x(3));
+
+// { posts: [post, post, post], users: [user, user, user] }
+console.log(snaplet.$store);
+```
+
+#### Local stores
+
+Each plan produces its own store and returns it when executed.
+It's particularly useful for the [`connect` option](/core-concepts/seed#using-connect-option).
+
+```ts
+const postsStore = await snaplet.posts(x => x(3));
+
+// { posts: [post, post, post], users: [user, user, user] }
+console.log(postsStore);
+
+const usersStore = await snaplet.users(x => x(2));
+
+// { users: [user, user] }
+console.log(usersStore);
+
+// { posts: [post, post, post], users: [user, user, user, user, user] }
+console.log(snaplet.$store);
+```
+
+#### Client state
+
+The `SnapletClient` keeps track of what was created before with `snaplet.$store` and increments global seeds each time you call a model function.
+
+If you want to reset this state, you can use the `snaplet.$reset` function.
+
+```ts
+await snaplet.posts(x => x(3));
+snaplet.$reset();
+// will give you the same result as before
+await snaplet.posts(x => x(3));
+```
+
+We also provide a way to get a new instance of the `SnapletClient` with a clean state through the `snaplet.$transaction` function.
+
+```ts
+await snaplet.posts(x => x(3));
+await snaplet.$transaction((snaplet) => {
+  // will give you the same result as above
+  await snaplet.posts(x => x(3));
+})
+```
+
+The `snaplet.$transaction` function can be used in tests to ensure that each test is executed with a clean state.
 
 ### Static or dynamic data, we got you covered
 
-If you want to use static data, you can directly pass an array to the models methods.
+If you want to use static data, you can directly pass an array to the models functions.
 As always, all the required fields and relationships will be automatically created for you based on your database schema.
 
 ```ts
@@ -137,7 +191,7 @@ snaplet.users([
 ]);
 ```
 
-If you want to use dynamic data, you can pass a callback function to the models methods. We inject a function `x` that you can use to generate as many models as you want.
+If you want to use dynamic data, you can pass a callback function to the models functions. We inject a function `x` that you can use to generate as many models as you want.
 
 ```ts
 // an array of 10 users
@@ -166,7 +220,7 @@ snaplet.users((x) => [
 
 We provide a special option that you can activate in the options of a plan, called `connect`.
 
-When `true`, the plan will automatically connect models relationships to fulfill to the client's global store if possible. The corresponding model will be picked randomly (but deterministically, we're using `copycat.oneOf` method under the hood).
+When `true`, the plan will automatically connect models relationships to fulfill to the client's global store if possible. The corresponding model will be picked randomly (but deterministically, we're using `copycat.oneOf` function under the hood).
 
 In the following example, the `post` model will be connected to one of the 3 `users` in the store.
 
