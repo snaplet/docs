@@ -1,5 +1,112 @@
 # Seed migration
 
+## From `0.80.0` and above
+
+### Stateful data client
+
+The `SnapletClient` is now stateful.
+
+It means that a global seed is now incremented every time you call a model function on the data client.
+
+```ts seed.mts
+// calling a model multiple times works and will continue the id sequences
+await snaplet.users([{}]);
+await snaplet.users([{}]);
+```
+
+All the generated data is now centralized into a global store available as the `$store` property on the data client.
+
+```ts seed.mts
+await snaplet.users([{}]);
+
+// { users: [ { id: 1, email: 'john.doe@acme.com' } ] }
+console.log(snaplet.$store);
+```
+
+You can reset the state of the data client by calling the `$reset` function.
+
+```ts seed.mts
+await snaplet.users([{}]);
+snaplet.$reset();
+```
+
+And you can get a new instance of the data client by calling the `$transaction` function.
+It receives a data client which state is reset.
+It's particularly useful in tests when you want a new client for each test.
+
+```ts seed.mts
+await snaplet.$transaction(async (snaplet) => {
+  await snaplet.users([{}]);
+});
+```
+
+### Store as a first-class citizen
+
+Everytime you call a model function, it now returns the generated data as a store.
+
+```ts seed.mts
+const singleUserStore = await snaplet.users([{}]);
+const usersStore = await snaplet.users(x => x(3));
+
+// { users: [ { id: 1 } ] }
+console.log(singleUserStore);
+
+// { users: [ { id: 2 }, { id: 3 }, { id: 4 } ] }
+console.log(usersStore);
+
+// { users: [ { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 } ] }
+console.log(snaplet.$store);
+```
+
+### Fine-grained connections
+
+`autoConnect` is renamed to `connect` and now accepts either `true` or a store.
+It allows for more flexibility when you want to connect generated data to existing data.
+
+```ts seed.mts
+await snaplet.users(x => x(3));
+
+// it will connect the authors of the posts to the previously generated users
+await snaplet.posts(x => x(3), { connect: true });
+```
+
+`connect: true` is a shorthand for `connect: snaplet.$store`.
+
+And here is how you can pass a custom store.
+
+```ts seed.mts
+// it will connect the authors of the posts to one of these users
+const externalStore = { users: [{ id: 42 }, { id: 5432 }]} };
+await snaplet.posts(x => x(3), { connect: externalStore });
+```
+
+### Good bye operators!
+
+We are removing the `pipe` and `merge` operators in light of the previous changes.
+
+If previously you had something like this:
+
+```ts seed.mts
+await snaplet.$pipe([
+  snaplet.users(x => x(3)),
+  snaplet.posts(x => x(3), { autoConnect: true }),
+]);
+```
+
+It is now equivalent to:
+
+```ts seed.mts
+await snaplet.users(x => x(3));
+await snaplet.posts(x => x(3), { connect: true });
+```
+
+Or if you don't want to connect on the global store:
+
+```ts seed.mts
+const usersStore = await snaplet.users(x => x(3));
+await snaplet.posts(x => x(3), { connect: usersStore });
+```
+
 ## From `0.76.0` and above
 
 In this version, we are removing the `run` function from the `generate` configuration.
