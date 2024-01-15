@@ -6,6 +6,31 @@ import { Steps } from "nextra/components"
 
 
 <Steps>
+  <Step>
+## 15 January 2024 - v0.82.0
+
+#### 🚨 BREAKING CHANGES in `@snaplet/seed`
+
+We've made improvements to our AI model to improve some the data we generate to more closely match your production database.
+
+This means that when running `snaplet generate`, the same field (column in a table) might now have a different default value generated for it compared to before `snaplet generate` was run.
+
+After upgrading, subsequent runs of `snaplet generate` afterwards will *not* cause different values to be generated though - just the first `snaplet generate` after the upgrade.
+
+In this context, a default value means a value that was not explicitly given to `@snaplet/seed` for a field (column in a table).
+
+For example:
+
+```ts
+// name given explicitly
+await snaplet.users({ name: 'Garnet Harley' })
+
+// name not given explicitly
+// => the generated value might have now changed
+// (after the first `snaplet generate` after upgrading)
+await snaplet.users({})
+```
+  </Step>
 <Step>
 ## 11 January 2024 - v0.81.0
 
