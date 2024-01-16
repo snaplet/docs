@@ -4,13 +4,13 @@ import { Callout } from "nextra/components";
 
 ![I absolutely love Supabase!](/recipes/supabase/snappy-holding-supabase-logo.svg)
 
-Snaplet gives you two options for getting data into your Supabase project. Pick your own path:
+Snaplet gives you two options for getting data into your Supabase public schema. Pick your own path:
 
 - [Generate data for your Supabase local development stack](/recipes/supabase#seeding-a-supabase-local-development-stack)
 - [Restore data from your production Supabase project to your local development stack](/recipes/supabase#restoring-to-a-supabase-local-development-stack)
 
 <Callout>
-If you experience any issues with any of the paths, reach out to us on [Discord](https://app.snaplet.dev/chat).
+For restoring and seeding data into your Supabase project, only the `public` and `auth` schemas are supported. If you experience any issues with any of the paths, reach out to us on [Discord](https://app.snaplet.dev/chat).
 </Callout>
 
 ## Generate data for your Supabase local development stack
@@ -111,12 +111,10 @@ DRY=0 npx tsx seed.mts
 **3.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
 
 ```ts seed.mts
-await snaplet.$pipe([
-  // create 10 users
-  snaplet.users((x) => x(10)),
-  // create 20 todos, for each of the 10 users
-  snaplet.todos((x) => x(20), { autoConnect: true }),
-]);
+// create 10 users
+await snaplet.users((x) => x(10));
+// create 20 todos, for each of the 10 users
+snaplet.todos((x) => x(20), { connect: true });
 ```
 
 You are now ready to seed your database.
@@ -275,31 +273,12 @@ That's it! You're all done, and should have restored a version of your Supabase 
 
 ### Troubleshooting
 
-#### Warnings after restoring
-
-When running the restore command, you may see warnings such as:
-
-```text >_&nbsp;terminal
-Could not drop schema "auth", Snaplet will try to truncate all tables and related objects as a fallback: error: must be owner of schema auth
-[Schema] Warning: type "aal_level" already exists, statement: "CREATE TYPE auth.aal_level AS ENUM (...
-```
-
-Supabase includes a few schemas that are not owned by the `postgres` user, for example: **auth**, **graphql**, **realtime,** and **storage.** During the capture process, Snaplet will try to capture data for tables under these schemas (if it has permission to read data from them)
-
-Your **target database** may already contain these schemas when restoring. The warnings just mean that when Snaplet attempted to restore these schemas (**auth, graphql**, etc) but was unable to drop the ones already existing in your **target database** (since the user is not an owner of these), and consequently it was not able to create any structure for them (since that structure still exists)
-
-Snaplet will still make sure to clear all data for tables in these schemas and restore data for each of these tables to what is in the snapshot. In other words, **these warnings do not mean that the restore failed, but rather show you what Snaplet tried to do.**
-
-If you aren't actually needing the data for some of these schemas, you can stop these warnings by excluding the schema from the captured snapshots. You can read more on how to do this [over here in our docs](/core-concepts/capture#select-data):
-
-![Example of excluding a schema](/recipes/supabase/snaplet-supabase-schema-exclude.png)
-
----
-
 #### Excluding specific schemas from snapshots
 
-We recommand excluding the `storage` and `supabase_functions` schemas from your snapshots. This is because these schemas contain data that may not have the relevant context of the target project you are restoring to.
-> e.g: the storage schema may contain files that belong to your production project, but may not be relevant to your development project.
+Snaplet does not support restoring all the schemas in a Supabase instance. By default your config will be set to only capture the `public` and `auth` schemas. 
+You can manually include other schemas, but this is not a supported use case for this integration.
+
+> Schemas such as `storage` and `supabase_functions` schemas are excluded, because Snaplet is unable to also the clone the infrastructure required to support these schemas.
 
 Your snapshot config should look something like this:
 
@@ -311,7 +290,7 @@ defineConfig({
     auth: true,
     // you can manually include schemas here, e.g: when you enable an extension and that
     // extension creates a schema. Note: including any other schemas other than the "public"
-    // and "auth" schemas, is not a supported use case for this integratiion.
+    // and "auth" schemas, may break the state of your Supabase project.
   }
 })
 ```
