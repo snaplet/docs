@@ -222,6 +222,132 @@ snaplet.users((x) => [
 ])
 ```
 
+#### Using the generate callback
+
+If you need more control over the value generated for each field, you can also pass a function for that field:
+
+```ts
+snaplet.users([{
+  email: ({ seed }) => copycat.email(seed)
+}])
+```
+
+##### `seed`
+
+A value unique to this particular field, and to this particular model being generated.
+
+`seed` is deterministic in the sense that for each new _session_ (for example, each new run of a seed script using `@snaplet/seed`, or each
+new run of the same [`$transaction`](#client-state)), the generate
+callback will receive the same value for `seed` for the same field of the same model.
+
+```ts
+const run = () =>
+  snaplet.$transaction(async (snaplet) => {
+    await snaplet.customers([
+      {
+        email({ seed }) {
+          return copycat.email(seed);
+        },
+      },
+    ]);
+  });
+
+await run();
+// INSERT INTO public."Customer" ... VALUES (..., 'Autumn_Boyer64366@vague-foal.org', ...);
+
+await run();
+// INSERT INTO public."Customer" ... VALUES (..., 'Autumn_Boyer64366@vague-foal.org', ...);
+```
+
+#### `data`
+
+An object containing the data already generated for a particular model. 
+
+```ts
+await snaplet.users([{
+  email: ({ data }) => `${data.first_name}${data.last_name}@example.org`.toLowerCase()
+}])
+```
+
+#### Field precedence
+
+The place in which the generate callback was given will determine what fields will be already available in `data`.
+
+For example, fields specified earlier in the same object for a particular model will be available in `data` for fields
+specified later in that object:
+
+```ts
+await snaplet.users([{
+  // `name` is evaluated first, then `email`
+  name: ({ seed }) => copycat.firstName(seed),
+  email: ({ data }) => `${data.name}@example.org`.toLowerCase()
+}])
+```
+
+And similarly, fields specified for a model when instantiating `SnapletClient` (`name` in the example below) will be available in `data` for
+fields specified as part of a plan (`email` in the example below):
+
+```ts
+new SnapletClient({
+  models: {
+    users: {
+      name: ({ seed }) => copycat.firstName(seed)
+    }
+  }
+})
+
+await snaplet.users([{
+  // `name` was given when instantiating `SnapletClient`, so it'll be available here
+  email: ({ data }) => `${data.name}@example.org`.toLowerCase()
+}])
+```
+
+To help with knowing what exactly will be available in `data`, we generate data in this order:
+
+1. Values for parent relation fields  (for example, an `organizationId` field on a `members`  model) will be generated first
+
+2. Then default values for fields (if you didn't explicitly define what the value of a field should be anywhere) will be generated next
+
+3. Then values given for fields using the `models` option for `SnapletClient` (as shown below) will be generated next:
+
+ ```ts
+new SnapletClient({
+  models: {
+    users: {
+      name: ({ seed }) => copycat.firstName(seed)
+    }
+  }
+})
+```
+
+4. Then values given for fields using the `models` option for a plan:
+
+```ts
+snaplet.users([{ ... }], {
+  models: {
+    name: ({ seed }) => copycat.firstName(seed)
+  }
+})
+```
+
+5. Then finally, fields specified earlier in the same object for a particular model will be generated before fields specified later in that object:
+
+```
+await snaplet.users([{
+  // `name` is evaluated first, then `email`
+  name: ({ seed }) => copycat.firstName(seed),
+  email: ({ data }) => `${data.name}@example.org`.toLowerCase()
+}])
+```
+
+#### `store`
+
+The [store local to this plan](#local-stores), containing models already created in this plan.
+
+#### `$store`
+
+The [global store](https://docs.snaplet.dev/core-concepts/seed#the-global-store) containing all models created in this `snaplet` instance so far.
+
 ### Connecting data
 
 #### Using `connect` option
@@ -435,6 +561,14 @@ const branch = {
   comments: [comment],
 };
 ```
+
+#### `store`
+
+The [store local to this plan](#local-stores), containing models already created in this plan.
+
+#### `$store`
+
+The [global store](https://docs.snaplet.dev/core-concepts/seed#the-global-store) containing all models created in this `snaplet` instance so far.
 
 ## Customizing `@snaplet/seed` with aliases
 
