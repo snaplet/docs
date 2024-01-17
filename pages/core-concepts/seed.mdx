@@ -259,7 +259,7 @@ await run();
 // INSERT INTO public."Customer" ... VALUES (..., 'Autumn_Boyer64366@vague-foal.org', ...);
 ```
 
-#### `data`
+##### `data`
 
 An object containing the data already generated for a particular model. 
 
@@ -269,7 +269,7 @@ await snaplet.users([{
 }])
 ```
 
-#### Field precedence
+###### Field precedence
 
 The place in which the generate callback was given will determine what fields will be already available in `data`.
 
@@ -340,11 +340,11 @@ await snaplet.users([{
 }])
 ```
 
-#### `store`
+##### `store`
 
 The [store local to this plan](#local-stores), containing models already created in this plan.
 
-#### `$store`
+##### `$store`
 
 The [global store](https://docs.snaplet.dev/core-concepts/seed#the-global-store) containing all models created in this `snaplet` instance so far.
 
@@ -562,11 +562,11 @@ const branch = {
 };
 ```
 
-#### `store`
+##### `store`
 
 The [store local to this plan](#local-stores), containing models already created in this plan.
 
-#### `$store`
+##### `$store`
 
 The [global store](https://docs.snaplet.dev/core-concepts/seed#the-global-store) containing all models created in this `snaplet` instance so far.
 
