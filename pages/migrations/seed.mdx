@@ -1,5 +1,35 @@
 # Seed migration
 
+## From `0.83.0` and above
+We've removed the `modelSeed` parameter that we pass to generate functions in favor of a new `data` parameter. 
+
+Previously, if you had a field with a value that depended on another field, `modelSeed` provided a way to accomplish this:
+
+```
+// **before**
+await snaplet.users([{
+  createdAt: ({ modelSeed }) => copycat.dateString(modelSeed),
+  updateAt: ({ modelSeed }) => {
+    const createdAt = copycat.dateString(modelSeed)
+    const updatedAtMs = Number(new Date(createdAt)) + 60_000
+    return new Date(updatedAtMs).toISOString()
+  }
+}]
+```
+
+Since we now have the `data` parameter, we have a more natural way of obtaining the value generated for previous values:
+
+```
+// **after**
+await snaplet.users([{
+  createdAt: ({ seed }) => copycat.dateString(seed),
+  updateAt: ({ data }) => {
+    const updatedAtMs = Number(new Date(data.createdAt)) + 60_000
+    return new Date(updatedAtMs).toISOString()
+  }
+}]
+```
+
 ## From `0.81.0` and above
 
 ### Stateful data client
