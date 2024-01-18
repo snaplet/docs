@@ -19,42 +19,7 @@ await snaplet.users([{
 }])
 ```
 
-To help with knowing what exactly will be available in `data`, we generate data in this order:
-1. Values for parent relation fields  (for example, an `organizationId` field on a `members`  model)
-2. Default values for fields (if you didn't explicitly define what the value of a field should be anywhere)
-3. Values given for fields using the `models` option for `SnapletClient`, example:
-
- ```
-new SnapletClient({
-  models: {
-    users: {
-      name: ({ seed }) => copycat.firstName(seed)
-    }
-  }
-})
-```
-
-4. Values given for fields using the `models` option for a plan, example:
-
-```
-snaplet.users([{ ... }], {
-  models: {
-    name: ({ seed }) => copycat.firstName(seed)
-  }
-})
-```
-
-5. Fields specified earlier in the same object for a particular model, example:
-
-```
-await snaplet.users([{
-  // `name` is evaluated first, then `email`
-  name: ({ seed }) => copycat.firstName(seed),
-  email: ({ data }) => `${data.name}@example.org`.toLowerCase()
-}])
-```
-
-Documentation for this coming soon!
+For more, check out [our docs](/core-concepts/seed#data).
 
 ### Improvement: `store` and `$store` parameters for generate and connect functions
 For both generating fields, as well as connecting up relations, we now provide:
@@ -73,7 +38,9 @@ await snaplet.reservations([{
 }]);
 ```
 
-Documentation for this coming soon!
+For more, check out our docs:
+* [Generate function docs](/core-concepts/seed#store)
+* [Connect function docs](/core-concepts/seed#store-2)
 
 ### Improvement: Further future-proofing for usage with jest
 `0.82.1` solved some issues for using `@snaplet/seed` with jest, this release adds further such improvements to help prevent these same issues appearing in the future
@@ -92,7 +59,7 @@ await snaplet.users([{
     const updatedAtMs = Number(new Date(createdAt)) + 60_000
     return new Date(updatedAtMs).toISOString()
   }
-}]
+}])
 ```
 
 Since we now have the `data` parameter, we have a more natural way of obtaining the value generated for previous values:
@@ -105,7 +72,7 @@ await snaplet.users([{
     const updatedAtMs = Number(new Date(data.createdAt)) + 60_000
     return new Date(updatedAtMs).toISOString()
   }
-}]
+}])
 ```
   </Step>
   <Step>
