@@ -59,7 +59,7 @@ await snaplet.users([{
     const updatedAtMs = Number(new Date(createdAt)) + 60_000
     return new Date(updatedAtMs).toISOString()
   }
-}]
+}])
 ```
 
 Since we now have the `data` parameter, we have a more natural way of obtaining the value generated for previous values:
@@ -72,7 +72,7 @@ await snaplet.users([{
     const updatedAtMs = Number(new Date(data.createdAt)) + 60_000
     return new Date(updatedAtMs).toISOString()
   }
-}]
+}])
 ```
   </Step>
   <Step>
