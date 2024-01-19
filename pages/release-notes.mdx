@@ -7,6 +7,11 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+## 19 January 2024 - v0.83.1
+### Bug Fixes
+Addressed an issue with row estimates in partitioned tables. Previously, Snaplet incorrectly estimated total rows to copy as 0 for partitioned tables with data. This fix ensures accurate handling and data management for such tables, particularly when not using subsetting.
+  </Step>
+  <Step>
 ## 17 January 2024 - v0.83.0
 
 ### Improvement: `data` parameter for generate function
