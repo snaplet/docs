@@ -7,6 +7,19 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+## 23 January 2024 - v0.84.0
+### 🚨 `@snaplet/copycat` BREAKING CHANGE
+We have upgraded to @snaplet/copycat v2.0.0. Inputs for `copycat.float()` will now map to a different output. It is still deterministic - the same input will always map to the same output. It is just that after the upgrade the corresponding output for each input will have changed.
+
+**Who will be affected?**
+You might be impacted by this change if:
+* If you use snapshots, and you used `copycat.float()` in your `transform` configuration: https://docs.snaplet.dev/core-concepts/capture#transform-data
+* If you use `@snaplet/seed`, and you have floating-point column types (e.g. `float4`) in a table for which you use `@snaplet/seed` to generate data
+
+**Why is it changing?**
+Previously, output values for `copycat.float()` would stay close to the `min` value given. With this release, output values will distribute more evenly across the (min, max) range of values.
+  </Step>
+  <Step>
 ## 23 January 2024 - v0.83.2
 ### Improvements
 #### Support `Date`s  in `@snaplet/seed`
