@@ -9,14 +9,16 @@ import { Steps } from "nextra/components"
   <Step>
 ## 23 January 2024 - v0.83.2
 ### Improvements
-* **Support `Date`s  in `@snaplet/seed`**: We now allow date values to be given to `@snaplet/seed`.
+#### Support `Date`s  in `@snaplet/seed`
+We now allow date values to be given to `@snaplet/seed`.
 ```
 snaplet.users({
   createdAt: () => new Date(23)
 })
 ```
 ### Bug Fixes
-* **Filter out keys when generating `fingerprint.json`**: We now filter out primary and foreign keys from the fields we inspect when creating a fingerprint of your database. For a bit more on what `snaplet fingerprint` is, check out the release notes for the initial alpha release of this feature: https://docs.snaplet.dev/release-notes#alpha-release-of-snaplet-fingerprint. Docs, improvements and much more coming soon!
+#### Filter out keys when generating `fingerprint.json`
+We now filter out primary and foreign keys from the fields we inspect when creating a fingerprint of your database. For a bit more on what `snaplet fingerprint` is, check out the release notes for the initial alpha release of this feature: https://docs.snaplet.dev/release-notes#alpha-release-of-snaplet-fingerprint. Docs, improvements and much more coming soon!
   </Step>
   <Step>
 ## 19 January 2024 - v0.83.1
