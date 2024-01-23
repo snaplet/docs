@@ -112,9 +112,9 @@ DRY=0 npx tsx seed.mts
 
 ```ts seed.mts
 // create 10 users
-await snaplet.users((x) => x(10));
+await seed.users((x) => x(10));
 // create 20 todos, for each of the 10 users
-snaplet.todos((x) => x(20), { connect: true });
+seed.todos((x) => x(20), { connect: true });
 ```
 
 You are now ready to seed your database.

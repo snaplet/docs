@@ -77,9 +77,9 @@ uses `@snaplet/seed`. It should look something like this:
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = new SnapletClient();
 
-await snaplet.$resetDatabase()
+await seed.$resetDatabase()
 ```
 
 ---
@@ -103,10 +103,10 @@ Here we start from the `posts` models. `await`ing a plan will execute it.
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = new SnapletClient();
 
 // focus
-await snaplet.posts([{}]);
+await seed.posts([{}]);
 ```
 
 ---
@@ -116,9 +116,9 @@ You can directly define the values of your model.
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = new SnapletClient();
 
-await snaplet.posts([
+await seed.posts([
   {
     // focus
     title: 'Hello World!',
@@ -134,9 +134,9 @@ Here we define the author of the post represented by the `author` field.
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = new SnapletClient();
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     // focus(1:6)
@@ -159,9 +159,9 @@ You can read it as "comments times 3".
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = new SnapletClient();
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     author: {
@@ -185,15 +185,15 @@ Finally:
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient({
+const seed = new SnapletClient({
   // focus
   dryRun: process.env.DRY !== '0'
 });
 
 // focus
-await snaplet.$resetDatabase()
+await seed.$resetDatabase()
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     author: {
@@ -216,13 +216,13 @@ Copy the code and add it to your `seed.mts` file.
 ```ts seed.mts
 import { SnapletClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient({
+const seed = new SnapletClient({
   dryRun: process.env.DRY !== '0'
 });
 
-await snaplet.$resetDatabase()
+await seed.$resetDatabase()
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     author: {
