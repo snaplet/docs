@@ -1,5 +1,36 @@
 # Seed migration
 
+## From `0.85.0` and above
+
+### `new SnapletClient()` -> `await createSeedClient()`
+
+We've changed the way in which the client is instantiated.
+
+Previously, you would instantiated a class like this:
+
+```ts
+// before
+import { SnapletClient } from '@snaplet/seed'
+
+const snaplet = new SnapletClient({ /* options */ })
+```
+
+We now instead provide a promise-returning `createSeedClient` function for instantiating the client:
+
+```
+// after
+import { createSeedClient } from '@snaplet/seed'
+
+const snaplet = await createSeedClient({ /* options */ })
+```
+
+You will also need to [update your generated assets](https://docs.snaplet.dev/core-concepts/seed#3-regenerating-assets-as-your-database-changes-with-npx-snaplet-generate):
+
+```bash >_&nbsp;terminal
+npx snaplet generate
+```
+
+
 ## From `0.83.0` and above
 We've removed the `modelSeed` parameter that we pass to generate functions in favor of a new `data` parameter. 
 
