@@ -84,7 +84,7 @@ You can refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed)
 The **plan** is what's returned by the functions of `@snaplet/seed`. It's a representation of the data you want to seed.
 
 ```ts
-const userPlan = snaplet.users([{ email: 'snappy@snaplet.dev' }]);
+const userPlan = seed.users([{ email: 'snappy@snaplet.dev' }]);
 //    ^ the plan               ^ the plan's inputs
 ```
 
@@ -95,11 +95,11 @@ Then, the store is turned into **SQL statements** that are executed to persist t
 Given the plan from the [Seed Quick Start Guide](/getting-started/quick-start/seed):
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = await createSeedClient();
 
-const postsStore = await snaplet.posts([{
+const postsStore = await seed.posts([{
   title: 'Hello World!',
   author: {
     email: ({ seed }) =>
@@ -124,10 +124,10 @@ const postsStore = {
 #### The global store
 
 The global store is a special store which contains all the data that was generated as part of the plans you executed.
-It is accessible under the `$store` property of the data client.
+It is accessible under the `$store` property of the seed client.
 
 ```ts
-await snaplet.posts(x => x(3));
+await seed.posts(x => x(3));
 
 // { posts: [post, post, post], users: [user, user, user] }
 console.log(snaplet.$store);
@@ -139,12 +139,12 @@ Each plan produces its own store and returns it when executed.
 It's particularly useful for the [`connect` option](/core-concepts/seed#using-connect-option).
 
 ```ts
-const postsStore = await snaplet.posts(x => x(3));
+const postsStore = await seed.posts(x => x(3));
 
 // { posts: [post, post, post], users: [user, user, user] }
 console.log(postsStore);
 
-const usersStore = await snaplet.users(x => x(2));
+const usersStore = await seed.users(x => x(2));
 
 // { users: [user, user] }
 console.log(usersStore);
@@ -155,24 +155,24 @@ console.log(snaplet.$store);
 
 #### Client state
 
-The `SnapletClient` keeps track of what was created before with `snaplet.$store` and increments global seeds each time you call a model function.
+The `SeedClient` keeps track of what was created before with `snaplet.$store` and increments global seeds each time you call a model function.
 
 If you want to reset this state, you can use the `snaplet.$reset` function.
 
 ```ts
-await snaplet.posts(x => x(3));
+await seed.posts(x => x(3));
 snaplet.$reset();
 // will give you the same result as before
-await snaplet.posts(x => x(3));
+await seed.posts(x => x(3));
 ```
 
-We also provide a way to get a new instance of the `SnapletClient` with a clean state through the `snaplet.$transaction` function.
+We also provide a way to get a new instance of the `SeedClient` with a clean state through the `snaplet.$transaction` function.
 
 ```ts
-await snaplet.posts(x => x(3));
-await snaplet.$transaction((snaplet) => {
+await seed.posts(x => x(3));
+await seed.$transaction((seed) => {
   // will give you the same result as above
-  await snaplet.posts(x => x(3));
+  await seed.posts(x => x(3));
 })
 ```
 
@@ -182,8 +182,8 @@ If you need a fully deterministic plan execution, you can provide your own seed 
 
 ```ts
 // These statements will produce the exact same results
-await snaplet.posts(x => x(3), { seed: '42' });
-await snaplet.posts(x => x(3), { seed: '42' })
+await seed.posts(x => x(3), { seed: '42' });
+await seed.posts(x => x(3), { seed: '42' })
 ```
 
 ### Static or dynamic data, we got you covered
@@ -242,8 +242,8 @@ callback will receive the same value for `seed` for the same field of the same m
 
 ```ts
 const run = () =>
-  snaplet.$transaction(async (snaplet) => {
-    await snaplet.customers([
+  seed.$transaction(async (snaplet) => {
+    await seed.customers([
       {
         email({ seed }) {
           return copycat.email(seed);
@@ -261,10 +261,10 @@ await run();
 
 ##### `data`
 
-An object containing the data already generated for a particular model. 
+An object containing the data already generated for a particular model.
 
 ```ts
-await snaplet.users([{
+await seed.users([{
   email: ({ data }) => `${data.first_name}${data.last_name}@example.org`.toLowerCase()
 }])
 ```
@@ -277,18 +277,18 @@ For example, fields specified earlier in the same object for a particular model 
 specified later in that object:
 
 ```ts
-await snaplet.users([{
+await seed.users([{
   // `name` is evaluated first, then `email`
   name: ({ seed }) => copycat.firstName(seed),
   email: ({ data }) => `${data.name}@example.org`.toLowerCase()
 }])
 ```
 
-And similarly, fields specified for a model when instantiating `SnapletClient` (`name` in the example below) will be available in `data` for
+And similarly, fields specified for a model when creating a new `SeedClient` (`name` in the example below) will be available in `data` for
 fields specified as part of a plan (`email` in the example below):
 
 ```ts
-new SnapletClient({
+await createSeedClient({
   models: {
     users: {
       name: ({ seed }) => copycat.firstName(seed)
@@ -296,8 +296,8 @@ new SnapletClient({
   }
 })
 
-await snaplet.users([{
-  // `name` was given when instantiating `SnapletClient`, so it'll be available here
+await seed.users([{
+  // `name` was given when creating `SeedClient`, so it'll be available here
   email: ({ data }) => `${data.name}@example.org`.toLowerCase()
 }])
 ```
@@ -308,10 +308,10 @@ To help with knowing what exactly will be available in `data`, we generate data 
 
 2. Then default values for fields (if you didn't explicitly define what the value of a field should be anywhere) will be generated next
 
-3. Then values given for fields using the `models` option for `SnapletClient` (as shown below) will be generated next:
+3. Then values given for fields using the `models` option for `createSeedClient` (as shown below) will be generated next:
 
  ```ts
-new SnapletClient({
+await createSeedClient({
   models: {
     users: {
       name: ({ seed }) => copycat.firstName(seed)
@@ -333,7 +333,7 @@ snaplet.users([{ ... }], {
 5. Then finally, fields specified earlier in the same object for a particular model will be generated before fields specified later in that object:
 
 ```
-await snaplet.users([{
+await seed.users([{
   // `name` is evaluated first, then `email`
   name: ({ seed }) => copycat.firstName(seed),
   email: ({ data }) => `${data.name}@example.org`.toLowerCase()
@@ -359,22 +359,22 @@ When `true`, the plan will automatically connect models relationships to fulfill
 In the following example, the `post` model will be connected to one of the 3 `users` in the store.
 
 ```ts
-await snaplet.users((x) => x(3));
+await seed.users((x) => x(3));
 // mark
-await snaplet.posts([{}], { connect: true });
+await seed.posts([{}], { connect: true });
 ```
 
 You can also provide a store to the `connect` option, in which case the plan will connect to the models in the store instead of the client's global store.
 
 ```ts
-await snaplet.users((x) => x(3));
+await seed.users((x) => x(3));
 
-const heroesStore = await snaplet.users([
+const heroesStore = await seed.users([
   { email: 'bruce@wayne-enterprises.com' },
   { email: 'peter.parker@gmail.com' }
 ]);
 
-await snaplet.posts([{}], { connect: heroesStore });
+await seed.posts([{}], { connect: heroesStore });
 ```
 
 In the above case, the `post` model will be connected to one of the user in the `heroesStore`.
@@ -386,7 +386,7 @@ const users = await prisma.users.findMany({
   where: { status: 'HERO' }
 })
 
-await snaplet.posts([{}], { connect: { users } });
+await seed.posts([{}], { connect: { users } });
 ```
 
 #### Using `connect` callback function
@@ -398,12 +398,12 @@ If you need a more fine-grained control over the connection, you can use the `co
 Let's start from our previous plan.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
-const snaplet = new SnapletClient();
+const seed = await createSeedClient();
 
-await snaplet.posts([{
+await seed.posts([{
   title: 'Hello World!',
   author: {
     email: ({ seed }) =>
@@ -420,12 +420,12 @@ await snaplet.posts([{
 We specify that the author of each comment will be provided from an external source rather than being generated using the `connect` callback function.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
-const snaplet = new SnapletClient()
+const seed = await createSeedClient()
 
-await snaplet.posts([{
+await seed.posts([{
   title: 'Hello World!',
   author: {
     email: ({ seed }) =>
@@ -433,24 +433,26 @@ await snaplet.posts([{
         domain: 'acme.org',
       }),
   },
-  comments: (x) => x(3, () => ({
+  comments: (x) => x(3, {
     // focus(1:3)
     author: () => {
 
     }
-  })),
+  }),
 }]);
 ```
 
 ---
 
-We can use the plan's internal `store` to provide the `user` model we want to connect to. In this case the only generated `user` in the plan will be the author of the post.
+We can use the `connect` function to express that the author of the comments is the same as the post.
+We are using the plan's internal `store` to fetch the generated user.
+In this case the only generated `user` in the plan will be the author of the post.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
-await snaplet.posts([{
+await seed.posts([{
   title: 'Hello World!',
   author: {
     email: ({ seed }) =>
@@ -458,109 +460,14 @@ await snaplet.posts([{
         domain: 'acme.org',
       }),
   },
-  comments: (x) => x(3, () => ({
+  comments: (x) => x(3, {
     // focus(1:3)
-    author: ({ store }) => {
-      return store.users[0];
-    }
-  })),
+    author: ({ connect }) => connect(({ store }) => store.users[0])
+  }),
 }]);
 ```
 
 </CH.Scrollycoding>
-
-##### `graph`
-
-If your plan is complex, it can be quite challenging to find the right model to connect to. That's why we also provide the `graph` variable to the `connect` function.
-
-The `graph` contains all the data that was generated as part of the plan, arranged to follow the shape of your plan.
-
-And here is how you can use it:
-
-```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
-import { copycat } from '@snaplet/copycat';
-
-const snaplet = new SnapletClient()
-
-await snaplet.posts([{
-  title: 'Hello World!',
-  author: {
-    email: ({ seed }) => copycat.email(seed, { domain: 'acme.org' }),
-  },
-  comments: (x) => x(3, () => ({
-    // focus(1:4)
-    // we alias the graph to posts to make it more readable
-    author: ({ graph: posts }) => {
-      return posts[0].author;
-    }
-  })),
-}]);
-```
-
-Here is what the `graph` looks like for this plan:
-
-```ts
-// as we started with snaplet.posts, the graph is an array of posts
-const graph = [
-  {
-    author: user,
-    comments: [
-      comment,
-      comment,
-      comment,
-    ],
-  },
-];
-```
-
-##### `branch`
-
-Now let's complexify our plan a bit:
-
-- We want to generate 3 posts.
-- The author of each post should also be the author of the post's comments.
-
-It seems challenging to find the right user to connect to using `store` or `graph`. That's why we also provide the `branch` variable to the `connect` function.
-
-The `branch` is a particular iteration of the `graph` that was generated. It matches the path to the `connect` function in which it is injected.
-
-Let's take a look at the `branch` for our previous plan, adapted to our new requirements:
-
-```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
-import { copycat } from '@snaplet/copycat';
-
-const snaplet = new SnapletClient()
-
-await snaplet.posts([{
-  title: 'Hello World!',
-  author: {
-    email: ({ seed }) => copycat.email(seed, { domain: 'acme.org' }),
-  },
-  comments: (x) => x(3, () => ({
-    // focus(1:4)
-    // we alias the branch to "post" to make it more readable
-    author: ({ branch: post }) => {
-      return post.author;
-    }
-  })),
-}]);
-```
-
-Generating 3 posts will result in 3 branches, each containing a post, its author and its comments.
-
-In our above example, the `connect` function will receive the branch corresponding to its iteration. So the first `connect` function will receive the first branch, the second `connect` function will receive the second branch, and so on.
-
-Here is what the `branch` looks like for this particular `connect` function:
-
-```ts
-// as we started with snaplet.posts, the branch is a post model
-const branch = {
-  author: user,
-  comments: [comment],
-};
-```
 
 ##### `store`
 
@@ -617,12 +524,12 @@ export default defineConfig({
 ```
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient()
+const seed = await createSeedClient()
 
-// without inflection, you would have to use snaplet.User(...)
-await snaplet.users((x) => x(3))
+// without inflection, you would have to use seed.User(...)
+await seed.users((x) => x(3))
 ```
 
 And here is how you would change the inflection rules:
@@ -643,19 +550,19 @@ export default defineConfig({
 ```
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient()
+const seed = await createSeedClient()
 
-// without inflection, you would have to use snaplet.User(...)
-await snaplet.SuperUsers((x) => x(3))
+// without inflection, you would have to use seed.User(...)
+await seed.SuperUsers((x) => x(3))
 ```
 
 ### Override
 
 If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -676,11 +583,11 @@ export default defineConfig({
 ```
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient()
+const seed = await createSeedClient()
 
-await snaplet.users([{
+await seed.users([{
   // without override, it would be: postsByValidatorId: [...]
   validatedPosts: [{ title: 'Hello World!' }]
 }])
