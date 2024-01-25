@@ -9,7 +9,7 @@ type MapScalarField<T extends Record<string, any>> = {
 type ModelInputs<
   TFields extends Record<string, any>,
   TParents extends Record<string, any> = {},
-  TChildren extends Record<string, any> = {}
+  TChildren extends Record<string, any> = {},
 > = {
   data?: Partial<MapScalarField<TFields> & TParents & TChildren>;
   count?: number | ((context: { seed: string }) => number);
@@ -17,8 +17,8 @@ type ModelInputs<
 };
 type OmitDataFields<
   T extends { data?: Record<string, any> },
-  TKeys extends keyof NonNullable<T["data"]>
-> = Omit<T, "data"> & { data?: Omit<NonNullable<T["data"]>, TKeys> };
+  TKeys extends keyof NonNullable<T['data']>,
+> = Omit<T, 'data'> & { data?: Omit<NonNullable<T['data']>, TKeys> };
 export interface IPlan {
   generate: () => Promise<Store>;
 }
@@ -27,7 +27,7 @@ interface Plan extends IPlan {
   merge: Merge;
 }
 export type Pipe = (plans: IPlan[]) => IPlan;
-export type Merge =  (plans: IPlan[]) => IPlan;
+export type Merge = (plans: IPlan[]) => IPlan;
 type Store = {
   Comment: Comment[];
   Post: Post[];
@@ -35,47 +35,43 @@ type Store = {
 };
 
 type Comment = {
-  "content": string;
-  "id": string;
-  "postId": string;
-  "userId": string;
-  "writtenAt": string | null;
-}
+  'content': string;
+  'id': string;
+  'postId': string;
+  'userId': string;
+  'writtenAt': string | null;
+};
 type CommentParents = {
- Post: OmitDataFields<PostModel, "Comment">;
- User: OmitDataFields<UserModel, "Comment">;
+  Post: OmitDataFields<PostModel, 'Comment'>;
+  User: OmitDataFields<UserModel, 'Comment'>;
 };
-type CommentChildren = {
-
-};
+type CommentChildren = {};
 type CommentModel = ModelInputs<Comment, CommentParents, CommentChildren>;
 type Post = {
-  "content": string;
-  "createdBy": string;
-  "id": string;
-  "title": string;
-}
+  'content': string;
+  'createdBy': string;
+  'id': string;
+  'title': string;
+};
 type PostParents = {
- User: OmitDataFields<UserModel, "Post">;
+  User: OmitDataFields<UserModel, 'Post'>;
 };
 type PostChildren = {
- Comment: OmitDataFields<CommentModel, "Post">;
+  Comment: OmitDataFields<CommentModel, 'Post'>;
 };
 type PostModel = ModelInputs<Post, PostParents, PostChildren>;
 type User = {
-  "email": string;
-  "id": string;
-  "name": string;
-}
-type UserParents = {
-
+  'email': string;
+  'id': string;
+  'name': string;
 };
+type UserParents = {};
 type UserChildren = {
- Comment: OmitDataFields<CommentModel, "User">;
- Post: OmitDataFields<PostModel, "User">;
+  Comment: OmitDataFields<CommentModel, 'User'>;
+  Post: OmitDataFields<PostModel, 'User'>;
 };
 type UserModel = ModelInputs<User, UserParents, UserChildren>;
-export type SnapletClient = {
+export type SeedClient = {
   Comment: (inputs: CommentModel) => Plan;
   Post: (inputs: PostModel) => Plan;
   User: (inputs: UserModel) => Plan;

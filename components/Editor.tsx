@@ -2,7 +2,7 @@ import MonacoEditor, { type Monaco } from "@monaco-editor/react";
 import { useCallback, type ComponentProps, useEffect, useRef } from "react";
 import {
   fakerDefs,
-  snapletClientTypes,
+  seedClientTypes,
   snapletConfig,
   snapletTypes,
 } from "./seed-tutorial";
@@ -55,7 +55,7 @@ export function SeedTutorialEditor() {
       "inmemory://faker.d.ts"
     );
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      snapletClientTypes,
+      seedClientTypes,
       "inmemory://.snaplet/snaplet-client.d.ts"
     );
     monaco.languages.typescript.typescriptDefaults.addExtraLib(

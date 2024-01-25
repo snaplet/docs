@@ -75,9 +75,9 @@ This is where `@snaplet/seed` comes in: it gives you a programmatic interface to
 uses `@snaplet/seed`. It should look something like this:
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const snaplet = await createSeedClient();
 
 await snaplet.$resetDatabase()
 ```
@@ -101,9 +101,9 @@ These functions return what we call a _plan_. When describing a plan, you always
 Here we start from the `posts` models. `await`ing a plan will execute it.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const snaplet = await createSeedClient();
 
 // focus
 await snaplet.posts([{}]);
@@ -114,9 +114,9 @@ await snaplet.posts([{}]);
 You can directly define the values of your model.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const snaplet = await createSeedClient();
 
 await snaplet.posts([
   {
@@ -132,9 +132,9 @@ You can also define the values of your model's relationships.
 Here we define the author of the post represented by the `author` field.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const snaplet = await createSeedClient();
 
 await snaplet.posts([
   {
@@ -157,9 +157,9 @@ As we need more than one comment, we can use the `x` function which will create 
 You can read it as "comments times 3".
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const snaplet = await createSeedClient();
 
 await snaplet.posts([
   {
@@ -179,13 +179,13 @@ await snaplet.posts([
 ---
 
 Finally:
-* We'll add a `dryRun` option when instantiating `SnapletClient` - in dry run mode, we'll log the sql statements to the console instead of altering the database.
+* We'll add a `dryRun` option when instantiating `SeedClient` - in dry run mode, we'll log the sql statements to the console instead of altering the database.
 * and a `$resetDatabase()` call - this will clear the database of any current data, but keep the structure around
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient({
+const snaplet = await createSeedClient({
   // focus
   dryRun: process.env.DRY !== '0'
 });
@@ -214,9 +214,9 @@ We're done!
 Copy the code and add it to your `seed.mts` file.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient({
+const snaplet = await createSeedClient({
   dryRun: process.env.DRY !== '0'
 });
 

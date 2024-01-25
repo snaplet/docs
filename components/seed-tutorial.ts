@@ -1,4 +1,4 @@
-export const snapletClientTypes = `type JsonPrimitive = null | number | string | boolean;
+export const seedClientTypes = `type JsonPrimitive = null | number | string | boolean;
 type NestedArray<V> = Array<V | NestedArray<V>>;
 type Nested<V> = V | { [s: string]: V | Nested<V> } | Array<V | Nested<V>>;
 type Json = Nested<JsonPrimitive>;
