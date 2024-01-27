@@ -102,8 +102,8 @@ const seed = await createSeedClient();
 const postsStore = await seed.posts([{
   title: 'Hello World!',
   author: {
-    email: ({ seed }) =>
-      copycat.email(seed, {
+    email: (ctx) =>
+      copycat.email(ctx.seed, {
         domain: 'acme.org',
       }),
   },
@@ -207,12 +207,12 @@ snaplet.users((x) => x(10));
 
 // an array of 10 users with a custom email
 snaplet.users((x) => x(10, {
-  email: ({ seed }) => copycat.email(seed, { domain: 'snaplet.dev' })
+  email: (ctx) => copycat.email(ctx.seed, { domain: 'snaplet.dev' })
 }));
 
 // an array of 10 users with a custom email depending on contextual informations
-snaplet.users((x) => x(10, ({ index }) => ({
-  email: `user${index}@snaplet.dev`,
+snaplet.users((x) => x(10, (ctx) => ({
+  email: `user${ctx.index}@snaplet.dev`,
 })));
 ```
 
@@ -233,7 +233,7 @@ If you need more control over the value generated for each field, you can also p
 
 ```ts
 snaplet.users([{
-  email: ({ seed }) => copycat.email(seed)
+  email: (ctx) => copycat.email(ctx.seed)
 }])
 ```
 
@@ -247,12 +247,10 @@ callback will receive the same value for `seed` for the same field of the same m
 
 ```ts
 const run = () =>
-  seed.$transaction(async (snaplet) => {
+  seed.$transaction(async (seed) => {
     await seed.customers([
       {
-        email({ seed }) {
-          return copycat.email(seed);
-        },
+        email: (ctx) => copycat.email(ctx.seed),
       },
     ]);
   });
@@ -268,8 +266,8 @@ You can also access the `seed` of a model by using a callback.
 
 ```ts
 await seed.customers([
-  ({ seed }) => {
-    const createdAt = copycat.dateString(seed);
+  (ctx) => {
+    const createdAt = copycat.dateString(ctx.seed);
     const day = 60 * 60 * 24 * 1000;
     const updatedAt = new date(createdAt.getTime() + day);
     return {
@@ -286,7 +284,7 @@ An object containing the data already generated for a particular model.
 
 ```ts
 await seed.users([{
-  email: ({ data }) => `${data.first_name}${data.last_name}@example.org`.toLowerCase()
+  email: (ctx) => `${ctx.data.first_name}${ctx.data.last_name}@example.org`.toLowerCase()
 }])
 ```
 
@@ -300,8 +298,8 @@ specified later in that object:
 ```ts
 await seed.users([{
   // `name` is evaluated first, then `email`
-  name: ({ seed }) => copycat.firstName(seed),
-  email: ({ data }) => `${data.name}@example.org`.toLowerCase()
+  name: (ctx) => copycat.firstName(ctx.seed),
+  email: (ctx) => `${ctx.data.name}@example.org`.toLowerCase()
 }])
 ```
 
@@ -312,14 +310,14 @@ fields specified as part of a plan (`email` in the example below):
 await createSeedClient({
   models: {
     users: {
-      name: ({ seed }) => copycat.firstName(seed)
+      name: (ctx) => copycat.firstName(ctx.seed)
     }
   }
 })
 
 await seed.users([{
   // `name` was given when creating `SeedClient`, so it'll be available here
-  email: ({ data }) => `${data.name}@example.org`.toLowerCase()
+  email: (ctx) => `${ctx.data.name}@example.org`.toLowerCase()
 }])
 ```
 
@@ -335,7 +333,7 @@ To help with knowing what exactly will be available in `data`, we generate data 
 await createSeedClient({
   models: {
     users: {
-      name: ({ seed }) => copycat.firstName(seed)
+      name: (ctx) => copycat.firstName(ctx.seed)
     }
   }
 })
@@ -346,18 +344,18 @@ await createSeedClient({
 ```ts
 snaplet.users([{ ... }], {
   models: {
-    name: ({ seed }) => copycat.firstName(seed)
+    name: (ctx) => copycat.firstName(ctx.seed)
   }
 })
 ```
 
 5. Then finally, fields specified earlier in the same object for a particular model will be generated before fields specified later in that object:
 
-```
+```ts
 await seed.users([{
   // `name` is evaluated first, then `email`
-  name: ({ seed }) => copycat.firstName(seed),
-  email: ({ data }) => `${data.name}@example.org`.toLowerCase()
+  name: (ctx) => copycat.firstName(ctx.seed),
+  email: (ctx) => `${ctx.data.name}@example.org`.toLowerCase()
 }])
 ```
 
@@ -427,8 +425,8 @@ const seed = await createSeedClient();
 await seed.posts([{
   title: 'Hello World!',
   author: {
-    email: ({ seed }) =>
-      copycat.email(seed, {
+    email: (ctx) =>
+      copycat.email(ctx.seed, {
         domain: 'acme.org',
       }),
   },
@@ -438,7 +436,7 @@ await seed.posts([{
 
 ---
 
-We specify that the author of each comment will be provided from an external source rather than being generated using the `connect` callback function.
+We specify that the author of each comment will be provided from an external source rather than being generated using the model callback API.
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
@@ -449,23 +447,21 @@ const seed = await createSeedClient()
 await seed.posts([{
   title: 'Hello World!',
   author: {
-    email: ({ seed }) =>
-      copycat.email(seed, {
+    email: (ctx) =>
+      copycat.email(ctx.seed, {
         domain: 'acme.org',
       }),
   },
   comments: (x) => x(3, {
-    // focus(1:3)
-    author: () => {
-
-    }
+    // focus
+    author: () => {}
   }),
 }]);
 ```
 
 ---
 
-We can use the `connect` function to express that the author of the comments is the same as the post.
+We can use the `connect` function injected in the context to express that the author of the comments is the same as the post.
 We are using the plan's internal `store` to fetch the generated user.
 In this case the only generated `user` in the plan will be the author of the post.
 
@@ -482,8 +478,8 @@ await seed.posts([{
       }),
   },
   comments: (x) => x(3, {
-    // focus(1:3)
-    author: ({ connect }) => connect(({ store }) => store.users[0])
+    // focus
+    author: (ctx) => ctx.connect(({ store }) => store.users[0])
   }),
 }]);
 ```

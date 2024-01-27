@@ -36,7 +36,7 @@ npx snaplet generate
 
 This change is due to the fact that we need to scan your database at instantiation time in order to fetch your sequences current values.
 
-Also, you noticed that we changed our naming convention, from `snaplet` to `seed`. We think it's more easy to understand.
+Also, you noticed that we changed our naming convention, from `snaplet` to `seed`. We think it's easier to understand this way.
 
 ### Model callback API
 
@@ -65,14 +65,14 @@ await seed.posts([
 This change is also reflected into the `x` helper function which now supports static data as well:
 
 ```ts
-await seed.posts(x => x(3, ({ index, seed }) => ({
-  title: `Post #${index}`,
-  content: `This post's seed is ${seed}`
+await seed.posts(x => x(3, (ctx) => ({
+  title: `Post #${ctx.index}`,
+  content: `This post's seed is ${ctx.seed}`
 })));
 
 await seed.posts(x => x(3, {
   title: 'Static post',
-  content: ({ seed }) => copycat.paragraph(seed)
+  content: (ctx) => copycat.paragraph(ctx.seed)
 }));
 ```
 
@@ -84,12 +84,12 @@ You can now define parent fields as a callback function that receives the model'
 await seed.posts([
   {
     // the author will be connected to the first user in the store
-    author: ({ connect }) => connect(({ store }) => store.users[0])
+    author: (ctx) => ctx.connect(({ store }) => store.users[0])
   },
   {
     // a new author will be generated
-    author: ({ seed }) => {
-      const createdAt = new Date(copycat.dateString(seed))
+    author: (ctx) => {
+      const createdAt = new Date(copycat.dateString(ctx.seed))
       const day = 1000 * 60 * 60 * 24
       const updatedAt = new Date(createdAt.getTime() + day)
       return {

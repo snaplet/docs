@@ -139,8 +139,8 @@ await seed.posts([
     title: 'Hello World!',
     // focus(1:6)
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },
@@ -163,8 +163,8 @@ await seed.posts([
   {
     title: 'Hello World!',
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },
@@ -195,8 +195,8 @@ await seed.posts([
   {
     title: 'Hello World!',
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },
@@ -224,8 +224,8 @@ await seed.posts([
   {
     title: 'Hello World!',
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },
