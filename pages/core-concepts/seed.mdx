@@ -206,7 +206,12 @@ If you want to use dynamic data, you can pass a callback function to the models 
 snaplet.users((x) => x(10));
 
 // an array of 10 users with a custom email
-snaplet.users((x) => x(10, (index) => ({
+snaplet.users((x) => x(10, {
+  email: ({ seed }) => copycat.email(seed, { domain: 'snaplet.dev' })
+}));
+
+// an array of 10 users with a custom email depending on contextual informations
+snaplet.users((x) => x(10, ({ index }) => ({
   email: `user${index}@snaplet.dev`,
 })));
 ```
@@ -234,7 +239,7 @@ snaplet.users([{
 
 ##### `seed`
 
-A value unique to this particular field, and to this particular model being generated.
+A value unique to a particular field, and to a particular model being generated.
 
 `seed` is deterministic in the sense that for each new _session_ (for example, each new run of a seed script using `@snaplet/seed`, or each
 new run of the same [`$transaction`](#client-state)), the generate
@@ -257,6 +262,22 @@ await run();
 
 await run();
 // INSERT INTO public."Customer" ... VALUES (..., 'Autumn_Boyer64366@vague-foal.org', ...);
+```
+
+You can also access the `seed` of a model by using a callback.
+
+```ts
+await seed.customers([
+  ({ seed }) => {
+    const createdAt = copycat.dateString(seed);
+    const day = 60 * 60 * 24 * 1000;
+    const updatedAt = new date(createdAt.getTime() + day);
+    return {
+      createdAt,
+      updatedAt,
+    };
+  }
+]);
 ```
 
 ##### `data`
@@ -486,7 +507,7 @@ The models, fields and relationships names are fully customizable. You can use t
 
   To do that, run this command in your terminal:
   ```bash >_&nbsp;terminal
-  SNAPLET_SOURCE_DATABASE_URL='postgres://username:password@acme.com:5432/your_database' npx snaplet config generate --type typedefs
+  npx snaplet generate
   ```
 </Callout>
 

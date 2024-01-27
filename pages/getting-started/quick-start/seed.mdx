@@ -69,7 +69,7 @@ In order to have Snaplet generate this data, you'll need to tell Snaplet _how_ t
 
 This is where `@snaplet/seed` comes in: it gives you a programmatic interface to describe your seeding requirements.
 
-<CH.Scrollycoding className="seed-tutorial-configuration-file">
+<CH.Scrollycoding className="seed-tutorial-seed-script">
 
 `snaplet setup` would have generated an example script file called `seed.mts` in your project, which imports and
 uses `@snaplet/seed`. It should look something like this:
@@ -78,8 +78,6 @@ uses `@snaplet/seed`. It should look something like this:
 import { createSeedClient } from '@snaplet/seed';
 
 const seed = await createSeedClient();
-
-await seed.$resetDatabase()
 ```
 
 ---
