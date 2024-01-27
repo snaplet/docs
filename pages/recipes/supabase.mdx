@@ -112,9 +112,9 @@ DRY=0 npx tsx seed.mts
 
 ```ts seed.mts
 // create 10 users
-await snaplet.users((x) => x(10));
+await seed.users((x) => x(10));
 // create 20 todos, for each of the 10 users
-snaplet.todos((x) => x(20), { connect: true });
+await seed.todos((x) => x(20), { connect: true });
 ```
 
 You are now ready to seed your database.
@@ -275,7 +275,7 @@ That's it! You're all done, and should have restored a version of your Supabase 
 
 #### Excluding specific schemas from snapshots
 
-Snaplet does not support restoring all the schemas in a Supabase instance. By default your config will be set to only capture the `public` and `auth` schemas. 
+Snaplet does not support restoring all the schemas in a Supabase instance. By default your config will be set to only capture the `public` and `auth` schemas.
 You can manually include other schemas, but this is not a supported use case for this integration.
 
 > Schemas such as `storage` and `supabase_functions` schemas are excluded, because Snaplet is unable to also the clone the infrastructure required to support these schemas.
@@ -299,7 +299,7 @@ During onboarding, this `select` option is automatically added to your config. I
 
 #### Reset supabase database
 
-Use the `supabase db reset` command to reset the state of your Supabase project. 
+Use the `supabase db reset` command to reset the state of your Supabase project.
 This is useful for cases a snapshot breaks your project, or you want to start from a clean slate.
 
 ```bash >_&nbsp;terminal
