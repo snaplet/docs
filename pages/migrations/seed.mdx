@@ -2,7 +2,11 @@
 
 ## From `0.85.0` and above
 
-### `new SnapletClient()` -> `await createSeedClient()`
+**🚨 Breaking changes ahead 🚨**
+
+We're refining the API and getting closer and closer to a stable v1 release. 🎉
+
+### Creating a client is now async
 
 We've changed the way in which the client is instantiated.
 
@@ -17,11 +21,11 @@ const snaplet = new SnapletClient({ /* options */ })
 
 We now instead provide a promise-returning `createSeedClient` function for instantiating the client:
 
-```
+```ts
 // after
 import { createSeedClient } from '@snaplet/seed'
 
-const snaplet = await createSeedClient({ /* options */ })
+const seed = await createSeedClient({ /* options */ })
 ```
 
 You will also need to [update your generated assets](https://docs.snaplet.dev/core-concepts/seed#3-regenerating-assets-as-your-database-changes-with-npx-snaplet-generate):
@@ -30,9 +34,81 @@ You will also need to [update your generated assets](https://docs.snaplet.dev/co
 npx snaplet generate
 ```
 
+This change is due to the fact that we need to scan your database at instantiation time in order to fetch your sequences current values.
+
+Also, you noticed that we changed our naming convention, from `snaplet` to `seed`. We think it's more easy to understand.
+
+### Model callback API
+
+We are introducing a new way of definining models when you need contextual data. It impacts both parents and children fields.
+
+#### Children fields
+
+You can now define children fields as a callback function that receives the model's seed and the index of the current iteration:
+
+```ts
+await seed.posts([
+  // model level seed
+  ({ index, seed }) => ({
+    title: `Post #${index}`,
+    content: `This post's seed is ${seed}`
+  }),
+  // static data is of course still supported
+  {
+    title: 'Static post',
+    // field level seed
+    content: ({ seed }) => copycat.paragraph(seed)
+  },
+]);
+```
+
+This change is also reflected into the `x` helper function which now supports static data as well:
+
+```ts
+await seed.posts(x => x(3, ({ index, seed }) => ({
+  title: `Post #${index}`,
+  content: `This post's seed is ${seed}`
+})));
+
+await seed.posts(x => x(3, {
+  title: 'Static post',
+  content: ({ seed }) => copycat.paragraph(seed)
+}));
+```
+
+#### Parent fields
+
+You can now define parent fields as a callback function that receives the model's seed and a `connect` function. It finally makes connecting data more explicit:
+
+```ts
+await seed.posts([
+  {
+    // the author will be connected to the first user in the store
+    author: ({ connect }) => connect(({ store }) => store.users[0])
+  },
+  {
+    // a new author will be generated
+    author: ({ seed }) => {
+      const createdAt = new Date(copycat.dateString(seed))
+      const day = 1000 * 60 * 60 * 24
+      const updatedAt = new Date(createdAt.getTime() + day)
+      return {
+        createdAt,
+        updatedAt,
+      }
+    }
+  },
+])
+```
+
+### Fix the `seed` value for parent fields
+
+We were injecting the model's seed for all parent fields in a model. We're now injected a per parent field seed to have more variety in connected data.
+As the seed value changed, it means that you might experience different models being picked up when using `connect`.
+
 
 ## From `0.83.0` and above
-We've removed the `modelSeed` parameter that we pass to generate functions in favor of a new `data` parameter. 
+We've removed the `modelSeed` parameter that we pass to generate functions in favor of a new `data` parameter.
 
 Previously, if you had a field with a value that depended on another field, `modelSeed` provided a way to accomplish this:
 
