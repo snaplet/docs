@@ -369,7 +369,7 @@ The [global store](https://docs.snaplet.dev/core-concepts/seed#the-global-store)
 
 ### Connecting data
 
-#### Using `connect` option
+#### Using the `connect` option
 
 We provide a special option that you can activate in the options of a plan, called `connect`.
 
@@ -408,9 +408,9 @@ const users = await prisma.users.findMany({
 await seed.posts([{}], { connect: { users } });
 ```
 
-#### Using `connect` callback function
+#### Using the `connect` function
 
-If you need a more fine-grained control over the connection, you can use the `connect` callback function.
+If you need a more fine-grained control over the connection, you can use the `connect` function injected into the model callback API.
 
 <CH.Scrollycoding className="seed-tutorial-configuration-file">
 
@@ -472,14 +472,16 @@ import { copycat } from '@snaplet/copycat';
 await seed.posts([{
   title: 'Hello World!',
   author: {
-    email: ({ seed }) =>
-      copycat.email(seed, {
+    email: (ctx) =>
+      copycat.email(ctx.seed, {
         domain: 'acme.org',
       }),
   },
   comments: (x) => x(3, {
-    // focus
-    author: (ctx) => ctx.connect(({ store }) => store.users[0])
+    // focus(1:3)
+    author: (ctx) => ctx.connect(
+      ({ store }) => store.users[0]
+    )
   }),
 }]);
 ```
