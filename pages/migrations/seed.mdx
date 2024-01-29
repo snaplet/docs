@@ -114,6 +114,31 @@ await seed.posts([
 We were injecting the model's seed for all parent fields in a model. We're now injected a per parent field seed to have more variety in connected data.
 As the seed value changed, it means that you might experience different models being picked up when using `connect`.
 
+### Inflection is now turned on by default
+
+You no longer need a `snaplet.config.ts` file to enable inflection. It's now turned on by default.
+We think inflection brings a better developer experience and we want to make it the default.
+
+If you want to disable it, you can pass `false` to the `inflection` option in your `snaplet.config.ts` file:
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  seed: {
+    alias: {
+      inflection: false,
+    },
+  },
+});
+```
+
+Don't forget to regenerate your types and assets after updating your config by running:
+
+```bash >_&nbsp;terminal
+npx snaplet generate
+```
 
 ## From `0.83.0` and above
 We've removed the `modelSeed` parameter that we pass to generate functions in favor of a new `data` parameter.

@@ -526,21 +526,7 @@ These rules are:
 - **Child field names (one to many relationships):** pluralized and camelCased.
 - We also support [prefix extraction and opposite baseName for foreign keys](https://github.com/graphile/pg-simplify-inflector#naming-your-foreign-key-fields).
 
-Given your tables being named `User`, `Post` and `Comment`, here is an example of how you can use the `inflection` option to change the names of your models:
-
-```ts seed.mts
-/// <reference path=".snaplet/snaplet.d.ts" />
-import { defineConfig } from 'snaplet';
-
-export default defineConfig({
-  seed: {
-    alias: {
-      // enable our standard inflection rules
-      inflection: true,
-    },
-  }
-});
-```
+Given your tables being named `User`, `Post` and `Comment`, here is an example of how the default `inflection` strategy is applied to change the names of your models:
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
@@ -553,7 +539,7 @@ await seed.users((x) => x(3))
 
 And here is how you would change the inflection rules:
 
-```ts seed.mts
+```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -577,18 +563,32 @@ const seed = await createSeedClient()
 await seed.SuperUsers((x) => x(3))
 ```
 
-### Override
+If you don't want to use the `inflection` feature, you can disable it by setting `inflection: false` in the `alias` option.
 
-If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
-
-```ts seed.config.ts
+```ts snaplet.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
 export default defineConfig({
   seed: {
     alias: {
-      inflection: true,
+      inflection: false,
+    },
+  }
+});
+```
+
+### Override
+
+If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
+
+```ts snaplet.config.ts
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  seed: {
+    alias: {
       override: {
         User: {
           fields: {
