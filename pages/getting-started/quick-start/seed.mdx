@@ -69,17 +69,15 @@ In order to have Snaplet generate this data, you'll need to tell Snaplet _how_ t
 
 This is where `@snaplet/seed` comes in: it gives you a programmatic interface to describe your seeding requirements.
 
-<CH.Scrollycoding className="seed-tutorial-configuration-file">
+<CH.Scrollycoding className="seed-tutorial-seed-script">
 
 `snaplet setup` would have generated an example script file called `seed.mts` in your project, which imports and
 uses `@snaplet/seed`. It should look something like this:
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
-
-await snaplet.$resetDatabase()
+const seed = await createSeedClient();
 ```
 
 ---
@@ -101,12 +99,12 @@ These functions return what we call a _plan_. When describing a plan, you always
 Here we start from the `posts` models. `await`ing a plan will execute it.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = await createSeedClient();
 
 // focus
-await snaplet.posts([{}]);
+await seed.posts([{}]);
 ```
 
 ---
@@ -114,11 +112,11 @@ await snaplet.posts([{}]);
 You can directly define the values of your model.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = await createSeedClient();
 
-await snaplet.posts([
+await seed.posts([
   {
     // focus
     title: 'Hello World!',
@@ -132,17 +130,17 @@ You can also define the values of your model's relationships.
 Here we define the author of the post represented by the `author` field.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = await createSeedClient();
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     // focus(1:6)
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },
@@ -157,16 +155,16 @@ As we need more than one comment, we can use the `x` function which will create 
 You can read it as "comments times 3".
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient();
+const seed = await createSeedClient();
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },
@@ -179,26 +177,26 @@ await snaplet.posts([
 ---
 
 Finally:
-* We'll add a `dryRun` option when instantiating `SnapletClient` - in dry run mode, we'll log the sql statements to the console instead of altering the database.
+* We'll add a `dryRun` option when creating `SeedClient` - in dry run mode, we'll log the sql statements to the console instead of altering the database.
 * and a `$resetDatabase()` call - this will clear the database of any current data, but keep the structure around
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient({
+const seed = await createSeedClient({
   // focus
   dryRun: process.env.DRY !== '0'
 });
 
 // focus
-await snaplet.$resetDatabase()
+await seed.$resetDatabase()
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },
@@ -214,20 +212,20 @@ We're done!
 Copy the code and add it to your `seed.mts` file.
 
 ```ts seed.mts
-import { SnapletClient } from '@snaplet/seed';
+import { createSeedClient } from '@snaplet/seed';
 
-const snaplet = new SnapletClient({
+const seed = await createSeedClient({
   dryRun: process.env.DRY !== '0'
 });
 
-await snaplet.$resetDatabase()
+await seed.$resetDatabase()
 
-await snaplet.posts([
+await seed.posts([
   {
     title: 'Hello World!',
     author: {
-      email: ({ seed }) =>
-        copycat.email(seed, {
+      email: (ctx) =>
+        copycat.email(ctx.seed, {
           domain: 'acme.org',
         }),
     },

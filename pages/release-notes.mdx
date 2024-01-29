@@ -7,41 +7,52 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
-## 23 January 2024 - v0.84.0
-### 🚨 `@snaplet/copycat` BREAKING CHANGE
-We have upgraded to @snaplet/copycat v2.0.0. Inputs for `copycat.float()` will now map to a different output. It is still deterministic - the same input will always map to the same output. It is just that after the upgrade the corresponding output for each input will have changed.
+  ## 29 January 2024 - v0.85.0
+  #### 🚨 `@snaplet/seed` BREAKING CHANGES
+  * The instantiation of the client is now async
+  * Better compatibility with non-empty databases
+  * New model callback API
+  * Fix parent fields seed value
+  * Inflection is turned on by default
 
-**Who will be affected?**
-You might be impacted by this change if:
-* If you use snapshots, and you used `copycat.float()` in your `transform` configuration: https://docs.snaplet.dev/core-concepts/capture#transform-data
-* If you use `@snaplet/seed`, and you have floating-point column types (e.g. `float4`) in a table for which you use `@snaplet/seed` to generate data
+  For more details, check out the [migration guide](/migrations/seed#from-0850-and-above).
+  </Step>
+  <Step>
+  ## 23 January 2024 - v0.84.0
+  #### 🚨 `@snaplet/copycat` BREAKING CHANGE
+  We have upgraded to @snaplet/copycat v2.0.0. Inputs for `copycat.float()` will now map to a different output. It is still deterministic - the same input will always map to the same output. It is just that after the upgrade the corresponding output for each input will have changed.
 
-**Why is it changing?**
-Previously, output values for `copycat.float()` would stay close to the `min` value given. With this release, output values will distribute more evenly across the (min, max) range of values.
+  **Who will be affected?**
+  You might be impacted by this change if:
+  * If you use snapshots, and you used `copycat.float()` in your `transform` configuration: https://docs.snaplet.dev/core-concepts/capture#transform-data
+  * If you use `@snaplet/seed`, and you have floating-point column types (e.g. `float4`) in a table for which you use `@snaplet/seed` to generate data
+
+  **Why is it changing?**
+  Previously, output values for `copycat.float()` would stay close to the `min` value given. With this release, output values will distribute more evenly across the (min, max) range of values.
   </Step>
   <Step>
 ## 23 January 2024 - v0.83.2
-### Improvements
-#### Support `Date`s  in `@snaplet/seed`
+#### Improvements
+##### Support `Date`s  in `@snaplet/seed`
 We now allow date values to be given to `@snaplet/seed`.
 ```
 snaplet.users({
   createdAt: () => new Date(23)
 })
 ```
-### Bug Fixes
-#### Filter out keys when generating `fingerprint.json`
+#### Bug Fixes
+##### Filter out keys when generating `fingerprint.json`
 We now filter out primary and foreign keys from the fields we inspect when creating a fingerprint of your database. For a bit more on what `snaplet fingerprint` is, check out the release notes for the initial alpha release of this feature: https://docs.snaplet.dev/release-notes#alpha-release-of-snaplet-fingerprint. Docs, improvements and much more coming soon!
   </Step>
   <Step>
 ## 19 January 2024 - v0.83.1
-### Bug Fixes
+#### Bug Fixes
 Addressed an issue with row estimates in partitioned tables. Previously, Snaplet incorrectly estimated total rows to copy as 0 for partitioned tables with data. This fix ensures accurate handling and data management for such tables, particularly when not using subsetting.
   </Step>
   <Step>
 ## 17 January 2024 - v0.83.0
 
-### Improvement: `data` parameter for generate function
+#### Improvement: `data` parameter for generate function
 
 We now provide a way to access data already generated for a particular model with the `data` parameter:
 
@@ -53,7 +64,7 @@ await snaplet.users([{
 
 For more, check out [our docs](/core-concepts/seed#data).
 
-### Improvement: `store` and `$store` parameters for generate and connect functions
+#### Improvement: `store` and `$store` parameters for generate and connect functions
 For both generating fields, as well as connecting up relations, we now provide:
 * `store`: The store containing models already created in this plan
 * `$store`: The global store containing all models created in this `snaplet` instance so far.
@@ -74,10 +85,10 @@ For more, check out our docs:
 * [Generate function docs](/core-concepts/seed#store)
 * [Connect function docs](/core-concepts/seed#store-2)
 
-### Improvement: Further future-proofing for usage with jest
+#### Improvement: Further future-proofing for usage with jest
 `0.82.1` solved some issues for using `@snaplet/seed` with jest, this release adds further such improvements to help prevent these same issues appearing in the future
 
-### 🚨 **BREAKING CHANGES in `@snaplet/seed`**
+#### 🚨 **BREAKING CHANGES in `@snaplet/seed`**
 We've removed the `modelSeed` parameter that we pass to generate functions in favor of the new `data` mentioned above.
 
 Previously, if you had a field with a value that depended on another field, `modelSeed` provided a way to accomplish this:
@@ -109,7 +120,7 @@ await snaplet.users([{
   </Step>
   <Step>
 ## 16 January 2024 - v0.82.1
-### Changes and Improvements
+#### Changes and Improvements
 
 1. **Improved Restore Functionality for Supabase Users**
    - **Fix:** We've resolved an issue where automatic resets were not properly applied when restoring to `127.0.0.1`. Supabase users can now experience a smoother and more reliable restoration process.
