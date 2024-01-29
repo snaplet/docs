@@ -16,7 +16,7 @@ We're refining the API and getting closer to a stable v1 release. 🎉
 We are introducing a new way of definining models with functions, for example:
 
 ```ts
-await seed.authors([(ctx) => ({
+await seed.authors([(ctx) => {
   const createdAt = new Date(copycat.dateString(ctx.seed))
   const day = 1000 * 60 * 60 * 24
   const updatedAt = new Date(createdAt.getTime() + day)
@@ -24,7 +24,7 @@ await seed.authors([(ctx) => ({
     createdAt,
     updatedAt,
   }
-})])
+}])
 ```
 
 For a complete list of the changes, check out the [migration guide](/migrations/seed#from-0850-and-above)
