@@ -7,6 +7,28 @@ import { Steps } from "nextra/components"
 
 <Steps>
   <Step>
+  ## 31 January 2024 - v0.85.2
+### Handle model name conflicts after inflection applied
+As part of the inflection that `@snaplet/seed` does, we pluralise the table names. For example, a "User" table name would be exposed as `seed.users()`.
+
+This caused conflicts in cases where there was one table with the singular form, and one with the plural form. For example, public.user (note the singular form) and auth.users (not the plural form) would both get the name "users". As a result, the one table ends up getting "lost".
+
+In this release, we now account for the name conflict by instead qualifying both names with the schema name. For the example above, we would end up with "publicUsers" and "authUsers".
+
+We do not yet handle the case where the name conflict is in a single schema (e.g. public.user and public.users) - we plan to do this soon!
+
+### Fix support for reading `fingerprint` from `snaplet.config.ts`
+We previously exposed types for providing `fingerprint` in `snaplet.config.ts`, but did not actually read this from the config in `@snaplet/seed`.
+
+### Account for aliasing when generating fingerprint
+`snaplet fingerprint` did not account for inflection or model aliasing (which is now enabled default from 0.85.0 onwards).
+
+**note** `snaplet fingerprint` is still an experimental feature - docs, improvements and much more coming soon!
+
+### Avoid showing preview database url on `snaplet preview-database create`
+`snaplet preview-database create` now shares an example of a command to run to obtain the url of a preview database, rather than the url itself.
+  </Step>
+  <Step>
   ## 29 January 2024 - v0.85.0
 **🚨 Breaking changes ahead 🚨**
 
