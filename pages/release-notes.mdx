@@ -4,11 +4,20 @@ import { Steps } from "nextra/components"
 # Release notes
 *The latest Snaplet product updates from the Snaplet team.*
 
-
 <Steps>
+<Step>
+## 1 Febuary 2024 - v0.86.2
+
+#### Fix for unique constraint checking and default database values in Seed 🌱
+
+We had a bug where we attempted to check uniqueness for columns we don't handle. Indeed, if you have a DEFAULT column in your database, Seed won't generate a value and will let the database do the work unless you specify an explicit value.
+
+Unique constraints checks are now skipped for these columns if they're undefined. ✅
+</Step>
+<Step>
 ## 1 Febuary 2024 - v0.86.1
 
-### Handle model name conflicts after inflection applied
+#### Handle model name conflicts after inflection applied
 As part of the inflection that `@snaplet/seed` does, we pluralise the table names. For example, a `User` table name would be exposed as `seed.users()`.
 
 This caused conflicts in cases where there was one table with the singular form, and one with the plural form. For example, `public.user` (note the singular form) and `public.users` (not the plural form) would both get the name "users". As a result, the one table ends up getting "lost".
@@ -42,6 +51,7 @@ export default defineConfig({
 In this release, we detect if such conflicts exist when you run `npx snaplet generate`, and log a message to the console showing which table names conflict.
 
 For more, check out our docs on alias `override`s: https://docs.snaplet.dev/core-concepts/seed#override
+</Step>
 <Step>
 ## 1 Febuary 2024 - v0.86.0
 
