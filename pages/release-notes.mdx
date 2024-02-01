@@ -6,6 +6,42 @@ import { Steps } from "nextra/components"
 
 
 <Steps>
+## 1 Febuary 2024 - v0.86.1
+
+### Handle model name conflicts after inflection applied
+As part of the inflection that `@snaplet/seed` does, we pluralise the table names. For example, a `User` table name would be exposed as `seed.users()`.
+
+This caused conflicts in cases where there was one table with the singular form, and one with the plural form. For example, `public.user` (note the singular form) and `public.users` (not the plural form) would both get the name "users". As a result, the one table ends up getting "lost".
+
+In cases where the schemas differ, we can account for the name conflict by instead qualifying both names with the schema name. For example, for tables `public.user` and `auth.users`, we would end up with "publicUsers" and "authUsers".
+
+However, if the tables are from the same schema (e.g. `public.user` and `public.users`), we do not have a way to resolve the conflict, and need you to resolve the conflict by specifying `overrides` for this in `snaplet.config.ts`. For example:
+
+```
+/// <reference path=".snaplet/snaplet.d.ts" />
+import { defineConfig } from 'snaplet';
+
+export default defineConfig({
+  seed: {
+    alias: {
+      override: {
+        user: {
+          // e.g. seed.users(x => x(2))
+          name: 'users',
+        },
+        users: {
+          // e.g. seed.allUsers(x => x(2))
+          name: 'allUsers',
+        },
+      },
+    },
+  },
+});
+```
+
+In this release, we detect if such conflicts exist when you run `npx snaplet generate`, and log a message to the console showing which table names conflict.
+
+For more, check out our docs on alias `override`s: https://docs.snaplet.dev/core-concepts/seed#override
 <Step>
 ## 1 Febuary 2024 - v0.86.0
 
