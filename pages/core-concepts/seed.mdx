@@ -130,7 +130,7 @@ It is accessible under the `$store` property of the seed client.
 await seed.posts(x => x(3));
 
 // { posts: [post, post, post], users: [user, user, user] }
-console.log(snaplet.$store);
+console.log(seed.$store);
 ```
 
 #### Local stores
@@ -150,23 +150,23 @@ const usersStore = await seed.users(x => x(2));
 console.log(usersStore);
 
 // { posts: [post, post, post], users: [user, user, user, user, user] }
-console.log(snaplet.$store);
+console.log(seed.$store);
 ```
 
 #### Client state
 
-The `SeedClient` keeps track of what was created before with `snaplet.$store` and increments global seeds each time you call a model function.
+The `SeedClient` keeps track of what was created before with `seed.$store` and increments global seeds each time you call a model function.
 
-If you want to reset this state, you can use the `snaplet.$reset` function.
+If you want to reset this state, you can use the `seed.$reset` function.
 
 ```ts
 await seed.posts(x => x(3));
-snaplet.$reset();
+seed.$reset();
 // will give you the same result as before
 await seed.posts(x => x(3));
 ```
 
-We also provide a way to get a new instance of the `SeedClient` with a clean state through the `snaplet.$transaction` function.
+We also provide a way to get a new instance of the `SeedClient` with a clean state through the `seed.$transaction` function.
 
 ```ts
 await seed.posts(x => x(3));
@@ -176,7 +176,7 @@ await seed.$transaction((seed) => {
 })
 ```
 
-The `snaplet.$transaction` function can be used in tests to ensure that each test is executed with a clean state.
+The `seed.$transaction` function can be used in tests to ensure that each test is executed with a clean state.
 
 If you need a fully deterministic plan execution, you can provide your own seed which will override the global seed counter.
 
@@ -193,7 +193,7 @@ As always, all the required fields and relationships will be automatically creat
 
 ```ts
 // an array of 2 users
-snaplet.users([
+seed.users([
   { email: 'alice@acme.com' },
   { email: 'bob@acme.com' },
 ]);
@@ -203,15 +203,15 @@ If you want to use dynamic data, you can pass a callback function to the models 
 
 ```ts
 // an array of 10 users
-snaplet.users((x) => x(10));
+seed.users((x) => x(10));
 
 // an array of 10 users with a custom email
-snaplet.users((x) => x(10, {
+seed.users((x) => x(10, {
   email: (ctx) => copycat.email(ctx.seed, { domain: 'snaplet.dev' })
 }));
 
 // an array of 10 users with a custom email depending on contextual informations
-snaplet.users((x) => x(10, (ctx) => ({
+seed.users((x) => x(10, (ctx) => ({
   email: `user${ctx.index}@snaplet.dev`,
 })));
 ```
@@ -220,7 +220,7 @@ And if you need both static and dynamic data, you can mix them together!
 
 ```ts
 // an array of 10 users
-snaplet.users((x) => [
+seed.users((x) => [
   { email: 'first@acme.com' },
   ...x(8),
   { email: 'last@acme.com' },
@@ -232,7 +232,7 @@ snaplet.users((x) => [
 If you need more control over the value generated for each field, you can also pass a function for that field:
 
 ```ts
-snaplet.users([{
+seed.users([{
   email: (ctx) => copycat.email(ctx.seed)
 }])
 ```
@@ -342,7 +342,7 @@ await createSeedClient({
 4. Then values given for fields using the `models` option for a plan:
 
 ```ts
-snaplet.users([{ ... }], {
+seed.users([{ ... }], {
   models: {
     name: (ctx) => copycat.firstName(ctx.seed)
   }
