@@ -131,6 +131,7 @@ Here we define the author of the post represented by the `author` field.
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
+import { copycat } from '@snaplet/copycat';
 
 const seed = await createSeedClient();
 
@@ -156,6 +157,7 @@ You can read it as "comments times 3".
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
+import { copycat } from '@snaplet/copycat';
 
 const seed = await createSeedClient();
 
@@ -182,6 +184,7 @@ Finally:
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
+import { copycat } from '@snaplet/copycat';
 
 const seed = await createSeedClient({
   // focus
@@ -213,6 +216,7 @@ Copy the code and add it to your `seed.mts` file.
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
+import { copycat } from '@snaplet/copycat';
 
 const seed = await createSeedClient({
   dryRun: process.env.DRY !== '0'
