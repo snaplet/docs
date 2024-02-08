@@ -7,7 +7,7 @@ import { Steps } from "nextra/components"
 <Steps>
 <Step>
 ## 8 Febuary 2024 - v0.87.0
-#### 🚨 `@snaplet/copycat` BREAKING CHANGE
+### 🚨 `@snaplet/copycat` BREAKING CHANGE
 We have upgraded to @snaplet/copycat v4.0.0.
 
 Changes to `copycat.phoneNumber()`:
@@ -29,14 +29,13 @@ You might be impacted by this change if:
 * You use snapshots, and provide options to `copycat.phoneNumber()` in your `transform` configuration: https://docs.snaplet.dev/core-concepts/capture#transform-data
 * You use `@snaplet/seed`, and provide options to `copycat.phoneNumber()`
 
-#### 🚨 `@snaplet/seed` BREAKING CHANGE
+### 🚨 `@snaplet/seed` BREAKING CHANGE
 
 `@snaplet/seed` now has `@snaplet/copycat` as a _peer dependency_ rather than a dependency.
 
 This means you'll also need to have `@snaplet/copycat` installed in your project when using `@snaplet/seed`.
 
 While this technically is a breaking change, `npx snaplet setup` would have installed `@snaplet/copycat` for you when setting up `@snaplet/seed`. This change would only affect you if you have since removed `@snaplet/copycat` from your dependencies.
-</Step>
 </Step>
 <Step>
 ## 1 Febuary 2024 - v0.86.2
