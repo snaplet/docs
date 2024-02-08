@@ -14,8 +14,6 @@ It's important to note that both the encryption of the snapshot and the transfor
 
 The self-hosted version of Snaplet works similarly, but the customer self-hosts the snapshot capture workers in their own trusted environment. Snapshots are then stored in the customer's own trusted environment. As such, no part of the workflow touches the Snaplet cloud environment, and no customer data are stored in the Snaplet Cloud.
 
-For both the cloud and self-hosted version of Snaplet, we may collect standard telemetry data related to customer usage and interactions with our platforms. We do so in the interest of continuous improvement and to better understand our users' needs. This type of data collection is a common practice in the industry and helps us optimize our services and provide customers with a better experience.
-
 Snaplet recommends that customers who are especially sensitive to security concerns self-host Snaplet. Refer to our self-hosting guide for more information.
 
 ## Customer Data
@@ -36,16 +34,27 @@ Snaplet is not currently compliant with the General Data Protection Regulation (
 
 Users are authenticated via a login system, and account administrators can control permissions on a per-user basis.
 
-## Monitoring and Detection
+## Monitoring and Detection Telemetry
 
 We use automated logging and monitoring to detect security incidents and suspicious activity.
+
+## Login and Telemetry
+
+For both the cloud and self-hosted version of Snaplet, we may collect standard telemetry data related to customer usage and interactions with our platforms. As such, using the cloud and self-hosted versions of Snaplet may require a user account and access token. 
+
+We collect telemetry data in the interest of continuous improvement and to better understand our users' needs. This type of data collection is a common practice in the industry and helps us optimize our services and provide customers with a better experience. 
+
+For more information about how we collect telemetry data, including details on how to opt out, check out our [release notes](https://docs.snaplet.dev/release-notes#9-january-2024----important-update-for-snaplet-users-regarding-logins-and-telemetry).
+
 
 ## Incident Response
 
 We take security incidents seriously and have a dedicated incident response team to monitor, isolate, contain, eradicate, and recover from any potential security incidents. Our team also performs a post-incident review to identify and address root causes, lessons learned, and areas for improvement. We update our incident response plan and security policies and procedures as necessary to ensure the security and privacy of our customers' data.
 
 ## Security Audits and Vulnerability Assessments
+
 We prioritize the security of our customers' data and regularly perform security audits and vulnerability assessments to identify and address potential security risks. We take a proactive approach to security and update our security measures as necessary to ensure the ongoing protection of our customers' data.
 
 ## Contact Information
+
 At Snaplet, we prioritize the security of our systems and work to ensure that our clients' data is protected. However, as with any software product, there may be vulnerabilities that are not immediately apparent. If you identify a vulnerability, we encourage you to let us know so we can address it as quickly as possible. If you have any security concerns or incidents, please email us at [security@snaplet.dev](mailto:security@snaplet.dev)

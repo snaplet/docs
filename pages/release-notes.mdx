@@ -352,6 +352,52 @@ In the case of`@snaplet/seed`, `npx snaplet setup` now also adds `@snaplet/copyc
 We keep some internal state in a file called `system-manifest.json`. For different reasons, this file might be corrupt. This shouldn't prevent you from using Snaplet though, so we now recover from this case gracefully.
   </Step>
   <Step>
+
+  ## 9 January 2024 - 📢 Important Update for Snaplet Users Regarding Logins and Telemetry
+
+We have some important news to share with you about an upcoming change to Snaplet cli v0.79.0, effective January 10, 2024.
+
+#### 🔐 New Account Requirement:
+To continue using Snaplet from January 10th onwards, you'll need to create an account on our website. This is a significant step forward in our journey to provide you with the best possible experience.
+
+#### Why Are We Doing This?
+*Improved Product Through Telemetry*: By having users sign up, we can gather telemetry data that is vital for enhancing Snaplet's features and usability.
+
+*Better Engagement*: It allows us to engage more effectively with our community and respond to your needs and feedback.
+
+#### Your Data is Safe:
+We take your privacy seriously. Your data will be used strictly for the purposes of improving Snaplet and providing you with a better experience.
+
+#### Signing Up is Easy:
+Just visit Snaplet Signup Page to create your account and get your access token. It's quick and straightforward!
+If you're using Snaplet locally, you can directly obtain your `SNAPLET_ACCESS_TOKEN` without going through the full onboarding process.
+
+Once this is done, you can simply `snaplet auth login` to log the Snaplet cli tool with your account.
+
+#### Changes for Self-Hosting Users:
+For those of you self-hosting Snaplet, you can continue to do so. However, the command will now require an additional `SNAPLET_ACCESS_TOKEN`.
+
+You can get one of these tokens when you're logged in heading to: [Snaplet create token](https://app.snaplet.dev/access-tokens)
+
+Here's how it changes:
+
+Before:
+`SNAPLET_DATABASE_URL=<self-hosted-database-url> snaplet ss capture/restore`
+
+
+After:
+`SNAPLET_DATABASE_URL=<self-hosted-database-url> SNAPLET_ACCESS_TOKEN=<access-token> snaplet ss capture/restore`
+
+#### Telemetry for Snaplet Seed 
+Additionally, we'll be implementing telemetry specifically for `@snaplet/seed`: To continually enhance the `@snaplet/seed` experience, we have started capturing metrics related to your usage. This initiative will help us identify areas for improvement and enhance the overall functionality. 
+
+We respect your privacy and data. Therefore, for any specific event type, we will capture data only once every 24 hours.
+
+Our telemetry is default opt-in, but if you prefer not to participate, you can easily opt out. Simply set the environment variable `SNAPLET_DISABLE_TELEMETRY=1` where `@snaplet/seed` is being used.
+
+*We're Here to Help:*
+If you have any questions, concerns, or need assistance with the new process, please feel free to reach out. We're always here to help and value your feedback.
+
   ## 5 January 2024 - v0.78.3
 ##### Fix `Missing semicolon` error in `snaplet setup` and `snaplet generate`
 For some databases, we had an issue preventing generating  the assets needed by `@snaplet/seed`.
