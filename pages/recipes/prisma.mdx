@@ -24,3 +24,20 @@ Whenever your database structure changes (e.g after a new migration is applied),
 ```bash >_&nbsp;terminal
 npx snaplet generate
 ```
+
+### Restoring
+
+You can also use the restore command to restore data into your database. Just replace the `seed` command with `restore`:
+
+```bash >_&nbsp;terminal
+prisma migrate dev && snaplet restore --no-reset --no-schema
+```
+
+#### Limitations to consider with restoring
+
+There are a few things to keep in mind when running this feature:
+1. Backwards incompatible table changes will result in no data being restored for the entire table. Backwards incompatible changes include but aren't limited to: removed columns or newly added columns that do not have any default values. The result of attempting a restoration with the `--no-reset --no-schema` flags, given the above changes will result in an empty table.
+2. Under the hood, Snaplet relies on `CREATE DATABASE ... WITH TEMPLATE` for cloning the current database as part of the restoration, even though we subsequently clear the tables. We do this so we can preserve the original table IDs. This implementation detail may cause performance issues for large databases. If you do experience any performance issues, please reach out and [let us know](https://discord.com/invite/6HUuajc866).
+3. Any previous data will be cleared from each table that exists in the snapshot – this will occur in a cascading fashion where related rows in other tables will also be cleared. Any rows in tables added since the last snapshot will be kept as is, with the exception of rows with relations to data in the snapshot tables that are cleared – those will be cleared too.  Bare in mind that you are able to opt for a backup of your existing database (of which is currently `true` by default) .
+4. If any tables were removed since the last snapshot, the rest of the restoration will continue.
+5. Any failed database operations that occurred during the restoration (e.g. the removal of a table) will be logged to the `restore.log` and the first three log entries will be show in the console.
