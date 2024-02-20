@@ -6,6 +6,49 @@ import { Steps } from "nextra/components"
 
 <Steps>
 ### Snaplet Release Notes
+
+<Step>
+## 13 Febuary 2024 - v0.88.0
+### 🚨 BREAKING CHANGES in `@snaplet/seed`
+
+We've made improvements to how we generate fake data for each database field.
+
+This means that when running `snaplet generate`, the same field (column in a table) might now have a different default value generated for it compared to before `snaplet generate` was run.
+
+After upgrading, subsequent runs of `snaplet generate` afterwards will *not* cause different values to be generated though - just the first `snaplet generate` after the upgrade.
+
+In this context, a default value means a value that was not explicitly given to `@snaplet/seed` for a field (column in a table).
+
+For example:
+
+```ts
+// name given explicitly
+await snaplet.users({ name: 'Garnet Harley' })
+
+// name not given explicitly
+// => the generated value might have now changed
+// (after the first `snaplet generate` after upgrading)
+await snaplet.users({})
+```
+
+### Bug Fixes:
+#### Index dropping for snapshots
+When we restore database snapshots, we first drop constraints and indices relevant to the snapshot, then insert data from the snapshot, then bring back any constraints we previously dropped. In some cases however, forgein key constraints did not properly drop before dependant index keys were dropped, causing the index drop to fail.
+
+#### Account for Supavisor URLs when detecting Supabase DBs
+We currently automatically add `--no-reset` flag if we detect a Supabase database. We detect the supabase database by looking at database connection string. However, we weren't including Supavisor URLs in this check.
+
+#### Add types for async field functions
+At the moment we support promise-returning field generate functions, but `npx snaplet generate` did not generate types to show that it is supported:
+
+```ts
+snaplet.users([{ name: async () => { return await Promise.resolve('Foo Bar') } }])
+```
+
+#### Make type output deterministic
+In some cases, `npx snaplet generate` would generate types in a different order than in previous runs. 
+
+</Step>
 <Step>
 ## 13 Febuary 2024 - v0.87.3
 
