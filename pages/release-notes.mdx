@@ -8,6 +8,36 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 13 Febuary 2024 - v0.88.2
+
+### Bug Fixes
+
+#### Avoid unnecessary `limit: null` in generated copycat code
+We generate code with calls to copycat (e.g. `copycat.email(seed)`) in two cases:
+* `@snaplet/seed`: for each database field that we generate data for, we use this generated code
+  as the default value for the field
+* For snapshots, when generating example transform configs
+
+In both cases, in `0.88.0` we made a change that caused us to add `limit: null` for string fields
+that did not have a char limit (e.g. `text` columns in a database), for example:
+`copycat.email(seed, { limit: null })`
+
+If there is not char limit for the field, we now avoid this unnecessary `limit: null` fluff:
+`copycat.email(seed)`
+
+### Avoid `.toString()` for integer and float field types
+In the case of database integer and float database fields, when generated code with calls to copycat
+(the same code as mentioned above), we were in some cases incorrectly adding a `.toString()` to
+this code.
+
+### Avoid `copycat.scramble()` for generated copycat code for `@snaplet/seed`
+In the case of `@snaplet/seed`, for generated code with calls to copycat (the same code as
+mentioned above), we were in some cases incorrectly using `copycat.scramble()`, which does not make
+much sense for `@snaplet/seed`, where the input values to copycat would be seed values to determine
+what value is generated, rather than actual database values.
+</Step>
+
+<Step>
 ## 13 Febuary 2024 - v0.88.0
 ### 🚨 BREAKING CHANGES in `@snaplet/seed`
 
