@@ -25,12 +25,12 @@ that did not have a char limit (e.g. `text` columns in a database), for example:
 If there is not char limit for the field, we now avoid this unnecessary `limit: null` fluff:
 `copycat.email(seed)`
 
-### Avoid `.toString()` for integer and float field types
+#### Avoid `.toString()` for integer and float field types
 In the case of database integer and float database fields, when generated code with calls to copycat
 (the same code as mentioned above), we were in some cases incorrectly adding a `.toString()` to
 this code.
 
-### Avoid `copycat.scramble()` for generated copycat code for `@snaplet/seed`
+#### Avoid `copycat.scramble()` for generated copycat code for `@snaplet/seed`
 In the case of `@snaplet/seed`, for generated code with calls to copycat (the same code as
 mentioned above), we were in some cases incorrectly using `copycat.scramble()`, which does not make
 much sense for `@snaplet/seed`, where the input values to copycat would be seed values to determine
