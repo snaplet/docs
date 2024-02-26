@@ -8,6 +8,16 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 13 Febuary 2024 - v0.89.0
+
+### 🚨 `@snaplet/copycat` BREAKING CHANGE
+
+We have upgraded to @snaplet/copycat v5.0.0. Fixes `someOf()` when range tuple (e.g. `copycat.someOf(seed, [1, 2], ['a','b','c'])`) is given for `range` parameter instead of number (e.g. `copycat.someOf(seed, 2, ['a','b','c'])`). Previously this case would have always (incorrectly) returned an empty array (`[]`).
+
+If `copycat.someOf()` is currently being given a range tuple (e.g. `copycat.someOf(seed, [1, 2], ['a','b','c'])`), results for the same input would change from (incorrectly) being an empty array (`[]`), to (correctly) being an array of items of a size within the given range.
+
+</Step>
+<Step>
 ## 13 Febuary 2024 - v0.88.2
 
 ### Bug Fixes
