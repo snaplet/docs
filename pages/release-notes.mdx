@@ -8,7 +8,15 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
-## 13 Febuary 2024 - v0.89.0
+## 27 Febuary 2024 - v0.89.1
+
+### Bug Fixes
+
+#### Snaplet Cloud: Keep preview database restore tasks alive longer
+Previously, when restoring snapshots to preview database on app.snaplet.dev, we would terminate
+restore tasks that took longer than 20 minutes. When deciding whether to terminate a restore, we now give each step in the restore flow 20 minutes to complete, and the entire restore 2 hours to complete.
+
+## 26 Febuary 2024 - v0.89.0
 
 ### 🚨 `@snaplet/copycat` BREAKING CHANGE
 
