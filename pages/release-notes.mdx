@@ -5,9 +5,134 @@ import { Steps } from "nextra/components"
 *The latest Snaplet product updates from the Snaplet team.*
 
 <Steps>
+### Snaplet Release Notes
+
+<Step>
+## 27 Febuary 2024 - v0.89.4
+
+### Bug Fixes
+* Reverts the change made in 0.89.1 to keep preview database tasks alive longer - we suspect it might have introduced new issues. For the time being, this means preview database snapshots will be back to having a 20 minute time limit to complete for Snaplet Cloud
+</Step>
+
+<Step>
+## 27 Febuary 2024 - v0.89.1
+
+### Bug Fixes
+
+#### Snaplet Cloud: Keep preview database restore tasks alive longer
+Previously, when restoring snapshots to preview database on app.snaplet.dev, we would terminate
+restore tasks that took longer than 20 minutes. When deciding whether to terminate a restore, we now
+give each step in the restore flow 20 minutes to complete, and the entire restore 2 hours to
+complete.
+
+</Step>
+<Step>
+
+## 26 Febuary 2024 - v0.89.0
+
+### 🚨 `@snaplet/copycat` BREAKING CHANGE
+
+We have upgraded to @snaplet/copycat v5.0.0. Fixes `someOf()` when range tuple (e.g. `copycat.someOf(seed, [1, 2], ['a','b','c'])`) is given for `range` parameter instead of number (e.g. `copycat.someOf(seed, 2, ['a','b','c'])`). Previously this case would have always (incorrectly) returned an empty array (`[]`).
+
+If `copycat.someOf()` is currently being given a range tuple (e.g. `copycat.someOf(seed, [1, 2], ['a','b','c'])`), results for the same input would change from (incorrectly) being an empty array (`[]`), to (correctly) being an array of items of a size within the given range.
+
+</Step>
+<Step>
+## 13 Febuary 2024 - v0.88.2
+
+### Bug Fixes
+
+#### Avoid unnecessary `limit: null` in generated copycat code
+We generate code with calls to copycat (e.g. `copycat.email(seed)`) in two cases:
+* `@snaplet/seed`: for each database field that we generate data for, we use this generated code
+  as the default value for the field
+* For snapshots, when generating example transform configs
+
+In both cases, in `0.88.0` we made a change that caused us to add `limit: null` for string fields
+that did not have a char limit (e.g. `text` columns in a database), for example:
+`copycat.email(seed, { limit: null })`
+
+If there is not char limit for the field, we now avoid this unnecessary `limit: null` fluff:
+`copycat.email(seed)`
+
+#### Avoid `.toString()` for integer and float field types
+In the case of database integer and float database fields, when generated code with calls to copycat
+(the same code as mentioned above), we were in some cases incorrectly adding a `.toString()` to
+this code.
+
+#### Avoid `copycat.scramble()` for generated copycat code for `@snaplet/seed`
+In the case of `@snaplet/seed`, for generated code with calls to copycat (the same code as
+mentioned above), we were in some cases incorrectly using `copycat.scramble()`, which does not make
+much sense for `@snaplet/seed`, where the input values to copycat would be seed values to determine
+what value is generated, rather than actual database values.
+</Step>
+
+<Step>
+## 13 Febuary 2024 - v0.88.0
+### 🚨 BREAKING CHANGES in `@snaplet/seed`
+
+We've made improvements to how we generate fake data for each database field.
+
+This means that when running `snaplet generate`, the same field (column in a table) might now have a different default value generated for it compared to before `snaplet generate` was run.
+
+After upgrading, subsequent runs of `snaplet generate` afterwards will *not* cause different values to be generated though - just the first `snaplet generate` after the upgrade.
+
+In this context, a default value means a value that was not explicitly given to `@snaplet/seed` for a field (column in a table).
+
+For example:
+
+```ts
+// name given explicitly
+await snaplet.users({ name: 'Garnet Harley' })
+
+// name not given explicitly
+// => the generated value might have now changed
+// (after the first `snaplet generate` after upgrading)
+await snaplet.users({})
+```
+
+### Bug Fixes:
+#### Index dropping for snapshots
+When we restore database snapshots, we first drop constraints and indices relevant to the snapshot, then insert data from the snapshot, then bring back any constraints we previously dropped. In some cases however, forgein key constraints did not properly drop before dependant index keys were dropped, causing the index drop to fail.
+
+#### Account for Supavisor URLs when detecting Supabase DBs
+We currently automatically add `--no-reset` flag if we detect a Supabase database. We detect the supabase database by looking at database connection string. However, we weren't including Supavisor URLs in this check.
+
+#### Add types for async field functions
+At the moment we support promise-returning field generate functions, but `npx snaplet generate` did not generate types to show that it is supported:
+
+```ts
+snaplet.users([{ name: async () => { return await Promise.resolve('Foo Bar') } }])
+```
+
+#### Make type output deterministic
+In some cases, `npx snaplet generate` would generate types in a different order than in previous runs. 
+
+</Step>
+<Step>
+## 13 Febuary 2024 - v0.87.3
+
+- **Bug Fixes**: Resolved an issue where an unhandled error occurred when a package manager was not found in the CLI. This fix improves the stability and reliability of the CLI interface.
+
+</Step>
+<Step>
+## February 12, 2024 - v0.87.2  
+
+#### Bug Fixes
+- **PNPM Workspaces Support**: Enhanced `snaplet setup` to properly support pnpm workspaces, facilitating smoother project configurations for users leveraging this package manager.
+</Step>
+
+<Step>
+## February 8, 2024 - v0.87.1
+
+#### Bug Fixes:
+- **First Name Transformations**: Addressed a bug that led to incorrect automatic transformations for `firstName` fields, ensuring data integrity and consistency.
+- **Empty Database Setup**: Fixed an issue where users would encounter a deadlock if the target database was empty during the setup process, improving the setup flow's resilience.
+</Step>
+
 <Step>
 ## 8 Febuary 2024 - v0.87.0
-#### 🚨 `@snaplet/copycat` BREAKING CHANGE
+### 🚨 `@snaplet/copycat` BREAKING CHANGE
 We have upgraded to @snaplet/copycat v4.0.0.
 
 Changes to `copycat.phoneNumber()`:
@@ -29,14 +154,13 @@ You might be impacted by this change if:
 * You use snapshots, and provide options to `copycat.phoneNumber()` in your `transform` configuration: https://docs.snaplet.dev/core-concepts/capture#transform-data
 * You use `@snaplet/seed`, and provide options to `copycat.phoneNumber()`
 
-#### 🚨 `@snaplet/seed` BREAKING CHANGE
+### 🚨 `@snaplet/seed` BREAKING CHANGE
 
 `@snaplet/seed` now has `@snaplet/copycat` as a _peer dependency_ rather than a dependency.
 
 This means you'll also need to have `@snaplet/copycat` installed in your project when using `@snaplet/seed`.
 
 While this technically is a breaking change, `npx snaplet setup` would have installed `@snaplet/copycat` for you when setting up `@snaplet/seed`. This change would only affect you if you have since removed `@snaplet/copycat` from your dependencies.
-</Step>
 </Step>
 <Step>
 ## 1 Febuary 2024 - v0.86.2

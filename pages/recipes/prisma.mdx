@@ -1,23 +1,40 @@
 # Prisma
 
-Prisma Migrations creates the database structure, and Snaplet restores the data.
+> Learn how to add a `seed.mts` to your project, using our [quick start](https://docs.snaplet.dev/getting-started/quick-start/seed) guide.
+
+Prisma Migrations creates the database structure, Snaplet seed requires to generate data against.
 
 ```bash >_&nbsp;terminal
-prisma migrate dev
-snaplet restore --no-reset --no-schema
+prisma migrate dev && npx tsx seed.mts
 ```
 
 If you don't want to run two commands, you can automatically seed the database with data, after running `prisma migrate reset` or `prisma migrate dev`, by adding the following to your `package.json` file.
 
 ```json package.json
 "prisma": {
-  "seed": "snaplet snapshot restore -y"
+  "seed": "npx tsx seed.mts"
 }
 ```
 
 Learn ["how to seed your database in Prisma"](https://www.prisma.io/docs/guides/database/seed-database#how-to-seed-your-database-in-prisma) from their documentation.
 
-## Limitations to consider
+### Note on Migrations
+
+Whenever your database structure changes (e.g after a new migration is applied), `@snaplet/seed` will need be regenerated to reflect the new structure. To do this, run the following command:
+```bash >_&nbsp;terminal
+npx snaplet generate
+```
+
+### Restoring
+
+You can also use the restore command to restore data into your database. Just replace the `seed` command with `restore`:
+
+```bash >_&nbsp;terminal
+prisma migrate dev && snaplet restore --no-reset --no-schema
+```
+
+#### Limitations to consider with restoring
+
 There are a few things to keep in mind when running this feature:
 1. Backwards incompatible table changes will result in no data being restored for the entire table. Backwards incompatible changes include but aren't limited to: removed columns or newly added columns that do not have any default values. The result of attempting a restoration with the `--no-reset --no-schema` flags, given the above changes will result in an empty table.
 2. Under the hood, Snaplet relies on `CREATE DATABASE ... WITH TEMPLATE` for cloning the current database as part of the restoration, even though we subsequently clear the tables. We do this so we can preserve the original table IDs. This implementation detail may cause performance issues for large databases. If you do experience any performance issues, please reach out and [let us know](https://discord.com/invite/6HUuajc866).
