@@ -1,335 +1,184 @@
-import { Callout, Tabs, Tab } from 'nextra/components';
-import { TutorialSchema } from '../../../components/TutorialSchema';
+import { Step } from '../../../components/Step'
+import { Callout, Steps } from "nextra/components"
+import { Tabs, Tab } from "nextra/components";
 
-# Seed Quick Start Guide
+# Snapshot Quick Start Guide
 
 ## Assumptions
+This guide assumes you have access to a database that has production data, or production-like data you can connect to.
 
-This guide will take you through the process of using `@snaplet/seed` to create realistic, production-like data.
+If you're just looking to demo Snaplet's snapshot feature, you can also use a Snaplet demo database as part of this guide.
 
-<Callout emoji="📁">
-  If you already have access to a database with production or production-like
-  data you'd prefer to use as a source, you should instead follow the [Snapshot
-  Quick Start](/getting-started/quick-start/snapshot) guide.
+<Callout emoji="🤖">
+If you don't have access to a database with production data, and would prefer to seed production-like using Snaplet's AI `seed` feature, you should instead follow the [Seed Quick Start](/seed/getting-started/quick-start) guide.
 </Callout>
 
-## Prerequisites
 
-- Node.js and npm installed on your machine
-- a PostgreSQL database server running
 
-<Tabs items={["diagram", "sql"]}>
-<Tab>
-<TutorialSchema className="nx-mx-auto nx-my-4" />
-</Tab>
-<Tab>
-```sql
-CREATE TABLE public.user (
-  id uuid NOT NULL PRIMARY KEY,
-  username text NOT NULL,
-  email text NOT NULL
-);
-CREATE TABLE public.post (
-  id uuid NOT NULL PRIMARY KEY,
-  title text NOT NULL,
-  content text NOT NULL,
-  author_id uuid NOT NULL REFERENCES public.user(id)
-);
-CREATE TABLE public.comment (
-  id uuid NOT NULL PRIMARY KEY,
-  content text NOT NULL,
-  author_id uuid NOT NULL REFERENCES public.user(id),
-  post_id uuid NOT NULL REFERENCES public.post(id),
-  written_at timestamptz NOT NULL DEFAULT now()
-);
-```
-</Tab>
+## Getting Started
+**In this tutorial, we'll guide you through the process of:**
+* Capturing your first snapshot with Snaplet.
+* Installing the Snaplet CLI.
+* Restoring that snapshot to your development environment.
+
+Let's get started.
+
+## Sign up for Snaplet and Capture a Snapshot
+You'll need a free Snaplet account to capture a snapshot of your database.
+
+<Steps>
+
+### Sign up for Snaplet
+<Step image={{ src: "/getting-started/quick-start/quick-start-01.png", alt: "sign up for snaplet"}}>
+First off, you'll need a free Snaplet account. Sign up to [Snaplet Cloud](https://app.snaplet.dev).
+</Step>
+
+### Follow the Snapshot workflow
+<Step image={{ src: "/getting-started/quick-start/quick-start-01-5.png", alt: "select snapshot"}}>
+Snaplet allows you to seed production-like data using the [`seed`]((/seed/getting-started/quick-start)) feature, or create a snapshot from an existing production database. 
+
+We'll be doing the later, so select **'Continue'** to proceed with creating a snapshot. 
+</Step>
+
+### Start the Snaplet Onboarding
+<Step image={{ src: "/getting-started/quick-start/quick-start-02.png", alt: "start the onboarding"}}>
+You'll see a short overview of what the snapshot capture process entails. Click '**Let's go**'.
+</Step>
+
+### Select a Source Database
+<Step image={{ src: "/getting-started/quick-start/quick-start-03.png", alt: "select a source database"}}>
+The first step is to choose the **source database** you're going to connect to Snaplet. The source database is typically your production database. Click '**Provide my own db**'.
+
+*If you're uncomfortable connecting to your actual production database, use your staging or QA database, or the Snaplet demo database. Supabase users should select the Supabase option and follow the [Supabase tutorial](/snapshots/recipes/supabase) for assistance.*
+
+{/* *No database? Use Snaplet's `seed` feature to create fake production-like data. Follow the [seed quick start guide](/getting-started/quick-start/seed) instead of this guide.* */}
+</Step>
+
+### Provide source database credentials
+<Step image={{ src: "/getting-started/quick-start/quick-start-04.png", alt: "input connection information"}}>
+You'll need to provide your source database connection details. You can either do so individually for each of the values, or import a connection string.
+
+Once done, click '**Test my connection**' to verify that Snaplet is able to connect to your database, and proceed. If you see a warning about read-only access to your database, make sure you're using [read-only role](/snapshots/guides/postgresql/#create-a-read-only-role) credentials for Snaplet.
+
+If you're having trouble getting your database connection string to work, refer to our [connection string reference](/reference/connection-strings). Prisma also has a [reference guide](https://www.prisma.io/dataguide/postgresql/short-guides/connection-uris) on URI encoding that may be useful.
+</Step>
+
+### Subset your database
+<Step image={{ src: "/getting-started/quick-start/quick-start-05.png", alt: "subsetting"}}>
+You will now be prompted to create a subset of your source database.
+
+Subsetting is great for reducing the size of larger databases to a more managable size.
+
+Select the starting table for your subset (typically your "primary" table, like users or customers) and select how many rows of data you'd like.
+
+You can also opt not to subset at all by selecting '**All rows**'. Select any option to proceed.
+</Step>
+
+### Transform your data
+<Step image={{ src: "/getting-started/quick-start/quick-start-06.png", alt: "transform your data"}}>
+You can now transform the data from your source database.
+
+Snaplet's transform process can scramble all data from your source database, while retaining the overall "shape" of that data, in essence removing any personally-identifiable data.
+
+You can also not to transform the data. Select either option to proceed.
+
+</Step>
+
+### Snapshot capture
+<Step image={{ src: "/getting-started/quick-start/quick-start-07.png", alt: "snapshot capture"}}>
+Snaplet's workers will now connect to your source database, copy the contents, and depending on what you've selected, subset and transform the data. The output of this process is a **database snapshot**, which you can then restore into your development environment to code against.
+</Step>
+
+### Snapshot complete
+<Step image={{ src: "/getting-started/quick-start/quick-start-10.png", alt: "snapshot capture complete"}}>
+The snapshot capture process should finish within a few minutes for all but the biggest databases. Once it's done, you'll see a message confirming its succesful capture. 
+
+At this point, you have a database snapshot, and will need to restore this snapshot into your development environment or workflow to use it further. You can do this by installing and setting up the Snaplet CLI, and running the command to restore a snapshot.   
+</Step>
+
+</Steps>
+---
+
+## Snaplet CLI Installation 
+
+You'll recall that a snapshot is not a database, it's a subset, transformed copy of that database. In order to code against it, your snapshot needs to be restored into a database, like your local development database. 
+
+To do so, you'll need to install the Snaplet CLI and setup your Snaplet instance. Once done, you'll be able to restore your snapshot from the CLI.
+
+Start by installing the Snaplet CLI.
+
+<Tabs items={["npm", "pnpm", "yarn", "curl"]}>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Install and setup Snaplet with npx
+  npx snaplet setup
+  ```
+  </Tab>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Install and setup Snaplet with pnpm
+  pnpm dlx snaplet setup
+  ```
+  </Tab>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Install and setup Snaplet with yarn
+  yarn dlx snaplet setup
+  ```
+  </Tab>
+  <Tab>
+  ```bash >_&nbsp;terminal
+  # Install and setup Snaplet as a static binary
+  curl -sL https://app.snaplet.dev/get-cli/ | bash
+  snaplet setup
+  ```
+  </Tab>
 </Tabs>
 
-The diagram above represents the relationships of your database.
+<Steps>
 
-From the SQL tab above, copy the SQL statement and insert this into your database to define your schema.
+### Install the Snaplet CLI
+<Step image={{ src: "/getting-started/quick-start/quick-start-12.png", alt: "Install the Snaplet CLI with NPX"}}>
+Use your preferred installer to install and setup Snaplet. We're using `npx snaplet setup` here. When prompted, select **'y'** to proceed.  
+</Step>
 
-## Setting up snaplet
+### Follow the snapshot journey
+<Step image={{ src: "/getting-started/quick-start/quick-start-13.png", alt: "Opt to use snapshots"}}>
+Just like the Snaplet Cloud experience, select the option to use production data as your data source. 
+</Step>
 
-We now need to add snaplet to your project.
+### Specify your target database
+<Step image={{ src: "/getting-started/quick-start/quick-start-14.png", alt: "Provide your target database connection string"}}>
+Provide the [connection string](/reference/connection-strings) for your target database, typically your local development environment database, but it could be any database you want to code against. This is where the snapshot will be restored to, overwriting all data in the database and replacing it with the snapshot data.
+</Step>
 
-Run the following in your project root directory and follow the interactive prompts:
+### Link your Snaplet Cloud project 
+<Step image={{ src: "/getting-started/quick-start/quick-start-17.png", alt: "Link a Snaplet Cloud project"}}>
+You'll be prompted whether you want to link a project from Snaplet Cloud - select **yes**, and select the project you created earlier as part of this quick start guide.
+</Step>
 
-```bash >_&nbsp;terminal
-npx snaplet setup
-```
+### Restore your snapshot
+<Step image={{ src: "/getting-started/quick-start/quick-start-15.png", alt: "Restore your snapshot"}}>
+With the CLI associated with your Cloud project, and your target database defined, you're now ready to restore your snapshot into your database to code against.
 
-## `@snaplet/seed`
+Run `snaplet snapshot restore` or `snaplet ss restore --latest` to restore your snapshot into your target database.
 
-### Describing your requirements
+You may be prompted to confirm that your snapshot will overwrite your target database if you're not using a local database. 
+</Step>
 
-We now have a database with structure in it, and Snaplet set up to use it. We still do not yet have data though.
-In order to have Snaplet generate this data, you'll need to tell Snaplet _how_ to generate the data.
+### Snapshot restoration complete
+<Step image={{ src: "/getting-started/quick-start/quick-start-16.png", alt: "Restoration complete"}}>
+The Snaplet CLI will provide an update to the restoration process, and notify you on completion. You can now code against your snapshot data in your target database!
 
-This is where `@snaplet/seed` comes in: it gives you a programmatic interface to describe your seeding requirements.
+You can view your database in your preferred database viewer to verify that Snaplet has successfully and safely transformed all the potentially sensitive data from your source database if you opted to transform this data earlier. 
+</Step>
+</Steps>
 
-<CH.Scrollycoding className="seed-tutorial-seed-script">
+## Next Steps
+You can modify each step of the Snaplet snapshot workflow to exercise more granular control over the snapshot creation and capture process to get exactly the data you need for your use case.
 
-`snaplet setup` would have generated an example script file called `seed.mts` in your project, which imports and
-uses `@snaplet/seed`. It should look something like this:
+For more control over how your snapshot captures data from your source database, including selecting and excluding specific tables, check out the [capture guide](/snapshots/core-concepts/capture#select-data)
 
-```ts seed.mts
-import { createSeedClient } from '@snaplet/seed';
+To learn how to modify your data transformations, including how to use [`@snaplet/copycat`](https://github.com/snaplet/copycat) to seed realistic, deterministic values, check out the [data transformation guide](/snapshots/core-concepts/capture#select-data)
 
-const seed = await createSeedClient();
-```
-
----
-
-For your example blog application, let's assume we need the following data:
-
-- A post titled "Hello World!"
-- A post author, with an email address that ends with "acme.org."
-- Three comments on the post.
-
-It's worth noting what we're not explicitly defining - that each comment needs to have a separate, unique author, for instance. We're assuming that `@snaplet/seed` will fill in the blanks based on your schema and seed realistic data as needed.
-
-`snaplet` in the code above exposes all your models (i.e. your database tables, or the entities in your application - in this case "user" and "post") as functions.
-
-During `snaplet setup`, Snaplet would have read your database structure (using the database connection string you entered), and used this to create these functions.
-
-These functions return what we call a _plan_. When describing a plan, you always start from a "root" model - a model where we would start describing how to seed seed data, along with data for its related models (more on this soon).
-
-Here we start from the `posts` models. `await`ing a plan will execute it.
-
-```ts seed.mts
-import { createSeedClient } from '@snaplet/seed';
-
-const seed = await createSeedClient();
-
-// focus
-await seed.posts([{}]);
-```
-
----
-
-You can directly define the values of your model.
-
-```ts seed.mts
-import { createSeedClient } from '@snaplet/seed';
-
-const seed = await createSeedClient();
-
-await seed.posts([
-  {
-    // focus
-    title: 'Hello World!',
-  },
-]);
-```
-
----
-
-You can also define the values of your model's relationships.
-Here we define the author of the post represented by the `author` field.
-
-```ts seed.mts
-import { createSeedClient } from '@snaplet/seed';
-import { copycat } from '@snaplet/copycat';
-
-const seed = await createSeedClient();
-
-await seed.posts([
-  {
-    title: 'Hello World!',
-    // focus(1:6)
-    author: {
-      email: (ctx) =>
-        copycat.email(ctx.seed, {
-          domain: 'acme.org',
-        }),
-    },
-  },
-]);
-```
-
----
-
-Next, we also define the comments of the post represented by the `comments` field.
-As we need more than one comment, we can use the `x` function which will create a list of similar comments.
-You can read it as "comments times 3".
-
-```ts seed.mts
-import { createSeedClient } from '@snaplet/seed';
-import { copycat } from '@snaplet/copycat';
-
-const seed = await createSeedClient();
-
-await seed.posts([
-  {
-    title: 'Hello World!',
-    author: {
-      email: (ctx) =>
-        copycat.email(ctx.seed, {
-          domain: 'acme.org',
-        }),
-    },
-    // focus
-    comments: (x) => x(3),
-  },
-]);
-```
-
----
-
-Finally:
-* We'll add a `dryRun` option when creating `SeedClient` - in dry run mode, we'll log the sql statements to the console instead of altering the database.
-* and a `$resetDatabase()` call - this will clear the database of any current data, but keep the structure around
-
-```ts seed.mts
-import { createSeedClient } from '@snaplet/seed';
-import { copycat } from '@snaplet/copycat';
-
-const seed = await createSeedClient({
-  // focus
-  dryRun: process.env.DRY !== '0'
-});
-
-// focus
-await seed.$resetDatabase()
-
-await seed.posts([
-  {
-    title: 'Hello World!',
-    author: {
-      email: (ctx) =>
-        copycat.email(ctx.seed, {
-          domain: 'acme.org',
-        }),
-    },
-    comments: (x) => x(3),
-  },
-]);
-```
-
----
-
-We're done!
-
-Copy the code and add it to your `seed.mts` file.
-
-```ts seed.mts
-import { createSeedClient } from '@snaplet/seed';
-import { copycat } from '@snaplet/copycat';
-
-const seed = await createSeedClient({
-  dryRun: process.env.DRY !== '0'
-});
-
-await seed.$resetDatabase()
-
-await seed.posts([
-  {
-    title: 'Hello World!',
-    author: {
-      email: (ctx) =>
-        copycat.email(ctx.seed, {
-          domain: 'acme.org',
-        }),
-    },
-    comments: (x) => x(3),
-  },
-]);
-```
-
-</CH.Scrollycoding>
-
-### Executing the plan
-
-At this point, you're ready to run your seed script for the first time!
-
-Let's see what statements are generated by using the `DRY` environment variable we defined.
-
-Run this command in your terminal:
-
-```bash >_&nbsp;terminal
-npx tsx seed.mts
-```
-
-You should see the following output:
-
-<CH.Slideshow className="seed-tutorial-sql-output">
-
-Click the '**Next**' button on the slider above to see a step-by-step explanation of this output.
-
-```sql >_&nbsp;terminal
-INSERT INTO public.user (email,id,username) VALUES
-('Craig.Bednar82365@acme.org', '24058b0d-21ec-54b8-a3fa-b0ad8034f10f', 'site-glance56860'),
-('Humberto.Bruen34274@meternephew.org', '241ed1d9-c36c-50d4-b783-e12ce5187076', 'Alexis-Gleason29168'),
-('Mattie.Braun26688@plodantechamber.com', '8c84c800-1b34-5843-b34b-73d3239f0c5b', 'blissful-fountain21234'),
-('Dannie_Osinski74665@brownmidline.name', '0e041e68-00c0-53db-b0f8-e28be8a009e0', 'visualise-service97805');
-
-INSERT INTO public.post (title,content,author_id,id) VALUES
-('Hello World!', 'Ramo ramukin rae racea rakesoma, me vayota yume vi keyo munavima.', '24058b0d-21ec-54b8-a3fa-b0ad8034f10f', '1a294726-1661-5d42-aaf6-cdb66e6c6eaf');
-
-INSERT INTO public.comment (content,id,post_id,author_id,written_at) VALUES
-('Ma ceasova yuviketa shira chiyomu.', '13fdf8d2-2199-5dfd-81d0-c8dd3ce3b8a6', '1a294726-1661-5d42-aaf6-cdb66e6c6eaf', '241ed1d9-c36c-50d4-b783-e12ce5187076', DEFAULT),
-('Mukinra kahyceako kiva kai me hameso rae.', '71a504eb-a859-5217-9e27-e15975ac69c6', '1a294726-1661-5d42-aaf6-cdb66e6c6eaf', '8c84c800-1b34-5843-b34b-73d3239f0c5b', DEFAULT),
-('Ma nacea va memumi ta, mami viyua yoma shimusona viyo metake.', '8e826b31-f774-57f3-8ef2-183bddb35f3e', '1a294726-1661-5d42-aaf6-cdb66e6c6eaf', '0e041e68-00c0-53db-b0f8-e28be8a009e0', DEFAULT);
-```
-
----
-
-This is the post, titled "Hello World!" as intended.
-
-```sql >_&nbsp;terminal focus=8
-
-```
-
----
-
-This is the author of the post, notice the "acme.org" in the email.
-
-```sql >_&nbsp;terminal focus=2
-
-```
-
----
-
-And here are the 3 comments.
-
-```sql >_&nbsp;terminal focus=11:13
-
-```
-
----
-
-As mentioned earlier, these 3 users were automatically generated to satisfy the requirement of 3 comments. You didn't need to define them - `@snaplet/seed` did it for you, because it knows your schema relationships and can fulfill them automatically.
-
-```sql >_&nbsp;terminal focus=3:5
-
-```
-
-</CH.Slideshow>
-
-It's now time to seed this data into your database.
-
-In order to do that, run this command in your terminal (notice how the `DRY` environment variable is set to `0`):
-
-```bash >_&nbsp;terminal
-DRY=0 npx tsx seed.mts
-```
-
-All done, you're now ready to code against your generated data!
-
-### Evolving your application
-
-Whenever your database structure changes, `@snaplet/seed` will need to be re-generated so that it is in sync with your new database structure.
-
-You can do this by running:
-
-```bash >_&nbsp;terminal
-npx snaplet generate
-```
-
-If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
-
-## Next steps
-
-Learn more about how `@snaplet/seed` works and define more complex plans in our [seed reference guide](/core-concepts/seed)
+For more options and granular control over snapshot restoration, check out the Snaplet [restore guide](/snapshots/core-concepts/restore#more-granular-control-over-restorations).

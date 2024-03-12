@@ -221,7 +221,7 @@ function Switch() {
           asPath.startsWith("/seed") ? "" : "translate-x-[100px]"
         }`}
       />
-      <div className="flex items-center group absolute top-0 z-50 h-full w-full text-center">
+      <div className="flex items-center group absolute top-0 z-50 h-full w-full text-center text-sm">
         <SwitchLink
           goto="/seed/getting-started/overview"
           isActive={activePath === "seed"}

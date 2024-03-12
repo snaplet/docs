@@ -8,13 +8,13 @@ Snaplet captures a snapshot of your database by connecting to it and extracting 
 
 Snaplet has 3 operations for manipulating the data when capturing a snapshot:
 
-- **[Select](/core-concepts/capture#select-data):** Filter out data that is not required for development
-- **[Transform](/core-concepts/capture#transform-data):** Make existing data suitable for development by transforming the original value into a new one
-- **[Subset](/core-concepts/capture#subset-data):** Capture a subset of data whilst keeping referential integrity intact
+- **[Select](/snapshots/core-concepts/capture#select-data):** Filter out data that is not required for development
+- **[Transform](/snapshots/core-concepts/capture#transform-data):** Make existing data suitable for development by transforming the original value into a new one
+- **[Subset](/snapshots/core-concepts/capture#subset-data):** Capture a subset of data whilst keeping referential integrity intact
 
 All these operations are configurable via the `snaplet.config.ts` file.
 
-Once your `snaplet.config.ts` file is configured, you can **[capture a snapshot](/core-concepts/capture#capture-a-snapshot)**.
+Once your `snaplet.config.ts` file is configured, you can **[capture a snapshot](/snapshots/core-concepts/capture#capture-a-snapshot)**.
 
 ## Select data
 
@@ -156,7 +156,7 @@ Copycat is open-source and has templates for names, addresses, phone numbers and
 
 We believe that a good developer experience is when developers are in flow, so it's our goal to "work where you work" by providing programatic primitives for transforming the data in your database, and integrating those with your development worflow.
 
-![Be one with the database!](/core-concepts/capture/snappy-flow.svg)
+![Be one with the database!](/snapshots/core-concepts/capture/snappy-flow.svg)
 
 To transform the data in your database Snaplet needs two things:
 
@@ -676,7 +676,7 @@ Resulting in the follwing data being fetched: `user: (1,2,3,4,5,8) and team (1)`
 
 #### Excluding tables from subset
 
-To exclude specific tables from the snapshot see [select](/core-concepts/capture#select-data) documentation.
+To exclude specific tables from the snapshot see [select](/snapshots/core-concepts/capture#select-data) documentation.
 
 <Callout type="info">
 Note that the `precent` / `rowLimit` specified in the subset config may not be exact. The actual row count of the data is affected by the relationships between the tables. As such, a 5% subset specified against a specific table may ultimately include more than 5% of the actual database.
@@ -730,7 +730,7 @@ Some database providers (like Supabase) may set default timeout values for state
 
 To fix this, we recommend allowing longer running statements during the capture process. This can be achieved by setting the `statement_timeout` to a higher value or infinity in the database via the command `SET statement_timeout = 0;`.
 
-If you've created a dedicated role for Snaplet, as recommended [here](/guides/postgresql), you can set an infinite timeout specifically for the `snaplet` user role with the following command:
+If you've created a dedicated role for Snaplet, as recommended [here](/snapshots/guides/postgresql), you can set an infinite timeout specifically for the `snaplet` user role with the following command:
 
 ```sql >_&nbsp;terminal
 ALTER ROLE snaplet_readonly SET statement_timeout = 0;
