@@ -1,4 +1,8 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
+
 import { useTheme } from "nextra-theme-docs";
+import { ReactNode } from "react";
 
 export function LogoLight() {
   return (
@@ -184,12 +188,63 @@ function LogoDark() {
   );
 }
 
+function SwitchLink({
+  goto,
+  isActive,
+  children,
+}: {
+  goto: string;
+  isActive: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={goto}
+      className={`rounded-md w-[105px] my-1 ${
+        isActive ? "dark:text-primary-800" : ""
+      }`}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function Switch() {
+  const { asPath } = useRouter();
+
+  const activePath = asPath.startsWith("/seed") ? "seed" : "snapshots";
+
+  return (
+    <div className="relative border nx-border-slate-100 dark:nx-border-neutral-400/70 rounded-[8px] w-[210px]">
+      <div
+        className={`h-[28px] w-[100px] nx-bg-gray-100 dark:nx-bg-neutral-400 m-1 duration-200 rounded-md transition-transform ${
+          asPath.startsWith("/seed") ? "" : "translate-x-[100px]"
+        }`}
+      />
+      <div className="flex items-center group absolute top-0 z-50 h-full w-full text-center">
+        <SwitchLink
+          goto="/seed/getting-started/overview"
+          isActive={activePath === "seed"}
+        >
+          seed
+        </SwitchLink>
+        <SwitchLink
+          goto="/snapshots/getting-started/overview"
+          isActive={activePath === "snapshots"}
+        >
+          snapshots
+        </SwitchLink>
+      </div>
+    </div>
+  );
+}
+
 export function Logo() {
   const { resolvedTheme } = useTheme();
-
-  if (resolvedTheme === "dark") {
-    return <LogoDark />;
-  }
-
-  return <LogoLight />;
+  return (
+    <div className="flex items-center gap-4">
+      {resolvedTheme === "dark" ? <LogoDark /> : <LogoLight />}
+      <Switch />
+    </div>
+  );
 }

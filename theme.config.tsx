@@ -1,5 +1,6 @@
 import { useConfig, type DocsThemeConfig } from "nextra-theme-docs";
 import { Logo } from "./components/Logo";
+import { ProductDropdown } from "./components/ProductDropdown";
 import { useRouter } from "next/router";
 
 const themeConfig: DocsThemeConfig = {
@@ -8,6 +9,7 @@ const themeConfig: DocsThemeConfig = {
   },
   head: null,
   logo: <Logo />,
+  logoLink: false,
   project: {
     link: "https://snaplet.dev",
   },
@@ -72,6 +74,13 @@ const themeConfig: DocsThemeConfig = {
   },
   sidebar: {
     defaultMenuCollapseLevel: 3,
+    titleComponent: ({ title, type }) => {
+      if (type === "separator") {
+        return <ProductDropdown />;
+      }
+
+      return <>{title}</>;
+    },
   },
 };
 
