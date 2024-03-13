@@ -200,9 +200,9 @@ function SwitchLink({
   return (
     <Link
       href={goto}
-      className={`rounded-md w-[105px] my-1 ${
-        isActive ? "dark:text-primary-800" : ""
-      }`}
+      className={`rounded-md w-[105px] my-1 transition-all ${
+        isActive ? "nx-text-primary-800 dark:nx-text-primary-600 font-bold" : ""
+      } nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-neutral-400 dark:hover:nx-text-gray-50 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50`}
     >
       {children}
     </Link>
@@ -215,9 +215,9 @@ function Switch() {
   const activePath = asPath.startsWith("/seed") ? "seed" : "snapshots";
 
   return (
-    <div className="relative border nx-border-slate-100 dark:nx-border-neutral-400/70 rounded-[8px] w-[210px]">
+    <div className="relative border rounded-[8px] w-[210px] nx-border-b nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
       <div
-        className={`h-[28px] w-[100px] nx-bg-gray-100 dark:nx-bg-neutral-400 m-1 duration-200 rounded-md transition-transform ${
+        className={`h-[28px] w-[100px] m-1 duration-200 rounded-md transition-transform contrast-more:nx-border nx-bg-primary-100 dark:nx-bg-primary-400/10 dark:nx-text-primary-600 contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500 ${
           asPath.startsWith("/seed") ? "" : "translate-x-[100px]"
         }`}
       />
@@ -243,7 +243,9 @@ export function Logo() {
   const { resolvedTheme } = useTheme();
   return (
     <div className="flex items-center gap-4">
-      {resolvedTheme === "dark" ? <LogoDark /> : <LogoLight />}
+      <div className="hidden md:block">
+        {resolvedTheme === "dark" ? <LogoDark /> : <LogoLight />}
+      </div>
       <Switch />
     </div>
   );

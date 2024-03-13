@@ -50,7 +50,7 @@ module.exports = withNextra({
         permanent: false,
       },
       // old doc links used in cli 0.63.6 and below
-      ...convertJSONToRedirects(require("./redirects/2023.json")),
+      ...convertJSONToRedirects(require("./redirects/09_Oct_2023.json")),
       // splitting the docs into snapshots and seed
       ...convertJSONToRedirects(require("./redirects/12_March_2024.json")),
     ];
