@@ -1,7 +1,7 @@
 {
     "/getting-started/overview": "/seed/getting-started/overview",
     "/getting-started/installation": "/seed/getting-started/installation",
-    "/references/configuration-files": "/reference/configuration",
+    "/references/configuration-files": "/seed/reference/configuration",
     "/getting-started/quick-start/seed": "/seed/getting-started/quick-start",
     "/getting-started/quick-start/snapshot": "/snapshot/getting-started/quick-start",
     "/core-concepts/why-snaplet": "/seed/getting-started/quick-start",

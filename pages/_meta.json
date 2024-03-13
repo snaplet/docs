@@ -6,8 +6,5 @@
   "snapshot": {
     "display": "hidden",
     "type": "page"
-  },
-  "reference": "Reference",
-  "release-notes": "Release Notes",
-  "security": "Security"
+  }
 }

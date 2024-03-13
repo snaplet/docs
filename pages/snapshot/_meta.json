@@ -2,6 +2,9 @@
     "getting-started": "Getting Started",
     "core-concepts": "Core Concepts",
     "guides": "Guides",
-    "recipes": "Recipes"
+    "recipes": "Recipes",
+    "reference": "Reference",
+    "release-notes": "Release Notes",
+    "security": "Security"
   }
   

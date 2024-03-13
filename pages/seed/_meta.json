@@ -1,6 +1,9 @@
 {
     "getting-started": "Getting Started",
     "core-concepts": "Core Concepts",
-    "recipes": "Recipes"
+    "recipes": "Recipes",
+    "reference": "Reference",
+    "release-notes": "Release Notes",
+    "security": "Security"
   }
   
