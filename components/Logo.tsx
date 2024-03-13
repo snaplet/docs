@@ -201,7 +201,9 @@ function SwitchLink({
     <Link
       href={goto}
       className={`rounded-md w-[105px] my-1 transition-all ${
-        isActive ? "nx-text-primary-800 dark:nx-text-primary-600 font-semibold" : "hover:nx-text-gray-900 dark:hover:nx-text-gray-50"
+        isActive
+          ? "nx-text-primary-800 dark:nx-text-primary-600 font-semibold"
+          : "hover:nx-text-gray-900 dark:hover:nx-text-gray-50"
       } nx-text-gray-500 dark:nx-text-neutral-400 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50`}
     >
       {children}
@@ -212,14 +214,18 @@ function SwitchLink({
 function Switch() {
   const { asPath } = useRouter();
 
-  const activePath = asPath.startsWith("/seed") ? "seed" : "snapshots";
+  const activePath = asPath.startsWith("/seed")
+    ? "seed"
+    : asPath.startsWith("/snapshots")
+    ? "snapshots"
+    : undefined;
 
   return (
     <div className="relative border rounded-[8px] w-[210px] nx-border-b nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
       <div
         className={`h-[28px] w-[100px] m-1 duration-200 rounded-md transition-transform contrast-more:nx-border nx-bg-primary-100 dark:nx-bg-primary-400/10 dark:nx-text-primary-600 contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500 ${
-          asPath.startsWith("/seed") ? "" : "translate-x-[100px]"
-        }`}
+          activePath === "seed" ? "" : "translate-x-[100px]"
+        } ${activePath === undefined ? "opacity-0" : ""}`}
       />
       <div className="flex items-center group absolute top-0 z-50 h-full w-full text-center text-sm">
         <SwitchLink
