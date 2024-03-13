@@ -201,7 +201,7 @@ function SwitchLink({
     <Link
       href={goto}
       className={`rounded-md w-[105px] my-1 transition-all ${
-        isActive ? "nx-text-primary-800 dark:nx-text-primary-600 font-bold" : "hover:nx-text-gray-900 dark:hover:nx-text-gray-50"
+        isActive ? "nx-text-primary-800 dark:nx-text-primary-600 font-semibold" : "hover:nx-text-gray-900 dark:hover:nx-text-gray-50"
       } nx-text-gray-500 dark:nx-text-neutral-400 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50`}
     >
       {children}
