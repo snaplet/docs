@@ -1,0 +1,26 @@
+# Prisma
+
+> Learn how to add a `seed.mts` to your project, using our [quick start](/seed/getting-started/quick-start) guide.
+
+Prisma Migrations creates the database structure, Snaplet seed requires to generate data against.
+
+```bash >_&nbsp;terminal
+prisma migrate dev && npx tsx seed.mts
+```
+
+If you don't want to run two commands, you can automatically seed the database with data, after running `prisma migrate reset` or `prisma migrate dev`, by adding the following to your `package.json` file.
+
+```json package.json
+"prisma": {
+  "seed": "npx tsx seed.mts"
+}
+```
+
+Learn ["how to seed your database in Prisma"](https://www.prisma.io/docs/guides/database/seed-database#how-to-seed-your-database-in-prisma) from their documentation.
+
+### Note on Migrations
+
+Whenever your database structure changes (e.g after a new migration is applied), `@snaplet/seed` will need be regenerated to reflect the new structure. To do this, run the following command:
+```bash >_&nbsp;terminal
+npx snaplet generate
+```

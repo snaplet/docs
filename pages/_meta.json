@@ -1,10 +1,10 @@
 {
-  "getting-started": "Getting Started",
-  "core-concepts": "Core Concepts",
-  "guides": "Guides",
-  "recipes": "Recipes",
-  "reference": "Reference",
-  "migrations": "Migrations",
-  "release-notes": "Release Notes",
-  "security": "Security"
+  "seed": {
+    "display": "hidden",
+    "type": "page"
+  },
+  "snapshot": {
+    "display": "hidden",
+    "type": "page"
+  }
 }

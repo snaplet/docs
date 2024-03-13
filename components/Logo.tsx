@@ -1,4 +1,8 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
+
 import { useTheme } from "nextra-theme-docs";
+import { ReactNode } from "react";
 
 export function LogoLight() {
   return (
@@ -184,12 +188,71 @@ function LogoDark() {
   );
 }
 
+function SwitchLink({
+  goto,
+  isActive,
+  children,
+}: {
+  goto: string;
+  isActive: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={goto}
+      className={`rounded-md w-[105px] my-1 transition-all ${
+        isActive
+          ? "nx-text-primary-800 dark:nx-text-primary-600 font-semibold"
+          : "hover:nx-text-gray-900 dark:hover:nx-text-gray-50"
+      } nx-text-gray-500 dark:nx-text-neutral-400 contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50`}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function Switch() {
+  const { asPath } = useRouter();
+
+  const activePath = asPath.startsWith("/seed")
+    ? "seed"
+    : asPath.startsWith("/snapshot")
+    ? "snapshots"
+    : undefined;
+
+  return (
+    <div className="relative border rounded-[8px] w-[210px] nx-border-b nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400">
+      <div
+        className={`h-[28px] w-[100px] m-1 duration-200 rounded-md transition-transform contrast-more:nx-border nx-bg-primary-100 dark:nx-bg-primary-400/10 dark:nx-text-primary-600 contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500 ${
+          activePath === "seed" ? "" : "translate-x-[100px]"
+        } ${activePath === undefined ? "opacity-0" : ""}`}
+      />
+      <div className="flex items-center group absolute top-0 z-50 h-full w-full text-center text-sm">
+        <SwitchLink
+          goto="/seed/getting-started/overview"
+          isActive={activePath === "seed"}
+        >
+          Seed
+        </SwitchLink>
+        <SwitchLink
+          goto="/snapshot/getting-started/overview"
+          isActive={activePath === "snapshots"}
+        >
+          Snapshot
+        </SwitchLink>
+      </div>
+    </div>
+  );
+}
+
 export function Logo() {
   const { resolvedTheme } = useTheme();
-
-  if (resolvedTheme === "dark") {
-    return <LogoDark />;
-  }
-
-  return <LogoLight />;
+  return (
+    <div className="flex items-center gap-4">
+      <Link href="/" className="hidden md:block transition-opacity hover:opacity-70">
+        {resolvedTheme === "dark" ? <LogoDark /> : <LogoLight />}
+      </Link>
+      <Switch />
+    </div>
+  );
 }

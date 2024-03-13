@@ -8,6 +8,7 @@ const themeConfig: DocsThemeConfig = {
   },
   head: null,
   logo: <Logo />,
+  logoLink: false,
   project: {
     link: "https://snaplet.dev",
   },
