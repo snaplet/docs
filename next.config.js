@@ -49,9 +49,9 @@ module.exports = withNextra({
         destination: "/snapshot/getting-started/overview",
         permanent: false,
       },
-      // old doc links used in cli 0.63.6 and below
+      // redirects for when we need to support deprecated links used in CLI 0.63.6 and below
       ...convertJSONToRedirects(require("./redirects/09_Oct_2023.json")),
-      // splitting the docs into snapshots and seed
+      // redirects for when we split the docs into snapshots and seed
       ...convertJSONToRedirects(require("./redirects/12_March_2024.json")),
     ];
   },
