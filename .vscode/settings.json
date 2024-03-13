@@ -3,8 +3,5 @@
   "editor.defaultFormatter": "unifiedjs.vscode-remark",
   "javascript.format.enable": false,
   "typescript.format.enable": false,
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
