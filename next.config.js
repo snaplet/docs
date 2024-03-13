@@ -45,8 +45,8 @@ module.exports = withNextra({
         permanent: false,
       },
       {
-        source: "/snapshots",
-        destination: "/snapshots/getting-started/overview",
+        source: "/snapshot",
+        destination: "/snapshot/getting-started/overview",
         permanent: false,
       },
       // old doc links used in cli 0.63.6 and below

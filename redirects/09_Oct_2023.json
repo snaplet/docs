@@ -25,6 +25,6 @@
     "/core-concepts/generate": "/core-concepts/seed",
     "/getting-started/quick-start/generate": "/getting-started/quick-start/seed",
     "/migrations/generate": "/migrations/seed",
-    "/references/snapshots": "/core-concepts/capture",
+    "/references/snapshot": "/core-concepts/capture",
     "/core-concepts/reference/configuration": "/reference/configuration"
 }

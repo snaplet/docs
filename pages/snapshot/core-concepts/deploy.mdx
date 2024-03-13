@@ -6,7 +6,7 @@ The typical Snaplet workflow involves restoring snapshots to your local developm
 While working locally with snapshots allows for more flexibility, configurability, and the ability to work offline without network latency or connectivity interruptions, there are situations where being able to preview your snapshot on an instant serverless database, called **preview databases**, is useful.
 
 For example, if you're currently in the process of evaluating Snaplet, being able to restore a snapshot to a preview database allows you to view that database without needing to download and install the Snaplet CLI.
-Preview databases are also easy to share with team members, and allow you to have [isolated preview databases](/snapshots/recipes/netlify) for preview deployments.
+Preview databases are also easy to share with team members, and allow you to have [isolated preview databases](/snapshot/recipes/netlify) for preview deployments.
 
 As such, Snaplet supports the creation of instant preview databases from snapshots, which allows users to view, code against, or run pull-request previews against a preview serverless PostgreSQL database.
 
@@ -16,7 +16,7 @@ Each Snaplet Project receives a PostgreSQL server instance where multiple previe
 
 ## Preview databases on Snaplet Cloud
 
-To create a preview database from within Snaplet Cloud, you'll need to have captured a snapshot from your source database - refer to the [Getting Started](/snapshots/getting-started/quick-start) guide if you need help. From the Snaplet dashboard, click on your snapshot, and then select the 'Previews' tab. From here, simply click the 'Create new preview database' button.
+To create a preview database from within Snaplet Cloud, you'll need to have captured a snapshot from your source database - refer to the [Getting Started](/snapshot/getting-started/quick-start) guide if you need help. From the Snaplet dashboard, click on your snapshot, and then select the 'Previews' tab. From here, simply click the 'Create new preview database' button.
 
 <Image src="/core-concepts/deploy/deploy-01.png" alt="Create a new preview database" zoom />
 

@@ -49,7 +49,7 @@ You'll see a short overview of what the snapshot capture process entails. Click 
 <Step image={{ src: "/getting-started/quick-start/quick-start-03.png", alt: "select a source database"}}>
 The first step is to choose the **source database** you're going to connect to Snaplet. The source database is typically your production database. Click '**Provide my own db**'.
 
-*If you're uncomfortable connecting to your actual production database, use your staging or QA database, or the Snaplet demo database. Supabase users should select the Supabase option and follow the [Supabase tutorial](/snapshots/recipes/supabase) for assistance.*
+*If you're uncomfortable connecting to your actual production database, use your staging or QA database, or the Snaplet demo database. Supabase users should select the Supabase option and follow the [Supabase tutorial](/snapshot/recipes/supabase) for assistance.*
 
 {/* *No database? Use Snaplet's `seed` feature to create fake production-like data. Follow the [seed quick start guide](/getting-started/quick-start/seed) instead of this guide.* */}
 </Step>
@@ -58,7 +58,7 @@ The first step is to choose the **source database** you're going to connect to S
 <Step image={{ src: "/getting-started/quick-start/quick-start-04.png", alt: "input connection information"}}>
 You'll need to provide your source database connection details. You can either do so individually for each of the values, or import a connection string.
 
-Once done, click '**Test my connection**' to verify that Snaplet is able to connect to your database, and proceed. If you see a warning about read-only access to your database, make sure you're using [read-only role](/snapshots/guides/postgresql/#create-a-read-only-role) credentials for Snaplet.
+Once done, click '**Test my connection**' to verify that Snaplet is able to connect to your database, and proceed. If you see a warning about read-only access to your database, make sure you're using [read-only role](/snapshot/guides/postgresql/#create-a-read-only-role) credentials for Snaplet.
 
 If you're having trouble getting your database connection string to work, refer to our [connection string reference](/reference/connection-strings). Prisma also has a [reference guide](https://www.prisma.io/dataguide/postgresql/short-guides/connection-uris) on URI encoding that may be useful.
 </Step>
@@ -177,8 +177,8 @@ You can view your database in your preferred database viewer to verify that Snap
 ## Next Steps
 You can modify each step of the Snaplet snapshot workflow to exercise more granular control over the snapshot creation and capture process to get exactly the data you need for your use case.
 
-For more control over how your snapshot captures data from your source database, including selecting and excluding specific tables, check out the [capture guide](/snapshots/core-concepts/capture#select-data)
+For more control over how your snapshot captures data from your source database, including selecting and excluding specific tables, check out the [capture guide](/snapshot/core-concepts/capture#select-data)
 
-To learn how to modify your data transformations, including how to use [`@snaplet/copycat`](https://github.com/snaplet/copycat) to seed realistic, deterministic values, check out the [data transformation guide](/snapshots/core-concepts/capture#select-data)
+To learn how to modify your data transformations, including how to use [`@snaplet/copycat`](https://github.com/snaplet/copycat) to seed realistic, deterministic values, check out the [data transformation guide](/snapshot/core-concepts/capture#select-data)
 
-For more options and granular control over snapshot restoration, check out the Snaplet [restore guide](/snapshots/core-concepts/restore#more-granular-control-over-restorations).
+For more options and granular control over snapshot restoration, check out the Snaplet [restore guide](/snapshot/core-concepts/restore#more-granular-control-over-restorations).

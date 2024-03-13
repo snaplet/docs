@@ -1,6 +1,5 @@
 import { useConfig, type DocsThemeConfig } from "nextra-theme-docs";
 import { Logo } from "./components/Logo";
-import { ProductDropdown } from "./components/ProductDropdown";
 import { useRouter } from "next/router";
 
 const themeConfig: DocsThemeConfig = {

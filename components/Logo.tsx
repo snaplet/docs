@@ -216,7 +216,7 @@ function Switch() {
 
   const activePath = asPath.startsWith("/seed")
     ? "seed"
-    : asPath.startsWith("/snapshots")
+    : asPath.startsWith("/snapshot")
     ? "snapshots"
     : undefined;
 
@@ -232,13 +232,13 @@ function Switch() {
           goto="/seed/getting-started/overview"
           isActive={activePath === "seed"}
         >
-          seed
+          Seed
         </SwitchLink>
         <SwitchLink
-          goto="/snapshots/getting-started/overview"
+          goto="/snapshot/getting-started/overview"
           isActive={activePath === "snapshots"}
         >
-          snapshots
+          Snapshot
         </SwitchLink>
       </div>
     </div>
@@ -249,9 +249,9 @@ export function Logo() {
   const { resolvedTheme } = useTheme();
   return (
     <div className="flex items-center gap-4">
-      <div className="hidden md:block">
+      <Link href="/" className="hidden md:block transition-opacity hover:opacity-70">
         {resolvedTheme === "dark" ? <LogoDark /> : <LogoLight />}
-      </div>
+      </Link>
       <Switch />
     </div>
   );
