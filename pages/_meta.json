@@ -7,5 +7,7 @@
     "display": "hidden",
     "type": "page"
   },
-  "reference": "Reference"
+  "reference": "Reference",
+  "release-notes": "Release Notes",
+  "security": "Security"
 }
