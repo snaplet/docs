@@ -26,7 +26,7 @@ Using Snaplet to seed data will typically look something like this:
 
 1. Initial setup with `npx @snaplet/seed init`
 2. Using `@snaplet/seed` to generate seed data
-3. Regenerating assets as your database changes with `npx @snaplet/seed dev`
+3. Regenerating assets as your database changes with `npx @snaplet/seed sync`
 
 You can also refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed) for a practical example of the workflow.
 
@@ -61,7 +61,7 @@ You can also use `@snaplet/seed` in other scenarios - for example, in your tests
 
 For more detail on using `@snaplet/seed`, check out [Generating data with `@snaplet/seed`](#generating-data-with-snapletseed) below.
 
-### 3. Regenerating assets as your database changes with `npx @snaplet/seed dev`
+### 3. Regenerating assets as your database changes with `npx @snaplet/seed sync`
 
 `@snaplet/seed` provides you with a client library that corresponds to your database structure. To do this, snaplet looks at your database structure and uses this to generate assets that `@snaplet/seed` can use to provide this client library.
 
@@ -70,7 +70,7 @@ Whenever your database structure changes, `@snaplet/seed` will need these assets
 You can regenerate these assets by running:
 
 ```bash >_&nbsp;terminal
-npx @snaplet/seed dev
+npx @snaplet/seed sync
 ```
 
 ## Generating data with `@snaplet/seed`
@@ -505,7 +505,7 @@ The models, fields and relationships names are fully customizable. You can use t
 
   To do that, run this command in your terminal:
   ```bash >_&nbsp;terminal
-  npx @snaplet/seed dev
+  npx @snaplet/seed sync
   ```
 </Callout>
 
