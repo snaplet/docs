@@ -539,7 +539,7 @@ await seed.users((x) => x(3))
 
 And here is how you would change the inflection rules:
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -565,7 +565,7 @@ await seed.SuperUsers((x) => x(3))
 
 If you don't want to use the `inflection` feature, you can disable it by setting `inflection: false` in the `alias` option.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -582,7 +582,7 @@ export default defineConfig({
 
 If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
