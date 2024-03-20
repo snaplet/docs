@@ -24,17 +24,21 @@ While generated data might be the unsung hero of early development, it can get a
 
 Using Snaplet to seed data will typically look something like this:
 
-1. Initial setup with `npx snaplet setup`
+1. Initial setup with `npx @snaplet/seed init`
 2. Using `@snaplet/seed` to generate seed data
-3. Regenerating assets as your database changes with `npx snaplet generate`
+3. Regenerating assets as your database changes with `npx @snaplet/seed dev`
 
 You can also refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed) for a practical example of the workflow.
 
-### 1. Initial setup with `npx snaplet setup`
+### 1. Initial setup with `npx @snaplet/seed init`
 
-At the start, you'll setup Snaplet for your project with `npx snaplet setup`, and follow the interactive prompts.
+At the start, you'll setup Snaplet for your project with `npx @snaplet/seed init`, and follow the
+interactive prompts.
 
-`snaplet setup` will look at your database and its structure, and use it to generate the configuration files and assets needed by `@snaplet/seed`.
+```bash >_&nbsp;terminal
+npx @snaplet/seed init
+
+`@snaplet/seed init` will look at your database and its structure, and use it to generate the configuration files and assets needed by `@snaplet/seed`.
 
 ### 2. Using `@snaplet/seed` to generate seed data
 
@@ -57,7 +61,7 @@ You can also use `@snaplet/seed` in other scenarios - for example, in your tests
 
 For more detail on using `@snaplet/seed`, check out [Generating data with `@snaplet/seed`](#generating-data-with-snapletseed) below.
 
-### 3. Regenerating assets as your database changes with `npx snaplet generate`
+### 3. Regenerating assets as your database changes with `npx @snaplet/seed dev`
 
 `@snaplet/seed` provides you with a client library that corresponds to your database structure. To do this, snaplet looks at your database structure and uses this to generate assets that `@snaplet/seed` can use to provide this client library.
 
@@ -66,10 +70,8 @@ Whenever your database structure changes, `@snaplet/seed` will need these assets
 You can regenerate these assets by running:
 
 ```bash >_&nbsp;terminal
-npx snaplet generate
+npx @snaplet/seed dev
 ```
-
-If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
 
 ## Generating data with `@snaplet/seed`
 
@@ -503,7 +505,7 @@ The models, fields and relationships names are fully customizable. You can use t
 
   To do that, run this command in your terminal:
   ```bash >_&nbsp;terminal
-  npx snaplet generate
+  npx @snaplet/seed dev
   ```
 </Callout>
 
