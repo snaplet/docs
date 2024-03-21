@@ -1,0 +1,39 @@
+# What is Seed?
+
+**Seed** is a set of tools **understanding your database schema** to help you **generate production-accurate data**.
+
+It consists of the following parts:
+
+- **Seed ORM**: Auto-generated and type-safe data client for Node.js & TypeScript 🛡️
+- **Seed AI**: Our custom model identifying the shape of your data 🤖
+- **Seed CLI**: A CLI to generate and keep the data client in sync with your database 🛠️
+
+## Seed ORM
+
+To generate data, we don't need the details, you can focus on the data that matters to **you**.
+We will take care of generating all the relationships for you. ✨
+
+Are you working on a blog app and need 5 posts?
+```ts
+await seed.posts((x) => x(5))
+```
+
+Or maybe you need a user with a specific email?
+```ts
+await seed.users([
+  { email: 'snappy@snaplet.dev' },
+])
+```
+
+What if you want to create an organization with a varying number of members?
+```ts
+await seed.organizations([
+  {
+    name: 'Snaplet',
+    members: (x) => x({ min: 1, max: 10 }),
+  },
+])
+```
+
+## Seed CLI
+
