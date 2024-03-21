@@ -8,10 +8,16 @@ It consists of the following parts:
 - **Seed CLI**: A CLI to generate and keep the data client in sync with your database 🛠️
 - **Seed AI**: Our custom model identifying the shape of your data 🤖
 
+We are compatible with [PostgreSQL]() and [SQLite](). MySQL support is coming soon.
+
 ## Seed ORM
 
-To generate data, we don't need the details, you can focus on the data that matters to **you**.
-We will take care of generating all the relationships for you. ✨
+Our data client is auto-generated from your database schema.
+We are using the full power of TypeScript to provide you with a type-safe and auto-completed experience when working with your data.
+
+You can focus on the data that matter to **you**, we will take care of generating all the relationships. ✨
+
+Here is a sneak peek of what you can do with Seed ORM:
 
 Are you working on a blog app and need 5 posts?
 ```ts
@@ -35,14 +41,18 @@ await seed.organizations([
 ])
 ```
 
+And this is just the beginning! Explore the [Seed ORM guide]() to see all the possibilities.
+
 ## Seed CLI
 
-It's the entry point to Seed. It will help you generate the data client and keep it in sync with your database.
+The CLI is the entry point to Seed. It will help you generate the data client and keep it in sync with your database.
 
-Start using Seed in seconds by running this command in your project directory:
+To begin your journey with Seed in seconds, run this command in your project directory:
 ```bash >_&nbsp;terminal
 npx @snaplet/seed init
 ```
+
+Checkout the [Seed CLI reference]() to learn more about the CLI and how to use it.
 
 ## Seed AI
 
