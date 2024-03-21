@@ -51,7 +51,7 @@ We now need to add snaplet to your project.
 Run the following in your project root directory and follow the interactive prompts:
 
 ```bash >_&nbsp;terminal
-npx snaplet setup
+npx @snaplet/seed init
 ```
 
 ## `@snaplet/seed`
@@ -182,7 +182,7 @@ import { copycat } from '@snaplet/copycat';
 
 const seed = await createSeedClient({
   // focus
-  dryRun: process.env.DRY !== '0'
+  dryRun: true
 });
 
 // focus
@@ -213,7 +213,7 @@ import { createSeedClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
 
 const seed = await createSeedClient({
-  dryRun: process.env.DRY !== '0'
+  dryRun: true
 });
 
 await seed.$resetDatabase()
@@ -304,10 +304,14 @@ As mentioned earlier, these 3 users were automatically generated to satisfy the 
 
 It's now time to seed this data into your database.
 
-In order to do that, run this command in your terminal (notice how the `DRY` environment variable is set to `0`):
+In order to do that, change `dryRun` to `false`. Now, instead of logging the SQL statements to the
+console, the data will be inserted into your database:
 
-```bash >_&nbsp;terminal
-DRY=0 npx tsx seed.mts
+```ts seed.mts
+const seed = await createSeedClient({
+  // focus
+  dryRun: false
+});
 ```
 
 All done, you're now ready to code against your generated data!
@@ -318,12 +322,13 @@ Whenever your database structure changes, `@snaplet/seed` will need to be re-gen
 
 You can do this by running:
 
-```bash >_&nbsp;terminal
-npx snaplet generate
 ```
-
-If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
+# * fetches the new structure from your database
+# * uses it to regenerate @snaplet/seed assets
+npx @snaplet/seed sync
+```
 
 ## Next steps
 
-Learn more about how `@snaplet/seed` works and define more complex plans in our [seed reference guide](/seed/core-concepts)
+Learn more about how `@snaplet/seed` works and define more complex plans in our [seed reference
+guide](/seed/core-concepts)
