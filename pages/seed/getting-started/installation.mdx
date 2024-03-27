@@ -1,3 +1,5 @@
+import { Callout } from 'nextra/components'
+
 # Installation
 
 ## With the Setup Wizard
@@ -53,20 +55,14 @@ This command will introspect your database schema and generate the necessary fil
 
 ### 4. Create and execute your first Seed script
 
-You are now ready to create your first Seed script.
-
 Create a new `seed.mts` file.
 
-In the following example, we assume that you have a table called `users` in your database.
+We assume that you have a table called `users` in your database.
 
 ```ts seed.mts
 import { createSeedClient } from "@snaplet/seed";
 
-const seed = await createSeedClient({
-  // Optional, the data will be printed to the console instead of being persisted to the database
-  // except if the DRY_RUN environment variable is set to 0
-  dryRun: process.env.DRY_RUN !== '0',
-});
+const seed = await createSeedClient();
 
 // Truncate all tables in the database
 await seed.$resetDatabase();
@@ -77,16 +73,14 @@ await seed.users((x) => x(10));
 process.exit();
 ```
 
+<Callout type="warning" emoji="⚠️">
+  Executing this script will delete all data in your database and seed it with 10 users. Make sure to adjust the script to your needs.
+</Callout>
+
 You can now execute your Seed script by running the following command:
 
 ```bash >_&nbsp;terminal
 npx tsx seed.mts
 ```
 
-It won't alter your database as the `dryRun` option will be `true`, instead it will print the generated SQL statements to the console.
-
-If you want to execute the SQL statements, you can set the `DRY_RUN` environment variable to `0`:
-
-```bash >_&nbsp;terminal
-DRY_RUN=0 npx tsx seed.mts
-```
+Happy seeding! 🌱
