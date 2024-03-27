@@ -1,14 +1,92 @@
-import { Tabs, Tab } from "nextra/components";
-
 # Installation
 
-## For generating seed data
+## With the Setup Wizard
 
-First, you'll need [Node.js](https://nodejs.org/en/) and [postgres](https://www.postgresql.org/) installed on your system.
-
-Once you have these, run the following in the command line and follow the prompts:
+Run the following command in your terminal to start our handy install wizard:
 
 ```bash >_&nbsp;terminal
-# Set up Snaplet with npx
 npx @snaplet/seed init
+```
+
+It will guide you through the installation process and help you set up your project.
+
+## Manually
+
+If you prefer to do things manually, you can follow these steps.
+
+### 1. Install the required dev dependencies
+
+```bash >_&nbsp;terminal
+npm install -D @snaplet/seed @snaplet/copycat
+```
+
+### 2. Configure Seed
+
+Seed is configured using the `seed.config.ts` file.
+
+Your need to specify an [adapter]() in order for Seed to connect to your database.
+
+For this example, we assume you are using PostgreSQL as your database and want to connect to it with the [Postgres.js](https://github.com/porsager/postgres) library:
+
+```ts seed.config.ts
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import { defineConfig } from "@snaplet/seed/config";
+import postgres from "postgres";
+
+export default defineConfig({
+  adapter: () => {
+    const client = postgres(process.env.DATABASE_URL);
+    return new SeedPostgres(client);
+  },
+});
+```
+
+### 3. Generate your Seed Client
+
+Now that you have configured Seed, you can generate your Seed Client by running the following command:
+
+```bash >_&nbsp;terminal
+npx @snaplet/seed sync
+```
+
+This command will introspect your database schema and generate the necessary files for your Seed Client.
+
+### 4. Create and execute your first Seed script
+
+You are now ready to create your first Seed script.
+
+Create a new `seed.mts` file.
+
+In the following example, we assume that you have a table called `users` in your database.
+
+```ts seed.mts
+import { createSeedClient } from "@snaplet/seed";
+
+const seed = await createSeedClient({
+  // Optional, the data will be printed to the console instead of being persisted to the database
+  // except if the DRY_RUN environment variable is set to 0
+  dryRun: process.env.DRY_RUN !== '0',
+});
+
+// Truncate all tables in the database
+await seed.$resetDatabase();
+
+// Seed the database with 10 users
+await seed.users((x) => x(10));
+
+process.exit();
+```
+
+You can now execute your Seed script by running the following command:
+
+```bash >_&nbsp;terminal
+npx tsx seed.mts
+```
+
+It won't alter your database as the `dryRun` option will be `true`, instead it will print the generated SQL statements to the console.
+
+If you want to execute the SQL statements, you can set the `DRY_RUN` environment variable to `0`:
+
+```bash >_&nbsp;terminal
+DRY_RUN=0 npx tsx seed.mts
 ```
