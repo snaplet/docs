@@ -8,6 +8,15 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 27 March 2024 - v0.89.5
+### Bug fixes
+* Improvements to debugging information for `DEBUG=snaplet:subset:*` to help understand which `targets` caused which rows to be added
+* Avoid `@snaplet/seed`-related validation on `snaplet config pull` (since this command is specific to snapshots on Snaplet Cloud)
+* Allow overriding for alias conflicts: we were detecting if there were conflicts avoiding us from automatically applying [inflection](https://docs.snaplet.dev/seed/core-concepts#inflection), but we
+  were not allowing `override`s from being applied if there were any conflicts
+</Step>
+
+<Step>
 ## 27 Febuary 2024 - v0.89.4
 
 ### Bug Fixes
