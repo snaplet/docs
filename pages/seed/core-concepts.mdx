@@ -37,6 +37,7 @@ interactive prompts.
 
 ```bash >_&nbsp;terminal
 npx @snaplet/seed init
+```
 
 `@snaplet/seed init` will look at your database and its structure, and use it to generate the configuration files and assets needed by `@snaplet/seed`.
 
@@ -640,7 +641,7 @@ import { createSeedClient } from "@snaplet/seed";
 import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
 
 const client = postgres(process.env.DATABASE_URL);
-    
+
 const seed = createSeedClient({
   adapter: new SeedPostgres(client)
 })
