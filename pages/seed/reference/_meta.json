@@ -1,4 +1,5 @@
 {
   "environment-variables": "Environment Variables",
-  "cli": "Snaplet CLI"
+  "cli": "Snaplet CLI",
+  "adapters": "Adapters"
 }
