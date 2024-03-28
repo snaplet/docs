@@ -7,9 +7,13 @@ import { TutorialSchema } from '../../../components/TutorialSchema';
 
 This guide will take you through the process of using `@snaplet/seed` to create realistic, production-like data.
 
+## Prerequisites
+
+You already followed the [installation guide](/seed/getting-started/installation) and have `@snaplet/seed` available locally.
+
 ## Our first Seed script
 
-Given this PostgreSQL database schema:
+Given this PostgreSQL database schema of a blog application:
 
 <Tabs items={["diagram", "sql"]}>
 <Tab>
@@ -40,6 +44,31 @@ CREATE TABLE public.comment (
 </Tabs>
 
 Let's see how `@snaplet/seed` gives a programmatic interface to describe seeding requirements.
+
+We need to apply this schema to a new PostgreSQL database.
+
+Once done, we can edit the configuration file `seed.config.ts` to point to the database. We assume we already have our database client library `postgres` installed.
+
+```ts seed.config.ts
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import { defineConfig } from "@snaplet/seed/config";
+import postgres from "postgres";
+
+export default defineConfig({
+  adapter: () => {
+    const client = postgres("postgres://postgres@localhost:5432/blog");
+    return new SeedPostgres(client);
+  },
+});
+```
+
+We can now generate our `@snaplet/seed` assets by running:
+
+```bash >_&nbsp;terminal
+npx @snaplet/seed sync
+```
+
+It's time to write our first seed script!
 
 <CH.Scrollycoding className="seed-tutorial-seed-script">
 
