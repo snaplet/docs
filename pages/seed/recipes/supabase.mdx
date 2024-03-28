@@ -61,46 +61,12 @@ Started supabase local development setup.
 service_role key: eyJh......
 ```
 
-**2.3.** Copy the DB URL - we will use this in the next step **(step 4)** to generate data into (referred to as the target database).
-
 #### 3. Set up your Snaplet seed config
 
-**3.1.** Create a `seed.mts` file in your root directory.
+**3.1.** Initialise `@snaplet/seed` in your your root project.
 
 ```bash >_&nbsp;terminal
-npx snaplet setup
-```
-
-```bash >_&nbsp; terminal
-# mark
-✔ Welcome to Snaplet! 😸 Choose your adventure: › I want to generate seed data 🌱
-
-# mark
-✔ Target database connection string … postgresql://postgres:postgres@localhost:54322/postgres
-
-# mark
-✔ Database URL … postgresql://postgres:postgres@localhost:54322/postgres
-
-# mark
-✔ Would you like to link your account from Snaplet Cloud to have more realistic data using our AI model? 🤖 … no
-
-For the best AI-enhanced data generation experience, create a free Snaplet account and login with: snaplet auth login.
-
-Snaplet uses details about your database to improve our generation results.
-
-✔ You're all set!
-
-📝 Edit your seed script:
-You can describe how you would like to generate seed data by editing the example seed script:
-code seed.mts
-
-👁️  Preview seed statements:
-You can take a look at the sql statements that can be generated with:
-npx tsx seed.mts
-
-✨ Apply seeds:
-To load the generated data into your database execute the command:
-DRY=0 npx tsx seed.mts
+npx @snaplet/seed init
 ```
 
 **3.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.

@@ -229,13 +229,13 @@ function Switch() {
       />
       <div className="flex items-center group absolute top-0 z-50 h-full w-full text-center text-sm">
         <SwitchLink
-          goto="/seed/getting-started/overview"
+          goto="/seed"
           isActive={activePath === "seed"}
         >
           Seed
         </SwitchLink>
         <SwitchLink
-          goto="/snapshot/getting-started/overview"
+          goto="/snapshot"
           isActive={activePath === "snapshots"}
         >
           Snapshot
