@@ -54,7 +54,9 @@ When `true`, a default strategy is applied, all the table names will be pluraliz
 
 ```ts seed.client.ts
 export default defineConfig({
-  inflection: true,
+  alias: {
+    inflection: true,
+  },
 });
 ```
 
@@ -69,12 +71,14 @@ This option is useful for resolving renaming conflicts that can arise when using
 
 ```ts seed.client.ts
 export default defineConfig({
-  override: {
-    Book: {
-      name: "books",
-      fields: {
-        User: "author",
-        published_at: "publishedAt",
+  alias: {
+    override: {
+      Book: {
+        name: "books",
+        fields: {
+          User: "author",
+          published_at: "publishedAt",
+        },
       },
     },
   },
