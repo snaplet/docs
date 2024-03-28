@@ -53,6 +53,8 @@ When `true`, a default strategy is applied, all the table names will be pluraliz
 **Example:**
 
 ```ts seed.client.ts
+import { defineConfig } from "@snaplet/seed/config";
+
 export default defineConfig({
   alias: {
     inflection: true,
@@ -70,6 +72,8 @@ This option is useful for resolving renaming conflicts that can arise when using
 **Example:**
 
 ```ts seed.client.ts
+import { defineConfig } from "@snaplet/seed/config";
+
 export default defineConfig({
   alias: {
     override: {
@@ -95,6 +99,8 @@ For excluding multiple tables at once, you can use a wildcard character `*` at t
 **Example:**
 
 ```ts seed.client.ts
+import { defineConfig } from "@snaplet/seed/config";
+
 export default defineConfig({
   select: {
     "archive*": false,
