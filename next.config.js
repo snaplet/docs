@@ -39,6 +39,11 @@ module.exports = withNextra({
         permanent: false,
       },
       {
+        source: "/seed",
+        destination: "/seed/getting-started/overview",
+        permanent: false,
+      },
+      {
         source: "/snapshot",
         destination: "/snapshot/getting-started/overview",
         permanent: false,
