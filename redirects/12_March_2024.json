@@ -21,5 +21,6 @@
     "/recipes/supabase": "/seed/recipes/supabase",
     "/recipes/vercel": "/snapshot/recipes/vercel",
     "/migrations/seed": "/seed/migrations",
-    "/migrations/snapshot": "/snapshot/migrations"
+    "/migrations/snapshot": "/snapshot/migrations",
+    "/reference/connection-strings": "/seed/reference/connection-strings"
 }
