@@ -1,4 +1,6 @@
 {
-  "environment-variables": "Environment Variables",
-  "cli": "Snaplet CLI"
+  "configuration": "Configuration",
+  "cli": "Seed CLI",
+  "orm": "Seed ORM",
+  "environment-variables": "Environment Variables"
 }
