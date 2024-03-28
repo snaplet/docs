@@ -24,17 +24,21 @@ While generated data might be the unsung hero of early development, it can get a
 
 Using Snaplet to seed data will typically look something like this:
 
-1. Initial setup with `npx snaplet setup`
+1. Initial setup with `npx @snaplet/seed init`
 2. Using `@snaplet/seed` to generate seed data
-3. Regenerating assets as your database changes with `npx snaplet generate`
+3. Regenerating assets as your database changes with `npx @snaplet/seed sync`
 
 You can also refer to the [Seed Quick Start Guide](/getting-started/quick-start/seed) for a practical example of the workflow.
 
-### 1. Initial setup with `npx snaplet setup`
+### 1. Initial setup with `npx @snaplet/seed init`
 
-At the start, you'll setup Snaplet for your project with `npx snaplet setup`, and follow the interactive prompts.
+At the start, you'll setup Snaplet for your project with `npx @snaplet/seed init`, and follow the
+interactive prompts.
 
-`snaplet setup` will look at your database and its structure, and use it to generate the configuration files and assets needed by `@snaplet/seed`.
+```bash >_&nbsp;terminal
+npx @snaplet/seed init
+
+`@snaplet/seed init` will look at your database and its structure, and use it to generate the configuration files and assets needed by `@snaplet/seed`.
 
 ### 2. Using `@snaplet/seed` to generate seed data
 
@@ -57,7 +61,7 @@ You can also use `@snaplet/seed` in other scenarios - for example, in your tests
 
 For more detail on using `@snaplet/seed`, check out [Generating data with `@snaplet/seed`](#generating-data-with-snapletseed) below.
 
-### 3. Regenerating assets as your database changes with `npx snaplet generate`
+### 3. Regenerating assets as your database changes with `npx @snaplet/seed sync`
 
 `@snaplet/seed` provides you with a client library that corresponds to your database structure. To do this, snaplet looks at your database structure and uses this to generate assets that `@snaplet/seed` can use to provide this client library.
 
@@ -66,10 +70,8 @@ Whenever your database structure changes, `@snaplet/seed` will need these assets
 You can regenerate these assets by running:
 
 ```bash >_&nbsp;terminal
-npx snaplet generate
+npx @snaplet/seed sync
 ```
-
-If you are familiar with [`@prisma/client`](https://www.prisma.io/docs/concepts/components/prisma-client), you can think of `snaplet generate` doing the same thing, just in this case for `@snaplet/seed` rather than `@prisma/client`.
 
 ## Generating data with `@snaplet/seed`
 
@@ -503,7 +505,7 @@ The models, fields and relationships names are fully customizable. You can use t
 
   To do that, run this command in your terminal:
   ```bash >_&nbsp;terminal
-  npx snaplet generate
+  npx @snaplet/seed sync
   ```
 </Callout>
 
@@ -537,7 +539,7 @@ await seed.users((x) => x(3))
 
 And here is how you would change the inflection rules:
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -563,7 +565,7 @@ await seed.SuperUsers((x) => x(3))
 
 If you don't want to use the `inflection` feature, you can disable it by setting `inflection: false` in the `alias` option.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -580,7 +582,7 @@ export default defineConfig({
 
 If you are not satisfied with the default names of your models, fields or relationships, but you only want to do one-off changes, you can use the `override` option.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -612,3 +614,36 @@ await seed.users([{
 
 The `override` option is applied on top of the `inflection` option, it's perfect for one-off changes.
 Generated data, or seed data, is a useful tool in software development,
+
+### Providing a database connection in your seed script
+
+Out of the box, `@snaplet/seed` will use the `adapter` in your `seed.config.ts` file to determine how to connect to your database:
+
+```ts seed.config.ts
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import { defineConfig } from "@snaplet/seed/config";
+import postgres from "postgres";
+
+export default defineConfig({
+  adapter: () => {
+    const client = postgres(process.env.DATABASE_URL);
+    return new SeedPostgres(client);
+  },
+});
+```
+
+You can also provide an adapter when instantating your seed client with `createSeedClient()`:
+
+```ts seed.mts
+import postgres from "postgres";
+import { createSeedClient } from "@snaplet/seed";
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+
+const client = postgres(process.env.DATABASE_URL);
+    
+const seed = createSeedClient({
+  adapter: new SeedPostgres(client)
+})
+```
+
+For more on which database adapters are available, check out [Adapters](./adapters)

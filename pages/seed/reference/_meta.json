@@ -1,5 +1,6 @@
 {
   "configuration": "Configuration",
+  "adapters": "Adapters",
   "cli": "Seed CLI",
   "orm": "Seed ORM",
   "environment-variables": "Environment Variables"

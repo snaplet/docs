@@ -116,12 +116,12 @@ As the seed value changed, it means that you might experience different models b
 
 ### Inflection is now turned on by default
 
-You no longer need a `snaplet.config.ts` file to enable inflection. It's now turned on by default.
+You no longer need a `seed.config.ts` file to enable inflection. It's now turned on by default.
 We think inflection brings a better developer experience and we want to make it the default.
 
-If you want to disable it, you can pass `false` to the `inflection` option in your `snaplet.config.ts` file:
+If you want to disable it, you can pass `false` to the `inflection` option in your `seed.config.ts` file:
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -303,13 +303,13 @@ npx snaplet generate
 
 It will create a folder containing your data client source code under `node_modules/.snaplet`. This package is then re-exported by `@snaplet/seed`.
 
-Now, let's edit your `snaplet.config.ts` and port your `run` function to a seed script.
+Now, let's edit your `seed.config.ts` and port your `run` function to a seed script.
 
 <CH.Scrollycoding>
 
 Given this configuration.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -332,7 +332,7 @@ export default defineConfig({
 * Copy the content of your `run` function and remove it.
 * Rename the `generate` key in your config to `seed`:
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -421,13 +421,13 @@ You can start by regenerating your types by running:
 snaplet config generate
 ```
 
-Now, let's edit your `snaplet.config.ts` file.
+Now, let's edit your `seed.config.ts` file.
 
 <CH.Scrollycoding>
 
 This is what we had before version `0.66.0`.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -453,7 +453,7 @@ export default defineConfig({
 
 Rename `plan` to `run`, and make it async. You are no longer required to return a plan. Calling `await` on a plan will automatically run it.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -482,7 +482,7 @@ We inject directly the `snaplet` data client in the `run` function.
 
 The utilities and operators are now available directly on the `snaplet` object: `snaplet.$pipe`, `snaplet.$merge` and `snaplet.$createStore`.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -509,7 +509,7 @@ export default defineConfig({
 
 We no longer need `count` and `data`, you can pass the values directly.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -531,7 +531,7 @@ export default defineConfig({
 
 To create lists of data, you can either pass an array or use our `x` helper function passed in a callback.
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
@@ -553,7 +553,7 @@ export default defineConfig({
 
 Congrats, you are now using the new API!
 
-```ts snaplet.config.ts
+```ts seed.config.ts
 /// <reference path=".snaplet/snaplet.d.ts" />
 import { defineConfig } from 'snaplet';
 
