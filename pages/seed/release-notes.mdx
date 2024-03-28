@@ -8,6 +8,12 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 28 March 2024 - v0.89.6
+### Bug fixes
+* We were double-encoding special characters in connection strings in `snaplet restore`, causing restores to fail at the database connection test step for connection strings with special characters in them
+</Step>
+
+<Step>
 ## 27 March 2024 - v0.89.5
 ### Bug fixes
 * Improvements to debugging information for `DEBUG=snaplet:subset:*` to help understand which `targets` caused which rows to be added
