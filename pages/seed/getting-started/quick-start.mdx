@@ -9,8 +9,11 @@ This guide will take you through the process of using `@snaplet/seed` to create 
 
 ## Prerequisites
 
-- Node.js and npm installed on your machine
-- a PostgreSQL database server running
+You already followed the [installation guide](/seed/getting-started/installation) and have `@snaplet/seed` available locally.
+
+## Our first Seed script
+
+Given this PostgreSQL database schema of a blog application:
 
 <Tabs items={["diagram", "sql"]}>
 <Tab>
@@ -40,33 +43,36 @@ CREATE TABLE public.comment (
 </Tab>
 </Tabs>
 
-The diagram above represents the relationships of your database.
+Let's see how `@snaplet/seed` gives a programmatic interface to describe seeding requirements.
 
-From the SQL tab above, copy the SQL statement and insert this into your database to define your schema.
+We need to apply this schema to a new PostgreSQL database.
 
-## Setting up snaplet
+Once done, we can edit the configuration file `seed.config.ts` to point to the database. We assume we already have our database client library `postgres` installed.
 
-We now need to add snaplet to your project.
+```ts seed.config.ts
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import { defineConfig } from "@snaplet/seed/config";
+import postgres from "postgres";
 
-Run the following in your project root directory and follow the interactive prompts:
-
-```bash >_&nbsp;terminal
-npx @snaplet/seed init
+export default defineConfig({
+  adapter: () => {
+    const client = postgres("postgres://postgres@localhost:5432/blog");
+    return new SeedPostgres(client);
+  },
+});
 ```
 
-## `@snaplet/seed`
+We can now generate our `@snaplet/seed` assets by running:
 
-### Describing your requirements
+```bash >_&nbsp;terminal
+npx @snaplet/seed sync
+```
 
-We now have a database with structure in it, and Snaplet set up to use it. We still do not yet have data though.
-In order to have Snaplet generate this data, you'll need to tell Snaplet _how_ to generate the data.
-
-This is where `@snaplet/seed` comes in: it gives you a programmatic interface to describe your seeding requirements.
+It's time to write our first seed script!
 
 <CH.Scrollycoding className="seed-tutorial-seed-script">
 
-`snaplet setup` would have generated an example script file called `seed.mts` in your project, which imports and
-uses `@snaplet/seed`. It should look something like this:
+Let's start with a bare minimum seed script.
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
@@ -76,19 +82,17 @@ const seed = await createSeedClient();
 
 ---
 
-For your example blog application, let's assume we need the following data:
+For our example blog application, let's assume we need the following data:
 
 - A post titled "Hello World!"
 - A post author, with an email address that ends with "acme.org."
 - Three comments on the post.
 
-It's worth noting what we're not explicitly defining - that each comment needs to have a separate, unique author, for instance. We're assuming that `@snaplet/seed` will fill in the blanks based on your schema and seed realistic data as needed.
+It's worth noting what we're not explicitly defining - that each comment needs to have a separate, unique author, for instance. We're assuming that `@snaplet/seed` will fill in the blanks based on the schema and seed realistic data as needed.
 
-`snaplet` in the code above exposes all your models (i.e. your database tables, or the entities in your application - in this case "user" and "post") as functions.
+`seed` in the code above exposes all the models (i.e. the database tables, or the entities in our blog application - in this case "user" and "post") as functions.
 
-During `snaplet setup`, Snaplet would have read your database structure (using the database connection string you entered), and used this to create these functions.
-
-These functions return what we call a _plan_. When describing a plan, you always start from a "root" model - a model where we would start describing how to seed seed data, along with data for its related models (more on this soon).
+These functions return what we call a _plan_. When describing a plan, we always start from a "root" model - a model where we would start describing how to seed seed data, along with data for its related models (more on this soon).
 
 Here we start from the `posts` models. `await`ing a plan will execute it.
 
@@ -103,7 +107,7 @@ await seed.posts([{}]);
 
 ---
 
-You can directly define the values of your model.
+We can directly define the values of our model.
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
@@ -120,7 +124,7 @@ await seed.posts([
 
 ---
 
-You can also define the values of your model's relationships.
+We can also define the values of our model's relationships.
 Here we define the author of the post represented by the `author` field.
 
 ```ts seed.mts
@@ -147,7 +151,7 @@ await seed.posts([
 
 Next, we also define the comments of the post represented by the `comments` field.
 As we need more than one comment, we can use the `x` function which will create a list of similar comments.
-You can read it as "comments times 3".
+We can read it as "comments times 3".
 
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
@@ -206,8 +210,6 @@ await seed.posts([
 
 We're done!
 
-Copy the code and add it to your `seed.mts` file.
-
 ```ts seed.mts
 import { createSeedClient } from '@snaplet/seed';
 import { copycat } from '@snaplet/copycat';
@@ -236,17 +238,17 @@ await seed.posts([
 
 ### Executing the plan
 
-At this point, you're ready to run your seed script for the first time!
+At this point, we're ready to run our seed script for the first time!
 
-Let's see what statements are generated by using the `DRY` environment variable we defined.
+Let's see first what statements are generated by using the `dryRun: true` option.
 
-Run this command in your terminal:
+We run this command in the terminal:
 
 ```bash >_&nbsp;terminal
 npx tsx seed.mts
 ```
 
-You should see the following output:
+We should see the following output:
 
 <CH.Slideshow className="seed-tutorial-sql-output">
 
@@ -294,7 +296,7 @@ And here are the 3 comments.
 
 ---
 
-As mentioned earlier, these 3 users were automatically generated to satisfy the requirement of 3 comments. You didn't need to define them - `@snaplet/seed` did it for you, because it knows your schema relationships and can fulfill them automatically.
+As mentioned earlier, these 3 users were automatically generated to satisfy the requirement of 3 comments. We didn't need to define them - `@snaplet/seed` did it for us, because it knows our schema relationships and can fulfill them automatically.
 
 ```sql >_&nbsp;terminal focus=3:5
 
@@ -302,33 +304,29 @@ As mentioned earlier, these 3 users were automatically generated to satisfy the 
 
 </CH.Slideshow>
 
-It's now time to seed this data into your database.
+It's now time to seed this data into our database.
 
-In order to do that, change `dryRun` to `false`. Now, instead of logging the SQL statements to the
-console, the data will be inserted into your database:
+In order to do that, we remove the `dryRun` option. Now, instead of logging the SQL statements to the
+console, the data will be inserted into our database:
 
 ```ts seed.mts
-const seed = await createSeedClient({
-  // focus
-  dryRun: false
-});
+const seed = await createSeedClient();
 ```
 
-All done, you're now ready to code against your generated data!
+All done, we're now ready to code against our generated data!
 
-### Evolving your application
+### Evolving the application
 
-Whenever your database structure changes, `@snaplet/seed` will need to be re-generated so that it is in sync with your new database structure.
+Whenever the database structure changes, `@snaplet/seed` will need to be re-generated so that it is in sync with the new database structure.
 
-You can do this by running:
+We can do this by running:
 
-```
-# * fetches the new structure from your database
-# * uses it to regenerate @snaplet/seed assets
+```bash >_&nbsp;terminal
 npx @snaplet/seed sync
 ```
 
+This command will fetch the new structure from the database and use it to regenerate `@snaplet/seed` assets.
+
 ## Next steps
 
-Learn more about how `@snaplet/seed` works and define more complex plans in our [seed reference
-guide](/seed/core-concepts)
+Learn more about how `@snaplet/seed` works and define more complex plans in our [seed reference guide](/seed/core-concepts)
