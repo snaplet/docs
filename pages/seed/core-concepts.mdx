@@ -614,3 +614,36 @@ await seed.users([{
 
 The `override` option is applied on top of the `inflection` option, it's perfect for one-off changes.
 Generated data, or seed data, is a useful tool in software development,
+
+### Providing a database connection in your seed script
+
+Out of the box, `@snaplet/seed` will use the `adapter` in your `seed.config.ts` file to determine how to connect to your database:
+
+```ts seed.config.ts
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import { defineConfig } from "@snaplet/seed/config";
+import postgres from "postgres";
+
+export default defineConfig({
+  adapter: () => {
+    const client = postgres(process.env.DATABASE_URL);
+    return new SeedPostgres(client);
+  },
+});
+```
+
+You can also provide an adapter when instantating your seed client with `createSeedClient()`:
+
+```ts seed.mts
+import postgres from "postgres";
+import { createSeedClient } from "@snaplet/seed";
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+
+const client = postgres(process.env.DATABASE_URL);
+    
+const seed = createSeedClient({
+  adapter: new SeedPostgres(client)
+})
+```
+
+For more on which database adapters are available, check out [Adapters](./adapters)
