@@ -306,14 +306,11 @@ As mentioned earlier, these 3 users were automatically generated to satisfy the 
 
 It's now time to seed this data into our database.
 
-In order to do that, we change `dryRun` to `false`. Now, instead of logging the SQL statements to the
+In order to do that, we remove the `dryRun` option. Now, instead of logging the SQL statements to the
 console, the data will be inserted into our database:
 
 ```ts seed.mts
-const seed = await createSeedClient({
-  // focus
-  dryRun: false
-});
+const seed = await createSeedClient();
 ```
 
 All done, we're now ready to code against our generated data!
