@@ -1,4 +1,4 @@
 {
   "relationships": "Relationships",
-  "unique-constraint-error": "Unique constraints"
+  "unique-constraints": "Unique constraints"
 }
