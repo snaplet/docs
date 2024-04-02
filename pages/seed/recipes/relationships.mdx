@@ -1,3 +1,6 @@
+import { Callout, Tabs, Tab } from 'nextra/components';
+import { OneToManySchema, schema } from '../../../components/recipes/OneToManySchema';
+
 # Utilizing @snaplet/seed with Relationships
 
 This guide demonstrates how to use @snaplet/seed to implement common relationship patterns, focusing particularly on one-to-many and many-to-many relationships. Its goal is to simplify the management and interconnection of data.
@@ -19,6 +22,48 @@ In this example, the `schema.prisma` file outlines the database structure, illus
 
 * A User can create multiple Posts, illustrating a one-to-many relationship.
 * A Post can be associated with multiple Tags, and a Tag can be linked to multiple Posts, showcasing a many-to-many relationship through the PostTags table.
+
+
+<Tabs items={["diagram", "sql"]}>
+<Tab>
+<OneToManySchema className="nx-mx-auto nx-my-4" />
+</Tab>
+<Tab>
+```sql
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Post" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Tag" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "PostTags" (
+    "postId" INTEGER NOT NULL,
+    "tagId" INTEGER NOT NULL,
+
+    PRIMARY KEY ("postId", "tagId"),
+    CONSTRAINT "PostTags_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "PostTags_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+```
+</Tab>
+</Tabs>
 
 ### Many-to-one Relationship
 
