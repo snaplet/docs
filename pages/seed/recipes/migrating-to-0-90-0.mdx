@@ -1,3 +1,6 @@
+import { Callout } from 'nextra/components'
+
+
 # Migration Guide: @snaplet/seed v0.9.0 and Beyond
 
 ## Welcome to a Leaner @snaplet/seed
@@ -42,16 +45,16 @@ export default defineConfig({
 We've expanded our adapter offerings, including support for Prisma, pg, postgres-js, and betterSqlite3, with more on the horizon. 
 Custom adapter creation is also possible, enhancing flexibility (Documentation forthcoming).
 
-<Warning title="Your seed script now must process.exit">
+<Callout type="warning" emoji="⚠️">
 The new adapter change also means we don't automatically close the database connection for you.
-You must now call `process.exit` to close the connection. Or your seed script may hang indefinitely.
+You might now want to call `process.exit` to close the connection or your seed script may hang indefinitely.
 
 ```typescript
 // at the end of seed.mts
 
 process.exit(0);
 ```
-</Warning>
+</Callout>
 
 ### Inflection is now opt-in
 
