@@ -5,44 +5,44 @@ import { Steps } from "nextra/components"
 *The latest Snaplet product updates from the Snaplet team.*
 
 <Steps>
-### Snaplet Release Notes
+#### Snaplet Release Notes
 
 <Step>
 ## 2 Apr 2024 -  @snaplet/seed v0.90.0
 
-### 🚨 BREAKING CHANGES in `@snaplet/seed`
+#### 🚨 BREAKING CHANGES in `@snaplet/seed`
 
-### Highlights
+#### Highlights
 - **Introducing SQLite Support**: Alpha support for SQLite databases is now available, broadening the scope of database options for users.
 - **Enhanced API Methods**: The `$resetDatabase` method has been upgraded to allow selective table resets, giving you finer control over your database seeding processes.
 - **PostgreSQL Improvements**: This update brings notable enhancements to PostgreSQL support, including bug fixes related to unique constraints during seeding.
 
-### Key Changes
+#### Key Changes
 - **New Configuration File**: Configuration has moved from `snaplet.config.ts` to `seed.config.ts` to provide a more focused setup for @snaplet/seed.
 - **Initialization Command Update**: Users should now initialize their environment with `npx @snaplet/seed init`, replacing the previous `npx snaplet setup`.
 - **Streamlined Syncing Process**: The syncing process has been simplified with a single `npx @snaplet/seed sync` command, merging the functionality of the former `generate` and `introspect` commands into one streamlined step.
 
-### Configuration and Usage
+#### Configuration and Usage
 - **Database Adapter Configuration**: The new `adapter` parameter in `seed.config.ts` allows for the configuration of specific database adapters, including Prisma, pg, postgres-js, and betterSqlite3.
 - **Optional Inflection**: Based on user feedback, inflection is now an opt-in feature, allowing users to decide whether to enable this behavior based on their project needs.
 - **Selective Table Sync**: The improved `select` option in the configuration allows for more flexible inclusion or exclusion of tables using pattern matching.
 
-### Updated `$resetDatabase` Method
+#### Updated `$resetDatabase` Method
 - This release refines the `$resetDatabase` method to respect selective exclusions from the configuration, allowing for more precise data reset operations.
 
-See a complete list of changes and updates in the [migration guide](/recipes/migrating-to-0-90-0).
+See a complete list of changes and updates in the [migration guide](./migrations.mdx#from-0900-and-above).
 
 </Step>
 
 <Step>
 ## 28 March 2024 - v0.89.6
-### Bug fixes
+#### Bug fixes
 * We were double-encoding special characters in connection strings in `snaplet restore`, causing restores to fail at the database connection test step for connection strings with special characters in them
 </Step>
 
 <Step>
 ## 27 March 2024 - v0.89.5
-### Bug fixes
+#### Bug fixes
 * Improvements to debugging information for `DEBUG=snaplet:subset:*` to help understand which `targets` caused which rows to be added
 * Avoid `@snaplet/seed`-related validation on `snaplet config pull` (since this command is specific to snapshots on Snaplet Cloud)
 * Allow overriding for alias conflicts: we were detecting if there were conflicts avoiding us from automatically applying [inflection](https://docs.snaplet.dev/seed/core-concepts#inflection), but we
@@ -52,16 +52,16 @@ See a complete list of changes and updates in the [migration guide](/recipes/mig
 <Step>
 ## 27 Febuary 2024 - v0.89.4
 
-### Bug Fixes
+#### Bug Fixes
 * Reverts the change made in 0.89.1 to keep preview database tasks alive longer - we suspect it might have introduced new issues. For the time being, this means preview database snapshots will be back to having a 20 minute time limit to complete for Snaplet Cloud
 </Step>
 
 <Step>
 ## 27 Febuary 2024 - v0.89.1
 
-### Bug Fixes
+#### Bug Fixes
 
-#### Snaplet Cloud: Keep preview database restore tasks alive longer
+##### Snaplet Cloud: Keep preview database restore tasks alive longer
 Previously, when restoring snapshots to preview database on app.snaplet.dev, we would terminate
 restore tasks that took longer than 20 minutes. When deciding whether to terminate a restore, we now
 give each step in the restore flow 20 minutes to complete, and the entire restore 2 hours to
@@ -72,7 +72,7 @@ complete.
 
 ## 26 Febuary 2024 - v0.89.0
 
-### 🚨 `@snaplet/copycat` BREAKING CHANGE
+#### 🚨 `@snaplet/copycat` BREAKING CHANGE
 
 We have upgraded to @snaplet/copycat v5.0.0. Fixes `someOf()` when range tuple (e.g. `copycat.someOf(seed, [1, 2], ['a','b','c'])`) is given for `range` parameter instead of number (e.g. `copycat.someOf(seed, 2, ['a','b','c'])`). Previously this case would have always (incorrectly) returned an empty array (`[]`).
 
@@ -82,9 +82,9 @@ If `copycat.someOf()` is currently being given a range tuple (e.g. `copycat.some
 <Step>
 ## 13 Febuary 2024 - v0.88.2
 
-### Bug Fixes
+#### Bug Fixes
 
-#### Avoid unnecessary `limit: null` in generated copycat code
+##### Avoid unnecessary `limit: null` in generated copycat code
 We generate code with calls to copycat (e.g. `copycat.email(seed)`) in two cases:
 * `@snaplet/seed`: for each database field that we generate data for, we use this generated code
   as the default value for the field
@@ -97,12 +97,12 @@ that did not have a char limit (e.g. `text` columns in a database), for example:
 If there is not char limit for the field, we now avoid this unnecessary `limit: null` fluff:
 `copycat.email(seed)`
 
-#### Avoid `.toString()` for integer and float field types
+##### Avoid `.toString()` for integer and float field types
 In the case of database integer and float database fields, when generated code with calls to copycat
 (the same code as mentioned above), we were in some cases incorrectly adding a `.toString()` to
 this code.
 
-#### Avoid `copycat.scramble()` for generated copycat code for `@snaplet/seed`
+##### Avoid `copycat.scramble()` for generated copycat code for `@snaplet/seed`
 In the case of `@snaplet/seed`, for generated code with calls to copycat (the same code as
 mentioned above), we were in some cases incorrectly using `copycat.scramble()`, which does not make
 much sense for `@snaplet/seed`, where the input values to copycat would be seed values to determine
@@ -111,7 +111,7 @@ what value is generated, rather than actual database values.
 
 <Step>
 ## 13 Febuary 2024 - v0.88.0
-### 🚨 BREAKING CHANGES in `@snaplet/seed`
+#### 🚨 BREAKING CHANGES in `@snaplet/seed`
 
 We've made improvements to how we generate fake data for each database field.
 
@@ -133,22 +133,22 @@ await snaplet.users({ name: 'Garnet Harley' })
 await snaplet.users({})
 ```
 
-### Bug Fixes:
-#### Index dropping for snapshots
+#### Bug Fixes:
+##### Index dropping for snapshots
 When we restore database snapshots, we first drop constraints and indices relevant to the snapshot, then insert data from the snapshot, then bring back any constraints we previously dropped. In some cases however, forgein key constraints did not properly drop before dependant index keys were dropped, causing the index drop to fail.
 
-#### Account for Supavisor URLs when detecting Supabase DBs
+##### Account for Supavisor URLs when detecting Supabase DBs
 We currently automatically add `--no-reset` flag if we detect a Supabase database. We detect the supabase database by looking at database connection string. However, we weren't including Supavisor URLs in this check.
 
-#### Add types for async field functions
+##### Add types for async field functions
 At the moment we support promise-returning field generate functions, but `npx snaplet generate` did not generate types to show that it is supported:
 
 ```ts
 snaplet.users([{ name: async () => { return await Promise.resolve('Foo Bar') } }])
 ```
 
-#### Make type output deterministic
-In some cases, `npx snaplet generate` would generate types in a different order than in previous runs. 
+##### Make type output deterministic
+In some cases, `npx snaplet generate` would generate types in a different order than in previous runs.
 
 </Step>
 <Step>
@@ -158,7 +158,7 @@ In some cases, `npx snaplet generate` would generate types in a different order 
 
 </Step>
 <Step>
-## February 12, 2024 - v0.87.2  
+## February 12, 2024 - v0.87.2
 
 #### Bug Fixes
 - **PNPM Workspaces Support**: Enhanced `snaplet setup` to properly support pnpm workspaces, facilitating smoother project configurations for users leveraging this package manager.

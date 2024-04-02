@@ -69,7 +69,7 @@ const seed = await createSeedClient();
 
 - **Type:** `DatabaseClient`
 
-Overrides the adapter defined in the `seed.config.ts` configuration file.
+Overrides the [adapter](./adapters.mdx) defined in the `seed.config.ts` configuration file.
 
 **Example**
 
@@ -152,7 +152,7 @@ await seed.users([
 
 #### `x` function helper
 
-- **Example type:** `(n: number | MinMaxOption, plan?: UserPlan | ((ctx: { $store: Store, index: number, seed: string, store: Store }) => UserPlan)) => Array<UserPlan>`
+- **Example type:** `(n: number | MinMaxOption, plan?: UserPlanInputs | ((ctx: { $store: Store, index: number, seed: string, store: Store }) => UserPlanInputs)) => Array<UserPlanInputs>`
 
 Seed a given model `n` times.
 
