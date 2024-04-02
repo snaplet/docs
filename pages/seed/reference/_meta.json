@@ -1,7 +1,7 @@
 {
-  "configuration": "Configuration",
   "adapters": "Adapters",
+  "configuration": "Configuration",
+  "environment-variables": "Environment Variables",
   "cli": "Seed CLI",
-  "orm": "Seed ORM",
-  "environment-variables": "Environment Variables"
+  "client": "Seed Client API"
 }
