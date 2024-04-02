@@ -48,7 +48,14 @@ To learn more about the available adapters, see the [Adapters](./adapters.mdx) r
 - **Default**: `false`
 
 Apply a global renaming strategy to all tables and columns in the generated Seed Client.
-When `true`, a default strategy is applied, all the table names will be pluralized and camel-cased, and all the column names will be camel-cased.
+
+When `true`, a default strategy is applied:
+
+- **Model names:** pluralized and camelCased.
+- **Scalar field names:** camelCased.
+- **Parent field names (one to one relationships):** singularized and camelCased.
+- **Child field names (one to many relationships):** pluralized and camelCased.
+- We also support prefix extraction and opposite baseName for foreign keys inspired by [PostGraphile](https://github.com/graphile/pg-simplify-inflector#naming-your-foreign-key-fields).
 
 **Example:**
 
