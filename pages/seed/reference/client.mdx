@@ -152,7 +152,7 @@ await seed.users([
 
 #### `x` function helper
 
-- **Example type:** `(n: number | MinMaxOption, plan?: UserPlanInputs | ((ctx: { $store: Store, index: number, seed: string, store: Store }) => UserPlanInputs)) => Array<UserPlanInputs>`
+- **Example type:** `(n: number | MinMaxOption, plan?: UserPlanInputs) => Array<UserPlanInputs>`
 
 Seed a given model `n` times.
 
@@ -184,6 +184,146 @@ Seed 3 posts with a specific title depending on the index:
 await seed.posts((x) => x(3, (ctx) => ({
   title: `Post ${ctx.index}`
 })));
+```
+
+#### model plan's inputs
+
+- **Example type:** `UserPlanInputs`
+
+Provides a description of the data to seed.
+
+The `UserPlanInputs` type is a union of two types:
+- `UserInputs`: an object that describes the data to seed.
+- `(ctx: PlanContext) => UserInputs`: a callback receiving the plan's context and which returns an object that describes the data to seed.
+
+```ts
+type PlanContext = {
+  $store: Store;
+  index: number;
+  seed: string;
+  store: Store;
+};
+
+type UserPlanInputs = UserInputs | ((ctx: PlanContext) => UserInputs);
+```
+
+**Examples**
+
+Model's plan inputs as an object:
+
+```ts
+await seed.users([
+  { username: "Snappy" },
+]);
+```
+
+Model's plan inputs as a callback:
+
+```ts
+await seed.users([
+  (ctx) => ({ username: `Snappy ${ctx.index}` }),
+]);
+```
+
+The `UserInputs` type is a record of the model's fields.
+The fields can be scalar fields or [relationships](../recipes/relationships.mdx) (parents or children fields).
+
+```ts
+type FieldContext = {
+  $store: Store;
+  // the fields already generated for this model.
+  data: Partial<UserScalarFields>;
+  seed: string;
+  store: Store;
+};
+
+type UserInputs = {
+  // scalar fields
+  id?: string | ((ctx: FieldContext) => string | Promise<string>);
+  email?: string | ((ctx: FieldContext) => string | Promise<string>);
+  username?: string | ((ctx: FieldContext) => string | Promise<string>);
+  // relationships (children fields)
+  posts?: Array<PostPlanInputs> | xCallback<PostPlanInputs>;
+  comments?: Array<CommentPlanInputs> | xCallback<CommentPlanInputs>;
+};
+```
+
+**Examples**
+
+Scalar field as a string:
+
+```ts
+await seed.users([
+  { username: (ctx) => "Snappy" },
+]);
+```
+
+Scalar field as a callback:
+
+```ts
+await seed.users([
+  {
+    username: "Snappy",
+    email: (ctx) => `${ctx.data.username!}@snaplet.dev`,
+  },
+]);
+```
+
+Scalar field as an `async` callback:
+
+```ts
+await seed.users([
+  {
+    username: async (ctx) => {
+      return await fetchUsername(ctx.seed);
+    },
+  },
+]);
+```
+
+Children field as a static array:
+
+```ts
+await seed.users([
+  {
+    posts: [
+      { title: "Hello, world!" },
+      { title: "Hello, universe!" },
+    ],
+  },
+]);
+```
+
+Children field as a callback:
+
+```ts
+await seed.users([
+  {
+    posts: (x) => x(2),
+  },
+]);
+```
+
+Parent field as an object:
+
+```ts
+await seed.posts([
+  {
+    author: { username: "Snappy" },
+  }
+]);
+```
+
+Parent field as a callback:
+
+```ts
+await seed.users([{}]);
+
+await seed.posts([
+  {
+    author: (ctx) => ctx.connect(({ $store }) => $store.users[0]),
+  }
+]);
 ```
 
 ### `options`
