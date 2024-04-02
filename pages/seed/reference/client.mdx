@@ -1,0 +1,173 @@
+import { Callout, Tabs, Tab } from 'nextra/components';
+import { TutorialSchema } from '../../../components/TutorialSchema';
+
+# Seed Client API
+
+The Seed Client API reference documentation is based on the following PostgreSQL database schema and `seed.config.ts` configuration file:
+
+<Tabs items={["diagram", "sql"]}>
+<Tab>
+<TutorialSchema className="nx-mx-auto nx-my-4" />
+</Tab>
+<Tab>
+```sql
+CREATE TABLE public.user (
+  id uuid NOT NULL PRIMARY KEY,
+  username text NOT NULL,
+  email text NOT NULL
+);
+CREATE TABLE public.post (
+  id uuid NOT NULL PRIMARY KEY,
+  title text NOT NULL,
+  content text NOT NULL,
+  author_id uuid NOT NULL REFERENCES public.user(id)
+);
+CREATE TABLE public.comment (
+  id uuid NOT NULL PRIMARY KEY,
+  content text NOT NULL,
+  author_id uuid NOT NULL REFERENCES public.user(id),
+  post_id uuid NOT NULL REFERENCES public.post(id),
+  written_at timestamptz NOT NULL DEFAULT now()
+);
+```
+</Tab>
+</Tabs>
+
+```ts seed.config.ts
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import { defineConfig } from "@snaplet/seed/config";
+import postgres from "postgres";
+
+export default defineConfig({
+  adapter: () => {
+    const client = postgres(process.env.DATABASE_URL);
+    return new SeedPostgres(client);
+  },
+  alias: {
+    inflection: true,
+  },
+});
+```
+
+## `createSeedClient`
+
+- **Type:** `(options?: SeedClientOptions) => Promise<SeedClient>`
+
+Create a new Seed Client instance.
+
+**Example**
+
+```ts
+import { createSeedClient } from "@snaplet/seed";
+
+const seed = await createSeedClient();
+```
+
+### `adapter`
+
+- **Type:** `DatabaseClient`
+
+Overrides the adapter defined in the `seed.config.ts` configuration file.
+
+**Example**
+
+```ts
+import { createSeedClient } from "@snaplet/seed";
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import postgres from "postgres";
+
+const client = postgres(process.env.DATABASE_URL);
+const seed = await createSeedClient({
+  adapter: new SeedPostgres(client),
+});
+```
+
+### `dryRun`
+
+- **Type:** `boolean`
+
+If `true`, the Seed Client will not execute any database operations, it will log the generated SQL queries to stdout instead.
+
+**Example**
+
+```ts
+import { createSeedClient } from "@snaplet/seed";
+
+const seed = await createSeedClient({
+  dryRun: true,
+});
+```
+
+### `models`
+
+- **Type:** `UserModels`
+
+Overrides the default models generator functions.
+
+**Example**
+
+```ts
+import { copycat } from "@snaplet/copycat";
+import { createSeedClient } from "@snaplet/seed";
+
+const seed = await createSeedClient({
+  models: {
+    users: {
+      data: {
+        email: (ctx) => copycat.email(ctx.seed, { domain: "blog.dev" }),
+      },
+    },
+  },
+});
+```
+
+## Model generators
+
+- **Type:** `(plan: <model>PlanInputs, options?: PlanOptions) => Promise<Store>`
+
+Seed one or more records in the database starting from the given model.
+
+**Examples**
+
+Seed 10 users:
+
+```ts
+import { createSeedClient } from "@snaplet/seed";
+
+const seed = await createSeedClient();
+
+await seed.users((x) => x(10));
+```
+
+Seed a single post with a particular title and author:
+
+```ts
+import { createSeedClient } from "@snaplet/seed";
+
+const seed = await createSeedClient();
+
+await seed.posts([
+  {
+    title: "Hello, World!",
+    author: {
+      username: "snappy",
+    },
+  },
+]);
+```
+
+### `plan`
+
+- **Type:** `<model>PlanInputs`
+
+### `options`
+
+- **Type:** `PlanOptions`
+
+## Client methods
+
+### `$resetDatabase`
+
+## Client properties
+
+### `$store`

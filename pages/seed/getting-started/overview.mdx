@@ -8,20 +8,20 @@ import { Tabs, Tab } from "nextra/components";
 
 It consists of the following parts:
 
-- **Seed ORM**: Auto-generated and type-safe data client for Node.js & TypeScript 🛡️
+- **Seed Client**: Auto-generated and type-safe data client for Node.js & TypeScript 🛡️
 - **Seed CLI**: A CLI to generate and keep the data client in sync with your database 🛠️
 - **Seed AI**: Our custom model identifying the shape of your data 🤖
 
-We are compatible with [PostgreSQL](../reference/adapters#postgresql) and [SQLite](../reference/adapters#sqlite). MySQL support is coming soon.
+We are compatible with [PostgreSQL](../reference/adapters.mdx#postgres) and [SQLite](../reference/adapters.mdx#sqlite). MySQL support is coming soon.
 
-## Seed ORM
+## Seed Client
 
 Our data client is auto-generated from your database schema.
 We are using the full power of TypeScript to provide you with a type-safe and auto-completed experience when working with your data.
 
 You can focus on the data that matter to **you**, we will take care of generating all the relationships. ✨
 
-Here is a sneak peek of what you can do with Seed ORM:
+Here is a sneak peek of what you can do with Seed Client:
 
 Are you working on a blog app and need 5 posts?
 ```ts
@@ -45,7 +45,7 @@ await seed.organizations([
 ])
 ```
 
-And this is just the beginning! Explore the [Seed ORM guide]() to see all the possibilities.
+And this is just the beginning! Read the [quick start guide](./quick-start.mdx) to get started with Seed Client.
 
 ## Seed CLI
 
@@ -56,7 +56,7 @@ To begin your journey with Seed in seconds, run this command in your project dir
 npx @snaplet/seed init
 ```
 
-Checkout the [Seed CLI reference]() to learn more about the CLI and how to use it.
+Checkout the [Seed CLI reference](../reference/cli.mdx) to learn more about the CLI and how to use it.
 
 ## Seed AI
 
