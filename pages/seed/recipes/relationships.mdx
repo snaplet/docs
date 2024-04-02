@@ -5,20 +5,9 @@ import { OneToManySchema, schema } from '../../../components/recipes/OneToManySc
 
 This guide demonstrates how to use `@snaplet/seed` to implement common relationship patterns, focusing particularly on one-to-many and many-to-many relationships. Its goal is to simplify the management and interconnection of data.
 
-## Getting Started
-
-To begin, execute the following commands to clone the example repository, install dependencies, migrate your database, and initialize your seed data:
-
-```bash
-git clone git@github.com:snaplet/examples.git && cd examples/seed/relationships-examples
-npm install
-npx prisma migrate dev
-npx @snaplet/seed init
-```
-
 ## Database Structure
 
-In this example, the `schema.prisma` file outlines the database structure, illustrating models that depict a one-to-many relationship and a many-to-many relationship. We aim to create a basic blog system where:
+In this example, the database is illustrating models that depict a one-to-many relationship and a many-to-many relationship. We aim to create a basic blog system where:
 
 * A User can create multiple Posts, illustrating a one-to-many relationship.
 * A Post can be associated with multiple Tags, and a Tag can be linked to multiple Posts, showcasing a many-to-many relationship through the PostTags table.

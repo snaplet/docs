@@ -6,25 +6,12 @@ import { UniqueConstraintSchema } from '../../../components/recipes/UniqueConstr
 Welcome to your step-by-step guide on tackling unique constraint errors while establishing relationships between entities in your database using Snaplet Seed. 
 This guide is designed to make your journey smoother and help you understand how to navigate through common pitfalls with ease and efficiency.
 
-## Kick-Starting Your Project
-
-Let's get the ball rolling! 
-To set up your environment, we're going to clone a sample repository, install necessary dependencies, migrate your database, and get your seed data ready. 
-Simply run the following commands in your terminal:
-
-```bash
-git clone git@github.com:snaplet/examples.git && cd examples/seed/unique-constraint-error
-npm install
-npx prisma migrate dev
-npx @snaplet/seed init
-```
-
 ## Understanding Your Database
 
-In our example, the `schema.prisma` file lays out the database structure, highlighting two key constraints:
+In our example, we will lays out the database structure, highlighting two key constraints:
 
-- **Each User's Email Must Be Unique**: Ensuring every user has a unique email address in the database is crucial. This is enforced by marking the email field with `@unique` in the User model, mirroring the UNIQUE constraint on the email column in the SQL schema.
-- **One Membership Per Organization**: To avoid duplicate memberships, the Member model defines two unique constraints using the `@@unique([organizationId, userId])` attribute. This ensures a user can join multiple organizations but can't join the same one more than once.
+- **Each User's Email Must Be Unique**: Ensuring every user has a unique email address in the database is crucial. This is enforced by marking the email field with `UNIQUE (email)` in the User model, mirroring the UNIQUE constraint on the email column in the SQL schema.
+- **One Membership Per Organization**: To avoid duplicate memberships, the Member model defines two unique constraints using the `UNIQUE(organizationId, userId)` attribute. This ensures a user can join multiple organizations but can't join the same one more than once.
 
 <Tabs items={["diagram", "sql"]}>
 <Tab>
