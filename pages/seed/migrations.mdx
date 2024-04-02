@@ -1,4 +1,112 @@
-# Seed migration
+import { Callout } from 'nextra/components'
+
+# Migrations
+
+## From `0.90.0` and above
+
+### Welcome to a leaner `@snaplet/seed`
+
+Hello, `@snaplet/seed` community! With version 0.90.0, we're excited to bring you a suite of enhancements aimed at refining and streamlining your experience.
+This version introduces breaking changes, but fear not—we're here to guide you through them smoothly.
+
+### Why the Change?
+
+Our goal is to sharpen `@snaplet/seed`'s focus, simplifying both maintenance and your development workflows.
+These changes will differentiate `@snaplet/seed` from our snapshot tool, making it more intuitive and powerful for your projects.
+
+### What's New?
+
+- **SQLite Support**: We're rolling out alpha support for SQLite databases, expanding your options.
+- **Enhanced API Methods**: The `$resetDatabase` method now supports selective table resets, offering more control.
+- **PostgreSQL Improvements**: Expect fewer bugs, especially around unique constraints during seeding.
+
+### Key Changes to Note
+
+1. **New Configuration File**: Transition from `snaplet.config.ts` to `seed.config.ts` for a @snaplet/seed-specific setup.
+2. **Initialization Command Update**: Use `npx @snaplet/seed init` instead of `npx snaplet setup`.
+3. **Simplified Syncing**: A single `npx @snaplet/seed sync` command now replaces the previous `generate` and `introspect` commands, streamlining your workflow.
+
+### Dive into `seed.config.ts`
+
+#### Adapting with "adapter"
+
+The introduction of a "database adapter" parameter in `seed.config.ts` is a significant update. Here's how you might configure the Prisma adapter:
+
+```typescript
+import { SeedPrisma } from "@snaplet/seed/adapter-prisma";
+import { defineConfig } from "@snaplet/seed/config";
+// You can import the prisma instance from your own code like you would
+// in your backend code
+import { db } from "./src/utils/db";
+export default defineConfig({
+  adapter: () => new SeedPrisma(db),
+});
+```
+
+We've expanded our adapter offerings, including support for Prisma, pg, postgres-js, and betterSqlite3, with more on the horizon.
+Custom adapter creation is also possible, enhancing flexibility (Documentation forthcoming).
+
+<Callout type="warning" emoji="⚠️">
+The new adapter change also means we don't automatically close the database connection for you.
+You might now want to call `process.exit` to close the connection or your seed script may hang indefinitely.
+
+```typescript
+// at the end of seed.mts
+
+process.exit(0);
+```
+</Callout>
+
+#### Inflection is now opt-in
+
+In response to user feedback, we've transitioned inflection to an opt-in feature, acknowledging that its default behaviour didn't align with the expectations of many within our community.
+To learn more about what inflexion is and what it's for you can [read the documentation here](https://docs.snaplet.dev/seed/core-concepts#inflection).
+
+```typescript
+export default defineConfig({
+  // Additional configuration options
+  alias: {
+     // Opt-in to enable inflection behavior
+     inflection: true,
+  }
+});
+```
+
+#### Selective Sync with "select"
+
+The "select" option has been overhauled for greater flexibility, adopting a pattern matching approach to include or exclude tables:
+
+```typescript
+export default defineConfig({
+    select: {
+        'some_schema_name*': false, // Exclude all tables under a schema
+        'public.some_table_name': false, // Exclude a specific table
+        'public._*': false, // Exclude tables with a prefix
+    }
+});
+```
+
+#### Refined `$resetDatabase` Usage
+
+Fine-tune data resets with the `$resetDatabase` method, allowing you to persist certain tables across seeding operations:
+
+```typescript
+import { createSeedClient } from "@snaplet/seed";
+const seed = await createSeedClient();
+await seed.$resetDatabase(); // Resets, respecting exclusions from config
+// Example usage in tests
+test('your_test', () => {...});
+test('another_test', async () => {
+    await seed.$resetDatabase({
+        'public.users': false, // Keeps user data intact
+    });
+});
+```
+
+### Let's Grow Together
+
+We're excited for you to experience the improvements in @snaplet/seed v0.90.0.
+Your feedback is invaluable to us—join the conversation on [Discord](https://discord.gg/uCUrd7p5Fy) and let's make @snaplet/seed even better together.
 
 ## From `0.85.0` and above
 
