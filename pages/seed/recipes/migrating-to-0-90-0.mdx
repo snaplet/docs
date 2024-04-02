@@ -42,6 +42,17 @@ export default defineConfig({
 We've expanded our adapter offerings, including support for Prisma, pg, postgres-js, and betterSqlite3, with more on the horizon. 
 Custom adapter creation is also possible, enhancing flexibility (Documentation forthcoming).
 
+<Warning title="Your seed script now must process.exit">
+The new adapter change also means we don't automatically close the database connection for you.
+You must now call `process.exit` to close the connection. Or your seed script may hang indefinitely.
+
+```typescript
+// at the end of seed.mts
+
+process.exit(0);
+```
+</Warning>
+
 ### Inflection is now opt-in
 
 In response to user feedback, we've transitioned inflection to an opt-in feature, acknowledging that its default behaviour didn't align with the expectations of many within our community. 
