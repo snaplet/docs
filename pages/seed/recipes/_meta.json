@@ -1,5 +1,5 @@
 {
   "prisma": "Prisma",
   "supabase": "Supabase",
-  "relationships": "Relationships one-to-one and one-to-many"
+  "relationships": "Relationships OneToMany and ManyToOne"
 }

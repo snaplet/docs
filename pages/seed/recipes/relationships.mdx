@@ -20,7 +20,7 @@ In this example, the `schema.prisma` file outlines the database structure, illus
 * A User can create multiple Posts, illustrating a one-to-many relationship.
 * A Post can be associated with multiple Tags, and a Tag can be linked to multiple Posts, showcasing a many-to-many relationship through the PostTags table.
 
-### One-to-Many Relationship
+### Many-to-one Relationship
 
 Let's say our goal is to generate 5 new users, each with a variable number of posts ranging from 0 to 5. The code snippet below demonstrates how to define this one-to-many relationship in our seed file:
 
@@ -36,9 +36,7 @@ await seed.$resetDatabase();
 // Create 5 users, each potentially having up to 5 posts
 // At this stage, posts do not have associated tags
 await seed.User((x) => x(5, {
-
     Post: (x) => x({min: 0, max: 5})
-
 }))
 ```
 
