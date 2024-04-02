@@ -8,6 +8,39 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 2 Apr 2024 - v0.90.0
+
+### 🚨 BREAKING CHANGES in `@snaplet/seed`
+
+## Release Notes for v0.9.0
+
+### Highlights
+- **Introducing SQLite Support**: Alpha support for SQLite databases is now available, broadening the scope of database options for users.
+- **Enhanced API Methods**: The `$resetDatabase` method has been upgraded to allow selective table resets, giving you finer control over your database seeding processes.
+- **PostgreSQL Improvements**: This update brings notable enhancements to PostgreSQL support, including bug fixes related to unique constraints during seeding.
+
+### Key Changes
+- **New Configuration File**: Configuration has moved from `snaplet.config.ts` to `seed.config.ts` to provide a more focused setup for @snaplet/seed.
+- **Initialization Command Update**: Users should now initialize their environment with `npx @snaplet/seed init`, replacing the previous `npx snaplet setup`.
+- **Streamlined Syncing Process**: The syncing process has been simplified with a single `npx @snaplet/seed sync` command, merging the functionality of the former `generate` and `introspect` commands into one streamlined step.
+
+### Configuration and Usage
+- **Database Adapter Configuration**: The new `adapter` parameter in `seed.config.ts` allows for the configuration of specific database adapters, including Prisma, pg, postgres-js, and betterSqlite3.
+- **Optional Inflection**: Based on user feedback, inflection is now an opt-in feature, allowing users to decide whether to enable this behavior based on their project needs.
+- **Selective Table Sync**: The improved `select` option in the configuration allows for more flexible inclusion or exclusion of tables using pattern matching.
+
+### Updated `$resetDatabase` Method
+- This release refines the `$resetDatabase` method to respect selective exclusions from the configuration, allowing for more precise data reset operations.
+
+### Moving Forward
+We're thrilled to roll out these updates to enhance your experience with @snaplet/seed. Your feedback drives our improvement, so please share your thoughts and join the conversation on our Discord channel. Let's continue to grow and improve together!
+
+---
+
+This format focuses on delivering a clear and comprehensive overview of the new features, improvements, and changes introduced in the @snaplet/seed v0.9.0 release, designed to inform users effectively.
+</Step>
+
+<Step>
 ## 28 March 2024 - v0.89.6
 ### Bug fixes
 * We were double-encoding special characters in connection strings in `snaplet restore`, causing restores to fail at the database connection test step for connection strings with special characters in them
