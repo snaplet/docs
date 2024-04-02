@@ -49,8 +49,6 @@ export default defineConfig({
 });
 ```
 
-All the **Example type** are based on the `users` model.
-
 ## `createSeedClient`
 
 - **Type:** `(options?: SeedClientOptions) => Promise<SeedClient>`
@@ -188,13 +186,13 @@ await seed.posts((x) => x(3, (ctx) => ({
 
 #### model plan's inputs
 
-- **Example type:** `UserPlanInputs`
+- **Example type:** `PostPlanInputs`
 
 Provides a description of the data to seed.
 
-The `UserPlanInputs` type is a union of two types:
-- `UserInputs`: an object that describes the data to seed.
-- `(ctx: PlanContext) => UserInputs`: a callback receiving the plan's context and which returns an object that describes the data to seed.
+The `PostPlanInputs` type is an union of two types:
+- `PostInputs`: an object that describes the data to seed.
+- `(ctx: PlanContext) => PostInputs`: a callback receiving the plan's context and which returns an object that describes the data to seed.
 
 ```ts
 type PlanContext = {
@@ -204,7 +202,7 @@ type PlanContext = {
   store: Store;
 };
 
-type UserPlanInputs = UserInputs | ((ctx: PlanContext) => UserInputs);
+type PostPlanInputs = PostInputs | ((ctx: PlanContext) => PostInputs);
 ```
 
 **Examples**
@@ -212,27 +210,35 @@ type UserPlanInputs = UserInputs | ((ctx: PlanContext) => UserInputs);
 Model's plan inputs as an object:
 
 ```ts
-await seed.users([
-  { username: "Snappy" },
+await seed.posts([
+  { title: "Hello, world!" },
 ]);
 ```
 
 Model's plan inputs as a callback:
 
 ```ts
-await seed.users([
-  (ctx) => ({ username: `Snappy ${ctx.index}` }),
+await seed.posts([
+  (ctx) => ({ title: `Hello, world #${ctx.index}!` }),
 ]);
 ```
 
-The `UserInputs` type is a record of the model's fields.
+The `PostInputs` type is a record of the model's fields.
 The fields can be scalar fields or [relationships](../recipes/relationships.mdx) (parents or children fields).
 
 ```ts
 type FieldContext = {
   $store: Store;
-  // the fields already generated for this model.
-  data: Partial<UserScalarFields>;
+  // the scalar fields already generated for this model
+  data: Partial<PostScalarFields>;
+  seed: string;
+  store: Store;
+};
+
+type ParentContext<T> = {
+  $store: Store;
+  // the parent field can be connected to a specific model in the store
+  connect: (connectCallback: ConnectCallback<T>) => T;
   seed: string;
   store: Store;
 };
@@ -240,10 +246,11 @@ type FieldContext = {
 type UserInputs = {
   // scalar fields
   id?: string | ((ctx: FieldContext) => string | Promise<string>);
-  email?: string | ((ctx: FieldContext) => string | Promise<string>);
-  username?: string | ((ctx: FieldContext) => string | Promise<string>);
-  // relationships (children fields)
-  posts?: Array<PostPlanInputs> | xCallback<PostPlanInputs>;
+  title?: string | ((ctx: FieldContext) => string | Promise<string>);
+  content?: string | ((ctx: FieldContext) => string | Promise<string>);
+  // relationship (parent field)
+  author?: UserInputs | (ctx: ParentContext<UserInputs>) => UserInputs;
+  // relationship (child fields)
   comments?: Array<CommentPlanInputs> | xCallback<CommentPlanInputs>;
 };
 ```
@@ -253,18 +260,18 @@ type UserInputs = {
 Scalar field as a string:
 
 ```ts
-await seed.users([
-  { username: (ctx) => "Snappy" },
+await seed.posts([
+  { title: (ctx) => "Hello, world!" },
 ]);
 ```
 
 Scalar field as a callback:
 
 ```ts
-await seed.users([
+await seed.posts([
   {
-    username: "Snappy",
-    email: (ctx) => `${ctx.data.username!}@snaplet.dev`,
+    title: "Hello, world!",
+    content: (ctx) => `The title of this post is "${ctx.data.title}"`,
   },
 ]);
 ```
@@ -272,34 +279,11 @@ await seed.users([
 Scalar field as an `async` callback:
 
 ```ts
-await seed.users([
+await seed.posts([
   {
-    username: async (ctx) => {
-      return await fetchUsername(ctx.seed);
+    title: async (ctx) => {
+      return await fetchTitle(ctx.seed);
     },
-  },
-]);
-```
-
-Child field as a static array:
-
-```ts
-await seed.users([
-  {
-    posts: [
-      { title: "Hello, world!" },
-      { title: "Hello, universe!" },
-    ],
-  },
-]);
-```
-
-Child field as a callback:
-
-```ts
-await seed.users([
-  {
-    posts: (x) => x(2),
   },
 ]);
 ```
@@ -323,6 +307,29 @@ await seed.posts([
   {
     author: (ctx) => ctx.connect(({ $store }) => $store.users[0]),
   }
+]);
+```
+
+Child field as a static array:
+
+```ts
+await seed.posts([
+  {
+    comments: [
+      { title: "Very interesting!" },
+      { title: "It's Internet so I disagree!" },
+    ],
+  },
+]);
+```
+
+Child field as a callback:
+
+```ts
+await seed.posts([
+  {
+    comments: (x) => x(2),
+  },
 ]);
 ```
 
