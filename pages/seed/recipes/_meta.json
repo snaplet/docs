@@ -1,7 +1,4 @@
 {
-  "prisma": "Prisma",
-  "supabase": "Supabase",
   "relationships": "Relationships",
-  "unique-constraint-error": "Unique constraints",
-  "migrating-to-0-90-0": "Migrating guide to 0.90.0"
+  "unique-constraint-error": "Unique constraints"
 }
