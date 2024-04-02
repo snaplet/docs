@@ -1,4 +1,5 @@
 {
   "prisma": "Prisma",
-  "supabase": "Supabase"
+  "supabase": "Supabase",
+  "migrating-to-0-90-0": "Migrating guide to 0.90.0"
 }
