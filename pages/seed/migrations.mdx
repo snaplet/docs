@@ -74,17 +74,21 @@ export default defineConfig({
 
 #### Selective Sync with "select"
 
-The "select" option has been overhauled for greater flexibility, adopting a pattern matching approach to include or exclude tables:
+The "select" option has been overhauled for greater flexibility,
+adopting a [glob pattern matching](https://globster.xyz/) approach to include or exclude tables:
 
 ```typescript
 export default defineConfig({
-    select: {
-        'some_schema_name*': false, // Exclude all tables under a schema
-        'public.some_table_name': false, // Exclude a specific table
-        'public._*': false, // Exclude tables with a prefix
-    }
+    select: [
+        '!some_schema_name*', // Exclude all tables under a schema
+        '!public._*', // Exclude all tables prefixed by _ in the schema public
+        'public._specific_table', // include a specific table even with the prefix
+    ]
 });
 ```
+
+All tables are included by default, if you prefix a pattern with `!` everything matching that pattern will be excluded.
+The patterns apply in their declaration order.
 
 #### Refined `$resetDatabase` Usage
 
@@ -97,9 +101,9 @@ await seed.$resetDatabase(); // Resets, respecting exclusions from config
 // Example usage in tests
 test('your_test', () => {...});
 test('another_test', async () => {
-    await seed.$resetDatabase({
-        'public.users': false, // Keeps user data intact
-    });
+    await seed.$resetDatabase([
+        '!public.users', // Keeps user data intact
+    ]);
 });
 ```
 

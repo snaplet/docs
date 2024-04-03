@@ -100,8 +100,11 @@ export default defineConfig({
 
 - **Type:** `Record<string, boolean>`
 
-Exclude tables from the generated Seed Client.
-For excluding multiple tables at once, you can use a wildcard character `*` at the end of the table name.
+Exclude or include tables from the generated Seed Client.
+This use the [glob pattern matching api](https://globster.xyz/)
+
+All tables are included by default, if you prefix a table with `!` everything matching that pattern will be excluded.
+The patterns apply in their declaration order.
 
 **Example:**
 
@@ -109,10 +112,12 @@ For excluding multiple tables at once, you can use a wildcard character `*` at t
 import { defineConfig } from "@snaplet/seed/config";
 
 export default defineConfig({
-  select: {
-    "archive*": false,
-    "access_logs": false,
-    "auth.*": false,
-  },
+  select: [
+    "!archive*",
+    "!*_logs",
+    "!auth.*",
+    "archive.specific_table_to_include",
+    "auth._prefixed_to_include*",
+  ],
 });
 ```
