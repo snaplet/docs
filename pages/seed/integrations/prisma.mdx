@@ -31,7 +31,7 @@ export default defineConfig({
     return new SeedPrisma(client);
   },
   select: [
-    "!public._prisma_migrations",
+    "!*_prisma_migrations",
   ],
 });
 ```
