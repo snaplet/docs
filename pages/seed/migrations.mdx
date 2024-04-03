@@ -74,7 +74,8 @@ export default defineConfig({
 
 #### Selective Sync with "select"
 
-The "select" option has been overhauled for greater flexibility, adopting a glob pattern matching approach to include or exclude tables:
+The "select" option has been overhauled for greater flexibility,
+adopting a [glob pattern matching](https://globster.xyz/) approach to include or exclude tables:
 
 ```typescript
 export default defineConfig({
@@ -85,6 +86,9 @@ export default defineConfig({
     ]
 });
 ```
+
+All tables are included by default, if you prefix a table with `!` everything matching that pattern will be excluded.
+The patterns apply in their declaration order.
 
 #### Refined `$resetDatabase` Usage
 
