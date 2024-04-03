@@ -103,6 +103,33 @@ test('another_test', async () => {
 });
 ```
 
+#### `$transaction` and `$reset` methods have been removed
+
+To get a new instance of the client, you can simply use `createSeedClient` to get a new instance.
+
+```ts
+// before
+await snaplet.$transaction(async (snaplet) => {
+  await snaplet.users([{}]);
+});
+
+// after
+const snaplet = await createdSeedClient() 
+await snaplet.users([{}])
+```
+
+```ts
+// before
+await snaplet.users([{}]);
+snaplet.$reset()
+
+// after
+let snaplet = await createdSeedClient() 
+await snaplet.users([{}])
+snaplet = await createSeedClient()
+```
+
+
 ### Let's Grow Together
 
 We're excited for you to experience the improvements in @snaplet/seed v0.90.0.
