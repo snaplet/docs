@@ -424,9 +424,9 @@ await seed.$resetDatabase();
 Truncate all the tables except the `public._prisma_migrations` table:
 
 ```ts
-await seed.$resetDatabase({
-  "public._prisma_migrations": false,
-});
+await seed.$resetDatabase([
+  "!public._prisma_migrations",
+]);
 ```
 
 ## Client properties
