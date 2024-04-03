@@ -22,9 +22,25 @@ These changes will differentiate `@snaplet/seed` from our snapshot tool, making 
 
 ### Key Changes to Note
 
-1. **New Configuration File**: Transition from `snaplet.config.ts` to `seed.config.ts` for a @snaplet/seed-specific setup.
-2. **Initialization Command Update**: Use `npx @snaplet/seed init` instead of `npx snaplet setup`.
+1. **Seed CLI**: The `@snaplet/seed` now has its own CLI.
+2. **New Configuration File**: Transition from `snaplet.config.ts` to `seed.config.ts` for a `@snaplet/seed` specific setup.
 3. **Simplified Syncing**: A single `npx @snaplet/seed sync` command now replaces the previous `generate` and `introspect` commands, streamlining your workflow.
+
+### `@snaplet/seed` now has its own CLI
+
+If you are not using our Snapshot tool, you can uninstall the `snaplet` CLI.
+
+```bash >_&nbsp;terminal
+npm uninstall snaplet
+```
+
+Start your `@snaplet/seed` journey using the new onboarding wizard command:
+
+```bash >_&nbsp;terminal
+npx @snaplet/seed init
+```
+
+You can read the new [CLI reference](./reference/cli.mdx) to learn about all the available commands.
 
 ### Dive into `seed.config.ts`
 
@@ -60,7 +76,7 @@ process.exit(0);
 #### Inflection is now opt-in
 
 In response to user feedback, we've transitioned inflection to an opt-in feature, acknowledging that its default behaviour didn't align with the expectations of many within our community.
-To learn more about what inflexion is and what it's for you can [read the documentation here](https://docs.snaplet.dev/seed/core-concepts#inflection).
+To learn more about what inflection is and what it's for you can [read the documentation here](./reference/configuration.mdx#aliasinflection).
 
 ```typescript
 export default defineConfig({
@@ -118,7 +134,7 @@ await snaplet.$transaction(async (snaplet) => {
 });
 
 // after
-const snaplet = await createdSeedClient() 
+const snaplet = await createdSeedClient()
 await snaplet.users([{}])
 ```
 
@@ -128,7 +144,7 @@ await snaplet.users([{}]);
 snaplet.$reset()
 
 // after
-let snaplet = await createdSeedClient() 
+let snaplet = await createdSeedClient()
 await snaplet.users([{}])
 snaplet = await createSeedClient()
 ```
@@ -136,8 +152,8 @@ snaplet = await createSeedClient()
 
 ### Let's Grow Together
 
-We're excited for you to experience the improvements in @snaplet/seed v0.90.0.
-Your feedback is invaluable to us—join the conversation on [Discord](https://discord.gg/uCUrd7p5Fy) and let's make @snaplet/seed even better together.
+We're excited for you to experience the improvements in `@snaplet/seed` v0.90.0.
+Your feedback is invaluable to us, join the conversation on [Discord](https://discord.gg/uCUrd7p5Fy) and let's make `@snaplet/seed` even better together.
 
 ## From `0.85.0` and above
 
