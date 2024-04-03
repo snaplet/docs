@@ -22,5 +22,7 @@
     "/recipes/vercel": "/snapshot/recipes/vercel",
     "/migrations/seed": "/seed/migrations",
     "/migrations/snapshot": "/snapshot/migrations",
-    "/reference/connection-strings": "/seed/reference/connection-strings"
+    "/reference/connection-strings": "/seed/reference/connection-strings",
+    "/seed/recipes/prisma": "/seed/integrations/prisma",
+    "/seed/recipes/supabase": "/seed/integrations/supabase"
 }
