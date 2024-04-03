@@ -109,10 +109,10 @@ For excluding multiple tables at once, you can use a wildcard character `*` at t
 import { defineConfig } from "@snaplet/seed/config";
 
 export default defineConfig({
-  select: {
-    "archive*": false,
-    "access_logs": false,
-    "auth.*": false,
-  },
+  select: [
+    "!archive*",
+    "!*_logs",
+    "!auth.*",
+  ],
 });
 ```

@@ -77,8 +77,8 @@ export default defineConfig({
     const client = new PrismaClient();
     return new SeedPrisma(client);
   },
-  select: {
-    "public._prisma_migrations": false,
-  },
+  select: [
+    "!public._prisma_migrations",
+  ],
 });
 ```
