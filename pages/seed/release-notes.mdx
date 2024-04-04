@@ -8,6 +8,84 @@ import { Steps } from "nextra/components"
 #### Snaplet Release Notes
 
 <Step>
+## 4 Apr 2024 -  @snaplet/seed v0.91.0
+
+#### 🚨 BREAKING CHANGES in `@snaplet/seed`
+
+#### Inflection is (truly) opt-in
+
+We had a bug in `v0.90.0` which caused inflection to still be turned on by default.
+
+In this release, inflection is now truly opt-in. You need to explicitly enable it in your `seed.config.ts` file if you want to use it:
+
+```ts
+export default defineConfig({
+  alias: {
+    inflection: true,
+  },
+});
+```
+
+#### Descendants of a model are now automatically connected to it within the same plan
+
+You might have relationships in your database where an indirect descendant model has a foreign key to a parent model up the chain.
+
+Let's take the example of a todo app with the following tables:
+
+```sql
+create table board (
+  id uuid not null primary key,
+  name text not null
+);
+create table "column" (
+  id uuid not null primary key,
+  name text not null,
+  board_id uuid not null references board(id)
+);
+create table item (
+  id uuid not null primary key,
+  name text not null,
+  column_id uuid not null references "column"(id),
+  board_id uuid not null references board(id)
+);
+```
+
+Previously if you wanted to generate a board with columns and items, all connected to each other, you would have to do something like this:
+
+```ts
+await snaplet.boards([{
+  name: 'Snaplet',
+  // columns is a direct descendant of board, it will be automatically connected
+  columns: [{
+    // tasks is not a direct descendant of board, you had to connect it manually
+    tasks: [{
+      title: 'TODO',
+      board: (ctx) => ctx.connect(({ store }) => store.boards.find((b) => b.name === 'Snaplet')),
+    }]
+  }]
+}])
+```
+
+Now, `@snaplet/seed` will automatically connect these descendants to their parent model within the same plan:
+
+```ts
+await snaplet.boards([{
+  name: 'Snaplet',
+  columns: [{
+    tasks: [{
+      title: 'TODO',
+      // no need to connect board manually!
+    }]
+  }]
+}])
+```
+
+If you want to override the automatic connection, you can:
+- use an empty object to force the generation of a new model.
+- use the `ctx.connect` function as seen in the previous example.
+</Step>
+
+<Step>
 ## 2 Apr 2024 -  @snaplet/seed v0.90.0
 
 #### 🚨 BREAKING CHANGES in `@snaplet/seed`
