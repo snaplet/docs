@@ -24,5 +24,6 @@
     "/migrations/snapshot": "/snapshot/migrations",
     "/reference/connection-strings": "/seed/reference/connection-strings",
     "/seed/recipes/prisma": "/seed/integrations/prisma",
-    "/seed/recipes/supabase": "/seed/integrations/supabase"
+    "/seed/recipes/supabase": "/seed/integrations/supabase",
+    "/reference/cli": "/snapshot/reference/cli"
 }
