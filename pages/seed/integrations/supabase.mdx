@@ -5,107 +5,113 @@ import { Callout } from "nextra/components";
 ![I absolutely love Supabase!](/recipes/supabase/snappy-holding-supabase-logo.svg)
 
 <Callout>
-For seeding data into your Supabase project, only the `public` and `auth` schemas are supported. If you experience any issues with any of the paths, reach out to us on [Discord](https://app.snaplet.dev/chat).
+For seeding data into your Supabase project, we recommend selecting `public` and `auth` schemas only.
+If you experience any issues with any of the paths, reach out to us on [Discord](https://app.snaplet.dev/chat).
 </Callout>
 
 ## Generate data for your Supabase local development stack
 
-Supabase makes it easy to set up a local development environment linked to your Supabase project. Seed can improve your local development by seeding your local database with data, making coding and testing more efficient and accurate.
+Supabase makes it easy to set up a local development environment linked to your Supabase project.
+Seed can improve your local development by seeding your local database with data, making coding and testing more efficient and accurate.
 
-In this short guide, we use the `snaplet seed` command to seed a local Supabase stack. We will use the [Nextjs + Supabase template](https://vercel.com/templates/next.js/supabase) as an example.
+In this short guide we'll focus on how to integate `@snaplet/seed` with your Supabase project.
 
-### Prerequisites
+## 1. Setup your supabase project
 
-- [Docker installed](https://docs.docker.com/get-docker/)
-- [Supabase CLI installed](https://supabase.com/docs/guides/cli/getting-started)
-- [Seed CLI installed](../getting-started/installation.mdx)
+Once you have a working supabase project with a [local development stack](https://supabase.com/docs/guides/cli/local-development) setup.
 
-#### 1. Clone the Nextjs + Supabase template
+Running `npx supabase start` should spin up the database and give you the URL to access postgres database.
 
-**1.1.** Create a Next.js app using the starter template by running the `npx` command:
-
-```bash
-npx create-next-app -e with-supabase
 ```
-
-**1.2.** Use `cd` to change into the newly created directory:
-
-```bash
-cd name-of-new-app
-```
-
-#### 2. Setup your Supabase project and apply migrations
-
-**2.1.** Initialize the configuration for your Supabase local development project.
-
-```bash
-supabase init
-```
-
-**2.2.** Start your Supabase local stack. This will run the latest migrations against your local database.
-
-```bash
-supabase start
-```
-
-This command will print out the following output:
-
-```bash
 Started supabase local development setup.
 
-         API URL: http://localhost:54321
-          DB URL: postgresql://postgres:postgres@localhost:54322/postgres
-      Studio URL: http://localhost:54323
-    Inbucket URL: http://localhost:54324
-        anon key: eyJh......
-service_role key: eyJh......
+          ...
+          DB URL: postgresql://postgres:postgres@127.0.0.1:54322/postgresql
+          ...
 ```
 
-#### 3. Set up Seed
+Make sure that you have the migrations applied in your local database with your differents app tables on it.
+If you don't refer to [Supabase docs](https://supabase.com/docs/guides/cli/local-development#link-your-project) to run your migrations.
 
-**3.1.** Initialise `@snaplet/seed` in your your root project.
+## 2. Set up Seed
+
+**2.1.** To interface with your postgres database we'll need to install an adapter for `@snaplet/seed` you can use either `node-postgres` or `postgres`
+
+```bash
+npm install -D postgres
+```
+
+**2.2.** Initialise `@snaplet/seed` in your your root project.
 
 ```bash >_&nbsp;terminal
 npx @snaplet/seed init
 ```
 
-**3.2.** Update the `seed.mts` file to create 10 users and 20 todos, the todos should be assigned to at least one of the 10 users.
+**2.3.** The init command will create a `seed.config.ts` file in which you can specify the database connection details and exclude part of the
+database schema you don't want to alter with `@snaplet/seed`
 
-```ts seed.mts
-// create 10 users
-await seed.users((x) => x(10));
-// create 20 todos, for each of the 10 users
-await seed.todos((x) => x(20), { connect: true });
+```ts
+import { SeedPostgres } from "@snaplet/seed/adapter-postgres";
+import { defineConfig } from "@snaplet/seed/config";
+import postgres from "postgres";
+
+export default defineConfig({
+  adapter: () => {
+    const client = postgres("postgresql://postgres:postgres@127.0.0.1:54322/postgresql");
+    return new SeedPostgres(client);
+  },
+  select: [
+    // We don't alter any extensions tables that might be owned by extensions
+    "!*", 
+    // We want to alter all the tables under public schema
+    "public*",
+    // We also want to alter some of the tables under the auth schema
+    "auth.users",
+    "auth.identities",
+    "auth.sessions",
+  ]
+});
 ```
 
+Once you save the edited file, the `init` command will continue and create a `seed.mts` example file in your project folder.
 You are now ready to seed your database.
 
-#### 4. Reset and seed your local development database
+## 4. Keep Seed Client in sync with your database
 
-**4.1** Run `npx tsx seed.mts` and pipe the output to your `supabase/seed.sql` file.
+Whenever your database structure changes (e.g after a new migration is applied), `@snaplet/seed` will need be regenerated to reflect the new structure.
+To do this, run the following command:
+
+```bash >_&nbsp;terminal
+npx @snaplet/seed sync
+```
+
+## 4. (optional) Hook into Supabase seeding workflow
+
+You can hook into [Supabase seeding workflow](https://supabase.com/docs/guides/cli/local-development#add-sample-data) using the `dryRun` option for client creation in the `seed.mts` file:
+
+```ts
+import { createSeedClient } from "@snaplet/seed";
+
+const seed = await createSeedClient({ dryRun: true });
+```
+
+This option will turn on the dry run mode, which will log the SQL queries that would be executed to the console, without actually executing them.
+
+You can then put those queries into the sql seed script expected by supabase:
 
 ```bash
 npx tsx seed.mts > supabase/seed.sql
 ```
 
-**4.2** Reset your local development database. This will run all the existing migrations and apply the seed script (at `supabase/seed.sql`).
+Then, running `npx supabase db reset` should apply the seed script to your local database.
 
-```bash
-supabase db reset
-```
 
-**4.3** Check your local database to see if the result of your seed script.
+### Going futher
 
-Now if you visit the Supabase Studio URL hosted locally (http://localhost:54323) and inspect the **"todo"** table, you should see 20 todo items.
+For a full example of a project using `@snaplet/seed` with Supabase including:
 
-![20 todos in the studio dashboard](/recipes/supabase/20_todos.webp)
+- seeding data
+- seeding with e2e tests
+- seeding with supabase created user pool
 
-In your project folder, if you move `app/_examples/client-component/page.tsx` to `app/todos/page.tsx` and then visit `http://localhost:3000/todos` you should see all the todos created.
-
-![list of todos in nextjs app](/recipes/supabase/nextjs_todos.webp)
-
-### All done!
-
-You have now successfully seeded your Supabase local development stack. As well as use the `snaplet seed` command to seed your local database with the data you need.
-
-If you have any questions or feedback, reach out to us on [Discord](https://app.snaplet.dev/chat).
+check out the [example project](https://github.com/snaplet/examples/tree/main/seed/supabase-twitter-clone)
