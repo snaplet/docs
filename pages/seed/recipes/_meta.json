@@ -1,4 +1,4 @@
 {
-  "prisma": "Prisma",
-  "supabase": "Supabase"
+  "relationships": "Relationships",
+  "unique-constraints": "Unique constraints"
 }
