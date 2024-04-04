@@ -59,7 +59,7 @@ export default defineConfig({
 });
 ```
 
-We've expanded our adapter offerings, including support for Prisma, pg, postgres-js, and betterSqlite3, with more on the horizon.
+We've expanded our adapter offerings, including support for [Prisma, pg, postgres-js, and betterSqlite3](./reference/adapters.mdx), with more on the horizon.
 Custom adapter creation is also possible, enhancing flexibility (Documentation forthcoming).
 
 <Callout type="warning" emoji="⚠️">
@@ -110,7 +110,7 @@ The patterns apply in their declaration order.
 
 #### Refined `$resetDatabase` Usage
 
-Fine-tune data resets with the `$resetDatabase` method, allowing you to persist certain tables across seeding operations:
+Fine-tune data resets with the `$resetDatabase` [method](./reference/client.mdx#resetdatabase), allowing you to persist certain tables across seeding operations:
 
 ```typescript
 import { createSeedClient } from "@snaplet/seed";
