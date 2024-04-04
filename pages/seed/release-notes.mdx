@@ -57,9 +57,9 @@ await snaplet.boards([{
   name: 'Snaplet',
   // columns is a direct descendant of board, it will be automatically connected
   columns: [{
-    // tasks is not a direct descendant of board, you had to connect it manually
-    tasks: [{
-      title: 'TODO',
+    // items is not a direct descendant of board, you had to connect it manually
+    items: [{
+      name: 'TODO',
       board: (ctx) => ctx.connect(({ store }) => store.boards.find((b) => b.name === 'Snaplet')),
     }]
   }]
@@ -72,8 +72,8 @@ Now, `@snaplet/seed` will automatically connect these descendants to their paren
 await snaplet.boards([{
   name: 'Snaplet',
   columns: [{
-    tasks: [{
-      title: 'TODO',
+    items: [{
+      name: 'TODO',
       // no need to connect board manually!
     }]
   }]
