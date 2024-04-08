@@ -2,40 +2,51 @@ import { Tabs, Tab } from "nextra/components";
 
 # Overview
 
-<iframe style={{ margin: "30px 0" }} width="100%" height="500" src="https://www.youtube.com/embed/-MfItFmmeqU?si=Yzg41rK4Spoy7FHa" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+Snaplet **seed** uses **your database schema** to generate **production-accurate data** for use in local development or testing. 
 
-**Seed** is a set of tools **understanding your database schema** to help you **generate production-accurate data**.
+Seed consists of the following components:
 
-It consists of the following parts:
-
-- **Seed Client**: Auto-generated and type-safe data client for Node.js & TypeScript 🛡️
 - **Seed CLI**: A CLI to generate and keep the data client in sync with your database 🛠️
+- **Seed Client**: Auto-generated and type-safe data client for Node.js & TypeScript 🛡️
 - **Seed AI**: Our custom model identifying the shape of your data 🤖
 
-We are compatible with [PostgreSQL](../reference/adapters.mdx#postgres) and [SQLite](../reference/adapters.mdx#sqlite). MySQL support is coming soon.
+**Seed** is compatible with [PostgreSQL](../reference/adapters.mdx#postgres) and [SQLite](../reference/adapters.mdx#sqlite). MySQL support is coming soon.
+
+*For a quick overview of how Snaplet **seed** works, check out our explainer video:*
+<iframe style={{ margin: "30px 0" }} width="100%" height="500" src="https://www.youtube.com/embed/-MfItFmmeqU?si=Yzg41rK4Spoy7FHa" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+
+## Seed CLI
+
+The **seed** CLI is the entry point to the Snaplet **seed** experience. It generates the **seed** data client, and keeps it in sync with your database.
+
+To begin your journey with **seed**, run this command in your project directory:
+```bash >_&nbsp;terminal
+npx @snaplet/seed init
+```
+
+Checkout the [seed CLI reference](../reference/cli.mdx) to learn more about the CLI and how to use it.
 
 ## Seed Client
 
-Our data client is auto-generated from your database schema.
-We are using the full power of TypeScript to provide you with a type-safe and auto-completed experience when working with your data.
+Once the CLI has generated the **seed** data client from your database schema, you can start generating production-accurate data for your development needs. 
 
-You can focus on the data that matter to **you**, we will take care of generating all the relationships. ✨
+The **seed** client uses TypeScript, which ensures a type-safe and auto-completed experience when working with your data, allowing you to validate data transformations as you're defining the data you want. 
 
-Here is a sneak peek of what you can do with Seed Client:
+Additionally, because **seed** uses your schema, it understands the intricacies of your data and its relationships, and is able to generate highly realistic data sets with minimal input. As an example, here's what you can do with the **seed** client:
 
-Are you working on a blog app and need 5 posts?
+Let's assume you've created a blog application, and now need 5 posts' worth of data. Here's how to get that from the **seed** client: 
 ```ts
 await seed.posts((x) => x(5))
 ```
 
-Or maybe you need a user with a specific email?
+Perhaps you need a user with a specific email address for testing purposes: 
 ```ts
 await seed.users([
   { email: 'snappy@snaplet.dev' },
 ])
 ```
 
-What if you want to create an organization with a varying number of members?
+And maybe you need an small organization with a random amount of members, but fewer than 10:
 ```ts
 await seed.organizations([
   {
@@ -44,24 +55,17 @@ await seed.organizations([
   },
 ])
 ```
+What might require dozens of lines of code in a traditional seed script are achieved in just a few statements here. 
 
-And this is just the beginning! Read the [quick start guide](./quick-start.mdx) to get started with Seed Client.
-
-## Seed CLI
-
-The CLI is the entry point to Seed. It will help you generate the data client and keep it in sync with your database.
-
-To begin your journey with Seed in seconds, run this command in your project directory:
-```bash >_&nbsp;terminal
-npx @snaplet/seed init
-```
-
-Checkout the [Seed CLI reference](../reference/cli.mdx) to learn more about the CLI and how to use it.
+Because Snaplet **seed** understands the structure of your data and is able to infer the probable relationships between entities, it's able to construct a comprehensive graph of related entities and populate your database with highly realistic data. 
 
 ## Seed AI
 
-We are using AI to have a deeper understanding of your datatabase schema so we can generate the most accurate and production-like data for you.
+The **seed** AI-powered prediction API enables a deeper understanding of your datatabase schema. This in turn means **seed** is able to suggest the most accurate and production-like data for your use case, reducing manual workload. 
 
+## Ready to try seed?
+
+Want to start using Snaplet **seed**? Check out our [quick start guide](./quick-start.mdx).  
 
 ## Join our Community
 
