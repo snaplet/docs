@@ -16,10 +16,20 @@ npx @snaplet/seed init
 
 The `npx @snaplet/seed login` command is used to log into your Snaplet account.
 
+**Options**
+
+- `--access-token` - Snaplet Cloud access token to use for login, you can obtain one at https://app.snaplet.dev/access-tokens.
+
 **Usage**
 
+Interactive login:
 ```bash >_&nbsp;terminal
 npx @snaplet/seed login
+```
+
+Login with access token:
+```bash >_&nbsp;terminal
+npx @snaplet/seed login --access-token <access-token>
 ```
 
 ## **sync**
