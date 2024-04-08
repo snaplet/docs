@@ -10,7 +10,7 @@ const themeConfig: DocsThemeConfig = {
   logo: <Logo />,
   logoLink: false,
   project: {
-    link: "https://snaplet.dev",
+    link: "https://github.com/snaplet/docs",
   },
   docsRepositoryBase: "https://github.com/snaplet/docs/tree/main",
   primaryHue: {

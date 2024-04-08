@@ -32,9 +32,9 @@ export default defineConfig({
     const client = new PrismaClient();
     return new SeedPrisma(client);
   },
-  select: {
-    "public._prisma_migrations": false,
-  },
+  select: [
+    "!*_prisma_migrations",
+  ],
 });
 ```
 
@@ -72,8 +72,6 @@ With this change, the database will be seeded with the data you specified in you
 - `prisma db seed`
 - `prisma migrate dev`
 - `prisma migrate reset`
-
-Learn ["how to seed your database in Prisma"](https://www.prisma.io/docs/guides/database/seed-database#how-to-seed-your-database-in-prisma) from their documentation.
 
 ## 5. Keep Seed Client in sync with your database
 

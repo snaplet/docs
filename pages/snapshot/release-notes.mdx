@@ -8,6 +8,37 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 4 April 2024 - v0.90.0
+
+### Removed `@snaplet/seed` parts from the CLI
+`@snaplet/seed` now has its own CLI, so `npx snaplet setup` now only sets up a project for using Snapshots and not `@snaplet/seed`, and `npx snaplet generate` has been replaced with `npx @snaplet/seed
+sync`. For more, check out the [release notes for `@snaplet/seed`](/seed/release-notes)
+
+### Improved `snaplet auth login`
+`snaplet auth login` will now authenticate you without you needing to do any manual steps in-between.
+
+### Bug Fixes
+* We automatically restore snapshots of Supabase databases using `--no-reset` to avoid losing permissions that supabase adds for schemas and their tables. However, we were previously not detecting
+  whether a database is a Supabase database when capturing the snapshots.
+</Step>
+
+<Step>
+## 28 March 2024 - v0.89.6
+#### Bug fixes
+* We were double-encoding special characters in connection strings in `snaplet restore`, causing restores to fail at the database connection test step for connection strings with special characters in them
+</Step>
+
+<Step>
+## 27 March 2024 - v0.89.5
+#### Bug fixes
+* Improvements to debugging information for `DEBUG=snaplet:subset:*` to help understand which `targets` caused which rows to be added
+* Avoid `@snaplet/seed`-related validation on `snaplet config pull` (since this command is specific to snapshots on Snaplet Cloud)
+* Allow overriding for alias conflicts: we were detecting if there were conflicts avoiding us from automatically applying [inflection](https://docs.snaplet.dev/seed/core-concepts#inflection), but we
+  were not allowing `override`s from being applied if there were any conflicts
+</Step>
+
+
+<Step>
 ## 27 Febuary 2024 - v0.89.4
 
 ### Bug Fixes
