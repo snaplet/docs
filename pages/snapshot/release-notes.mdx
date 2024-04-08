@@ -8,6 +8,16 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 8 April 2024 - v0.90.1
+
+### Bug Fix: Subsetting for the case of multiple `targets` that have the same table.
+Previously, if the same table was specified multiple times in `subset.targets`, Snaplet would only copy data for relations matching the first target.
+
+Note: Fixing this involved a change to the subsetting algorithm - we now arrange the steps such that each target in the `targets` configuration will have its own steps completed before the next
+target's steps are run. This might cause the subsetting algorithm to end up picking different rows to what it previously did.
+</Step>
+
+<Step>
 ## 4 April 2024 - v0.90.0
 
 ### Removed `@snaplet/seed` parts from the CLI
