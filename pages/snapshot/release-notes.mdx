@@ -8,6 +8,12 @@ import { Steps } from "nextra/components"
 ### Snaplet Release Notes
 
 <Step>
+## 8 April 2024 - v0.90.2
+
+### Bug fixes
+* The bug fix introduced in v0.90.1 has been reverted - it introduced a regression which caused subsetted datasets to grow considerably. We're working on solving the original issue (subsetting for the
+  case of multiple `targets` that have the same table - but with avoiding this regression in mind)
+
 ## 8 April 2024 - v0.90.1
 
 ### Bug Fix: Subsetting for the case of multiple `targets` that have the same table.
