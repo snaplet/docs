@@ -16,10 +16,20 @@ npx @snaplet/seed init
 
 The `npx @snaplet/seed login` command is used to log into your Snaplet account.
 
+**Options**
+
+- `--access-token` - Snaplet Cloud access token to use for login, you can obtain one at https://app.snaplet.dev/access-tokens.
+
 **Usage**
 
+Interactive login:
 ```bash >_&nbsp;terminal
 npx @snaplet/seed login
+```
+
+Login with access token:
+```bash >_&nbsp;terminal
+npx @snaplet/seed login --access-token <access-token>
 ```
 
 ## **sync**
@@ -41,3 +51,18 @@ The `npx @snaplet/seed generate` command is used to generate the necessary asset
 ```bash >_&nbsp;terminal
 npx @snaplet/seed generate
 ```
+
+## Common options
+
+- `--config <path>` - Path to the config file.
+
+**Usage**
+
+```bash >_&nbsp;terminal
+npx @snaplet/seed --config seed/seed.config.ts sync
+```
+
+## Global options
+
+- `--help` - Show help.
+- `--version` - Show version number.

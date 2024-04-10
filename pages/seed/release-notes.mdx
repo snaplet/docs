@@ -6,6 +6,27 @@ import { Steps } from "nextra/components"
 
 <Steps>
 #### Snaplet Release Notes
+<Step>
+## 9 April 2024 - v0.92.1
+
+#### Bug Fixes
+* Better compatibility for the types produced by `npx @snaplet/seed generate` for CommonJS environments.
+* The chosen database client library is now automatically installed if not found when running `npx @snaplet/seed init`.
+
+</Step>
+<Step>
+## 9 April 2024 - v0.92.0
+
+#### Bug Fixes
+* Fixed a bug causing the autocomplete for tables in the `select` field of `seed.config.ts` not to show up.
+* Fixed a bug causing model-defined values to be overwritten in some fields for columns with a default value in the database.
+* Fixed a bug causing the generated client assets to be lost after multiple `npm install` commands.
+
+#### Features
+* Added an `--access-token` option to the login command to allow logging in with an existing access token.
+* Added a `--config` option to the `sync` command to allow specifying the location of `seed.config.ts` in a monorepo setup.
+</Step>
+
 
 <Step>
 ## 7 April 2024 - v0.91.1
