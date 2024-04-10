@@ -2,7 +2,7 @@ import { Callout } from "nextra/components";
 
 # Supabase
 
-![I absolutely love Supabase!](/recipes/supabase/snappy-holding-supabase-logo.svg)
+![Snappy loves Supabase](/seed/integrations/supabase/Supabase_Docs_image.svg)
 
 <Callout>
 For seeding data into your Supabase project, we recommend selecting `public` and `auth` schemas only.
@@ -62,7 +62,7 @@ export default defineConfig({
   },
   select: [
     // We don't alter any extensions tables that might be owned by extensions
-    "!*", 
+    "!*",
     // We want to alter all the tables under public schema
     "public*",
     // We also want to alter some of the tables under the auth schema
