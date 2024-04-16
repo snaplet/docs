@@ -637,7 +637,7 @@ subset: {
 ```
 
 
-### Task sort algorithm (taskSortAlgorithm: 'children' | 'idsCount' | undefined) (default=undefined)
+#### Task sort algorithm (taskSortAlgorithm: 'children' | 'idsCount' | undefined) (default=undefined)
 
 Can helps reduce over-fetching in cloud snapshot filtering by tweaking the crawling heuristic. It prioritizes task processing based on different criteria.
 
@@ -673,6 +673,13 @@ However, if your app logic require each team to have at least one user with the 
 
 In that case, turning the `eager` parameter to true will allow the algorithm to fetch the missing data.
 Resulting in the follwing data being fetched: `user: (1,2,3,4,5,8) and team (1)`
+
+#### Traversal mode (traversalMode: 'together' | 'sequential') (default=together)
+
+* `together`: The traversal algorithm considers all targets collectively when determining the next steps. Traversal state, including counters used for checking thresholds (e.g. `maxCyclesLoop` or `maxChildrenPerNode`), is shared across all targets. 
+
+* `sequential`: Targets are traversed one after another. Traversal for each target is completed before moving on to the next target. Importantly, traversal state, including counters for threshold
+  checks (e.g. `maxCyclesLoop` or `maxChildrenPerNode`), is reset between targets, ensuring that these thresholds are applied on a per-target basis rather than collectively across all targets.
 
 #### Excluding tables from subset
 
