@@ -73,7 +73,7 @@ export default defineConfig({
 });
 ```
 
-Once you save the edited file, the `init` command will continue and create a `seed.mts` example file in your project folder.
+Once you save the edited file, the `init` command will continue and create a `seed.ts` example file in your project folder.
 You are now ready to seed your database.
 
 ## 4. Keep Seed Client in sync with your database
@@ -87,7 +87,7 @@ npx @snaplet/seed sync
 
 ## 4. (optional) Hook into Supabase seeding workflow
 
-You can hook into [Supabase seeding workflow](https://supabase.com/docs/guides/cli/local-development#add-sample-data) using the `dryRun` option for client creation in the `seed.mts` file:
+You can hook into [Supabase seeding workflow](https://supabase.com/docs/guides/cli/local-development#add-sample-data) using the `dryRun` option for client creation in the `seed.ts` file:
 
 ```ts
 import { createSeedClient } from "@snaplet/seed";
@@ -100,7 +100,7 @@ This option will turn on the dry run mode, which will log the SQL queries that w
 You can then put those queries into the sql seed script expected by supabase:
 
 ```bash
-npx tsx seed.mts > supabase/seed.sql
+npx tsx seed.ts > supabase/seed.sql
 ```
 
 Then, running `npx supabase db reset` should apply the seed script to your local database.

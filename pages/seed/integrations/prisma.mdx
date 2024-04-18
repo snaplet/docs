@@ -40,11 +40,11 @@ export default defineConfig({
 
 ## 3. Customize the Seed Script
 
-The `npx @snaplet/seed init` command should also have created a seed script example `seed.mts`.
+The `npx @snaplet/seed init` command should also have created a seed script example `seed.ts`.
 
 You can move this file into your `prisma` directory and customize it to seed your database with the data you need.
 
-```ts prisma/seed.mts
+```ts prisma/seed.ts
 import { createSeedClient } from "@snaplet/seed";
 
 const seed = await createSeedClient();
@@ -64,11 +64,11 @@ You can hook into [Prisma seeding workflow](https://www.prisma.io/docs/orm/prism
 
 ```json package.json
 "prisma": {
-  "seed": "npx tsx prisma/seed.mts"
+  "seed": "npx tsx prisma/seed.ts"
 },
 ```
 
-With this change, the database will be seeded with the data you specified in your `seed.mts` file for each of the following commands:
+With this change, the database will be seeded with the data you specified in your `seed.ts` file for each of the following commands:
 - `prisma db seed`
 - `prisma migrate dev`
 - `prisma migrate reset`
