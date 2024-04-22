@@ -57,11 +57,11 @@ This command will introspect your database schema and generate the necessary fil
 
 ### 4. Create and execute your first Seed script
 
-Create a new `seed.mts` file.
+Create a new `seed.ts` file.
 
 We assume that you have a table called `users` in your database.
 
-```ts seed.mts
+```ts seed.ts
 import { createSeedClient } from "@snaplet/seed";
 
 const seed = await createSeedClient();
@@ -82,7 +82,7 @@ process.exit();
 You can now execute your Seed script by running the following command:
 
 ```bash >_&nbsp;terminal
-npx tsx seed.mts
+npx tsx seed.ts
 ```
 
 Happy seeding! 🌱
