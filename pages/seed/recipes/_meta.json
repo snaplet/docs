@@ -1,4 +1,5 @@
 {
   "relationships": "Relationships",
+  "contraints-and-defaults": "Constraints and DEFAULT",
   "unique-constraints": "Unique constraints"
 }
