@@ -1,0 +1,91 @@
+## Connecting Data Pools
+
+### Why ?
+
+It can sometimes happen that you want to actually re-use some of the data already present in your database.
+And just add more relations, or enrich it with more data. With `@snaplet/seed` the way to do that is to use the `connect` option.
+
+So you can re-use any data you want, and link it to the data you are creating with `@snaplet/seed`.
+
+### How ?
+
+Let's take an example with `prisma` where we have a database with some statically already seeded "files" and "users" in it.
+Let's say this pool, for some reason, we don't want to re-create it, but we want to link it to the data we are creating with `@snaplet/seed`.
+Maybe, 
+
+```typescript
+import { createClient } from '@supabase/supabase-js';
+import PrismaClient from "@prisma/client";
+
+// Declare our database client
+const prisma = new PrismaClient();
+// Select the current users and files in the database
+const users = await prisma.users.findMany({ select: { id: true } });
+const files = await prisma.files.findMany({ select: { id: true } });
+
+// Reset all rows in the database, except the migrations, users, and files tables
+await seed.$resetDatabase(["!*_prisma_migrations", "!*users", "!*files"]);
+
+// We can now seed 10 posts, and link them to the users and files we just retrieved
+await snaplet.posts(x => x(10, () => ({
+    Attachments: [{}, {}, {}],
+})), { connect: { users, files } });
+```
+
+
+### Re-use 3rd party supabase users pool with Snaplet seed
+
+Sometimes we can want to only rely on `@snaplet/seed` to do the heavy lifting of data seeding, but keep
+some of it tight to a 3rd party tool. Here we will use `supabase` as an example for user pools.
+
+#### Why ?
+
+Sometimes, you don't own, nor you want to own, the full logic of 3rd party data creation. Supabase is a great example of that.
+It use a simple API to "signUp" a new user, and behind the scene handle all the security (password hashing, email verification, etc).
+
+You don't want to reimplemant this logic yourself. Well, good news ! You don't have too !
+Here we'll see how you can re-use 3rd party to create your users, then, re-use those created users and "link" them to the data
+you'll be creating with `@snaplet/seed`.
+
+#### Let's dig in code
+Create a script to seed users into Supabase, enrich their data, and link additional content using Snaplet.
+
+```typescript
+import { createClient } from '@supabase/supabase-js';
+import { faker } from '@snaplet/copycat';
+
+// Initialize the Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ROLE_KEY
+);
+
+const PASSWORD = "testuser"; // Default password for all our supabase suers
+// We create a pool of 5 users with a common password using supabase client
+for (let i = 0; i < 5; i++) {
+    // Create user and augment data
+    await supabase.auth.signUp({
+        email: `user${i}@example.com`,
+        password: PASSWORD,
+        options: {
+            data: {
+                user_name: `user${i}`,
+            }
+        }
+    });
+}
+
+// With supabase, for each user created, an associated profiles row is created automatically
+// Retrieve the ids of such profile since it's what the rest of our app will use to link data
+const { data: profiles } = await supabase.from("profiles").select("id");
+
+// Here we'll create 10 posts, and link them to the profiles we just created
+// So the posts `created_by` fields or equivalent will be set to one of our "pool" of users
+await snaplet.posts(x => x(10), { connect: { profiles } });
+```
+
+#### Key Concepts
+- **3rd party client**: You can, and should use 3rd party clients to handle complex data creation if you have too.
+You'll just need a way to retrive back this created data before injecting it into the seeding plain.
+- **Snaplet Connect**: Utilize Snaplet's API to link seeded data with external pools of data. This will allow you to
+leverage seed for the boring parts, but still rely on your 3rd party tool for the complex parts.
