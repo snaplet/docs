@@ -6,11 +6,22 @@ You can use the Command-Line Interface (CLI) provided by `@snaplet/seed` to mana
 
 The `npx @snaplet/seed init` command is used to initialize Seed locally for your project.
 
+**Arguments**
+
+- `<directory>` - Directory path to initialize Snaplet Seed in.
+
 **Usage**
 
+Initialize Seed in the current directory:
 ```bash >_&nbsp;terminal
 npx @snaplet/seed init
 ```
+
+Initialize Seed in a specific directory:
+```bash >_&nbsp;terminal
+npx @snaplet/seed init prisma/seed
+```
+If you initialize Seed in a specific directory, you will have to specify the [`--config`](#common-options) option in the other commands.
 
 ## **login**
 
