@@ -8,6 +8,28 @@ import { Steps } from "nextra/components"
 #### Snaplet Release Notes
 
 <Step>
+## 22 April 2024 - v0.95.0
+
+#### Bug Fixes
+- **Windows Path Issue**: Fixed a problem with invalid paths on Windows.
+- **Monorepo Root Path Adjustment**: Improved root path settings for better monorepo support.
+- **CLI Configuration Error Handling**: Enhanced error handling to prevent runtime issues.
+- **Initial Connection Feedback**: Improved feedback mechanisms for clearer system communication.
+- **Connect API Behavior**: Adjusted connect APIs to focus on id fields, enabling more flexibility with the connect options and callbacks.
+
+#### New Features
+- **LLM Enhanced Data Support**: Head over to the Snaplet web-UI (Project -> Data Generator) to enable LLM for enhanced data quality in text fields.
+
+#### Improvements
+- **Quicktype-core Library Upgrade**: We've upgraded to stop those pesky punycode warnings when using the `@snaplet/seed` CLI with Node versions above 21.
+
+#### Miscellaneous
+- **Example File Update**: Swapped `.mts` for a standard `.ts` file to simplify usage.
+- **Post-Database Seeding Notification**: Users will now be notified after database seeding to ensure transparency.
+
+</Step>
+
+<Step>
 ## 16 April 2024 - v0.94.0
 
 #### Bug Fixes
