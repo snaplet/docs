@@ -237,8 +237,9 @@ type FieldContext = {
 
 type ParentContext<T> = {
   $store: Store;
-  // the parent field can be connected to a specific model in the store
-  connect: (connectCallback: ConnectCallback<T>) => T;
+  // the parent field can be marked as connected
+  // it won't be created in this case but its ids will be used by the current model to satisfy the relationship
+  connect: (modelData: T) => Connect<T>;
   seed: string;
   store: Store;
 };
