@@ -196,7 +196,6 @@ The `PostPlanInputs` type is an union of two types:
 
 ```ts
 type PlanContext = {
-  $store: Store;
   index: number;
   seed: string;
   store: Store;
@@ -228,7 +227,6 @@ The fields can be scalar fields or [relationships](../recipes/relationships.mdx)
 
 ```ts
 type FieldContext = {
-  $store: Store;
   // the scalar fields already generated for this model
   data: Partial<PostScalarFields>;
   seed: string;
@@ -236,7 +234,6 @@ type FieldContext = {
 };
 
 type ParentContext<T> = {
-  $store: Store;
   // the parent field can be marked as connected
   // it won't be created in this case but its ids will be used by the current model to satisfy the relationship
   connect: (modelData: T) => Connect<T>;
