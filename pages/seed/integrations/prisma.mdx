@@ -89,3 +89,99 @@ If you want to automate this process, you can add a [post script](https://docs.n
   "postmigrate": "npx @snaplet/seed sync"
 }
 ```
+
+## Recipes
+
+### @map and @@map renaming with Prisma in Snaplet Seed
+
+In Prisma, you have the flexibility to rename tables and columns in the database using the `@@map` and `@map` annotations. This feature allows developers to map their model and field names in Prisma to different database table and column names. However, when using Snaplet Seed, it's important to note that Snaplet Seed operates directly with database table names, not Prisma model names. Below, we illustrate how to align Snaplet Seed's operations with your Prisma schema through alias overrides.
+
+#### Default Prisma and Database Configuration
+
+Here's how a typical Prisma model might be set up without any renaming:
+
+```ts
+model UserProfile {
+  id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+}
+```
+
+This would correspond to the following SQL table creation:
+
+```sql
+CREATE TABLE "UserProfile" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+And it's used in `@snaplet/seed` like this:
+
+```ts
+await seed.UserProfile((x) => x(10, {
+  createdAt: new Date(),
+}));
+```
+
+#### Customizing Table and Column Names
+
+You can customize the names in Prisma using `@@map` for tables and `@map` for columns:
+
+```ts
+model UserProfile {
+  id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  @@map("user_profile")
+}
+```
+
+This reflects the following changes in your SQL schema:
+
+```sql
+CREATE TABLE "user_profile" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+Subsequently, Snaplet Seed would access this table as:
+
+```ts
+await seed.user_profile((x) => x(10, {
+  created_at: new Date(),
+}));
+```
+
+#### Aligning Snaplet Seed with Prisma Mappings
+
+To use Prisma-style naming in Snaplet Seed, adjust your `seed.config.ts` using [alias overrides](../reference/configuration#aliasoverride):
+
+```ts
+export default defineConfig({
+  alias: {
+    override: {
+      user_profile: {
+        name: 'UserProfile',
+        fields: {
+          created_at: "createdAt"
+        }
+      }
+    }
+  },
+  adapter: () => {
+    const client = new PrismaClient();
+    return new SeedPrisma(client);
+  },
+  select: ["!*_prisma_migrations"],
+});
+```
+
+After updating your configuration, run `npx @snaplet/seed sync` to apply the changes. Now, you can continue using the Prisma model names and conventions in Snaplet Seed:
+
+```ts
+await seed.UserProfile((x) => x(10, {
+    createdAt: new Date()
+}))
+```
