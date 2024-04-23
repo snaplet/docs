@@ -305,7 +305,7 @@ await seed.users([{}]);
 
 await seed.posts([
   {
-    author: (ctx) => ctx.connect(({ $store }) => $store.users[0]),
+    author: (ctx) => ctx.connect(seed.$store.users[0]),
   }
 ]);
 ```
