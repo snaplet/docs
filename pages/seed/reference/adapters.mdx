@@ -2,6 +2,30 @@
 
 Seed supports multiple databases and ORMs through adapters.
 
+## ORMs
+
+### Prisma
+
+> **Note** Currently supported providers: `postgres`, `mysql`, `sqlite`
+
+`@snaplet/seed` supports [Prisma](https://www.prisma.io/orm) using the `@snaplet/seed/adapter-prisma`:
+
+```ts seed.config.ts
+import { SeedPrisma } from "@snaplet/seed/adapter-prisma";
+import { defineConfig } from "@snaplet/seed/config";
+import { PrismaClient } from "@prisma/client";
+
+export default defineConfig({
+  adapter: () => {
+    const client = new PrismaClient();
+    return new SeedPrisma(client);
+  },
+  select: [
+    "!*_prisma_migrations",
+  ],
+});
+```
+
 ## PostgreSQL
 
 ### Postgres.js
@@ -61,24 +85,24 @@ export default defineConfig({
 });
 ```
 
-## ORMs
+## MySQL
 
-### Prisma
+> **Note** MySQL support is currently in alpha. We are working on improving the experience and welcome feedbacks on our [Discord](https://app.snaplet.dev/chat).
 
-`@snaplet/seed` supports [Prisma](https://www.prisma.io/orm) using the `@snaplet/seed/adapter-prisma` adapter:
+### mysql2
+
+`@snaplet/seed` supports [mysql2](https://github.com/sidorares/node-mysql2) using the `@snaplet/seed/adapter-mysql2` adapter:
 
 ```ts seed.config.ts
-import { SeedPrisma } from "@snaplet/seed/adapter-prisma";
+import { SeedMysql2 } from "@snaplet/seed/adapter-mysql2";
 import { defineConfig } from "@snaplet/seed/config";
-import { PrismaClient } from "@prisma/client";
+import { createConnection } from "mysql2/promise";
 
 export default defineConfig({
-  adapter: () => {
-    const client = new PrismaClient();
-    return new SeedPrisma(client);
+  adapter: async () => {
+    const client = await createConnection(process.env.DATABASE_URL);
+    await client.connect();
+    return new SeedMysql2(client);
   },
-  select: [
-    "!*_prisma_migrations",
-  ],
 });
 ```
