@@ -8,6 +8,33 @@ import { Steps } from "nextra/components"
 #### Snaplet Release Notes
 
 <Step>
+## 23 April 2024 - v0.96.0
+
+#### Breaking Change
+- **Connect API**: The `connect` function injected in a parent field callback context now directly accepts the parent data instead of a callback.
+  ```ts
+  // Before
+  await snaplet.posts([{
+    author: (ctx) => ctx.connect(() => seed.$store.users[0])
+  }])
+
+  // After
+  await snaplet.posts([{
+    author: (ctx) => ctx.connect(seed.$store.users[0])
+  }])
+  ```
+- **Model Callback API**: We removed the `$store` variable from the model callback context as it can be accessed globally with `seed.$store`.
+
+#### New Features
+- **Init in a custom directory**: You can now run the `init` command in a custom directory, allowing for more flexibility in project setup.
+  ```sh
+  # it will initialize the project in the ./prisma/seed directory
+  npx @snaplet/seed init prisma/seed
+  ```
+
+</Step>
+
+<Step>
 ## 22 April 2024 - v0.95.0
 
 #### Bug Fixes
