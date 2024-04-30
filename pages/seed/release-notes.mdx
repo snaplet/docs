@@ -23,9 +23,9 @@ The adapter is now persisted to `.snaplet/config.json`.
     "adapter": "prisma"
   }
   ```
-- **Deeper Prisma integration**: When using Prisma adapter, we are now parsing your `prisma.schema` and automatically reflect your model and field names in the generated Seed Client.
+- **Deeper Prisma integration**: When using Prisma adapter, we now parse your prisma.schema and automatically reflect your model and field names in the generated Seed Client.
 
-  To have this change applied, regenerate your Seed Client using `npx @snaplet/seed sync`.
+  To apply this change, regenerate your Seed Client using `npx @snaplet/seed sync`.
 
 #### New Features
 - **Global connect strategy**: You can now pass a `connect` option when creating the Seed Client to automatically connect all generated data to the global store.
