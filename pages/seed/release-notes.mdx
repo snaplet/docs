@@ -26,7 +26,7 @@ The adapter is now persisted to `.snaplet/config.json`.
 - **Deeper Prisma integration**: When using Prisma adapter, we now parse your prisma.schema and automatically reflect your model and field names in the generated Seed Client.
 
   To apply this change, regenerate your Seed Client using `npx @snaplet/seed sync`.
-
+- **Snaplet AI for better data**: We've improved our AI workflow to provide the best data for your seeds. It also means that the data generated might be different from the previous versions.
 #### New Features
 - **MySQL support 🐬**: We now support MySQL databases! You can use the [`mysql2`](./reference/adapters.mdx#mysql2) adapter to connect to your database.
 - **Global connect strategy**: You can now pass a `connect` option when creating the Seed Client to automatically connect all generated data to the global store.
@@ -41,7 +41,6 @@ The adapter is now persisted to `.snaplet/config.json`.
 
 #### Improvements
 - **Optional login**: Login is now optional, you can use `@snaplet/seed` without an account in Snaplet Cloud.
-- **Snaplet AI for better data**: We've improved our AI workflow to provide the best data for your seeds!
 </Step>
 
 <Step>
