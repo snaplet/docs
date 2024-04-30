@@ -15,16 +15,18 @@ This example shows how to set up your Seed workflow with [Prisma](https://www.pr
 Set up Seed in your Prisma project by running the following command:
 
 ```bash >_&nbsp;terminal
-npx @snaplet/seed init
+npx @snaplet/seed init prisma/seed
 ```
+
+This command creates a `prisma/seed` folder with multiple files in it.
 
 ## 2. Configure Seed
 
-Using the previous command should have created a `seed.config.ts` [configuration file](../reference/configuration.mdx).
+Using the previous command should have created a `prisma/seed/seed.config.ts` [configuration file](../reference/configuration.mdx).
 
 You can use it as is, or customize it to fit your needs.
 
-```ts seed.config.ts
+```ts prisma/seed/seed.config.ts
 import { SeedPrisma } from "@snaplet/seed/adapter-prisma";
 import { defineConfig } from "@snaplet/seed/config";
 import { PrismaClient } from "@prisma/client";
@@ -42,11 +44,11 @@ export default defineConfig({
 
 ## 3. Customize the Seed Script
 
-The `npx @snaplet/seed init` command should also have created a seed script example `seed.ts`.
+The `npx @snaplet/seed init prisma/seed` command should also have created a seed script example `seed.ts`.
 
-You can move this file into your `prisma` directory and customize it to seed your database with the data you need.
+You can customize it to seed your database with the data you need.
 
-```ts prisma/seed.ts
+```ts prisma/seed/seed.ts
 import { createSeedClient } from "@snaplet/seed";
 
 const seed = await createSeedClient();
@@ -55,7 +57,7 @@ const seed = await createSeedClient();
 await seed.$resetDatabase();
 
 // Seed the database with 10 users
-await seed.users((x) => x(10));
+await seed.user((x) => x(10));
 
 process.exit();
 ```
@@ -66,7 +68,7 @@ You can hook into [Prisma seeding workflow](https://www.prisma.io/docs/orm/prism
 
 ```json package.json
 "prisma": {
-  "seed": "npx tsx prisma/seed.ts"
+  "seed": "npx tsx prisma/seed/seed.ts"
 },
 ```
 
@@ -80,7 +82,7 @@ With this change, the database will be seeded with the data you specified in you
 Whenever your database structure changes (e.g after a new migration is applied), `@snaplet/seed` will need be regenerated to reflect the new structure. To do this, run the following command:
 
 ```bash >_&nbsp;terminal
-npx @snaplet/seed sync
+npx @snaplet/seed --config prisma/seed/seed.config.ts sync
 ```
 
 If you want to automate this process, you can add a [post script](https://docs.npmjs.com/cli/v10/using-npm/scripts#pre--post-scripts) to your `package.json` file:
@@ -88,102 +90,6 @@ If you want to automate this process, you can add a [post script](https://docs.n
 ```json package.json
 "scripts": {
   "migrate": "prisma migrate dev",
-  "postmigrate": "npx @snaplet/seed sync"
+  "postmigrate": "npx @snaplet/seed --config prisma/seed/seed.config.ts sync"
 }
-```
-
-## Recipes
-
-### @map and @@map renaming with Prisma in Snaplet Seed
-
-In Prisma, you have the flexibility to rename tables and columns in the database using the `@@map` and `@map` annotations. This feature allows developers to map their model and field names in Prisma to different database table and column names. However, when using Snaplet Seed, it's important to note that Snaplet Seed operates directly with database table names, not Prisma model names. Below, we illustrate how to align Snaplet Seed's operations with your Prisma schema through alias overrides.
-
-#### Default Prisma and Database Configuration
-
-Here's how a typical Prisma model might be set up without any renaming:
-
-```ts
-model UserProfile {
-  id          String      @id @default(uuid())
-  createdAt   DateTime    @default(now())
-}
-```
-
-This would correspond to the following SQL table creation:
-
-```sql
-CREATE TABLE "UserProfile" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-And it's used in `@snaplet/seed` like this:
-
-```ts
-await seed.UserProfile((x) => x(10, {
-  createdAt: new Date(),
-}));
-```
-
-#### Customizing Table and Column Names
-
-You can customize the names in Prisma using `@@map` for tables and `@map` for columns:
-
-```ts
-model UserProfile {
-  id          String      @id @default(uuid())
-  createdAt   DateTime    @default(now()) @map("created_at")
-
-  @@map("user_profile")
-}
-```
-
-This reflects the following changes in your SQL schema:
-
-```sql
-CREATE TABLE "user_profile" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-Subsequently, Snaplet Seed would access this table as:
-
-```ts
-await seed.user_profile((x) => x(10, {
-  created_at: new Date(),
-}));
-```
-
-#### Aligning Snaplet Seed with Prisma Mappings
-
-To use Prisma-style naming in Snaplet Seed, adjust your `seed.config.ts` using [alias overrides](../reference/configuration#aliasoverride):
-
-```ts
-export default defineConfig({
-  alias: {
-    override: {
-      user_profile: {
-        name: 'UserProfile',
-        fields: {
-          created_at: "createdAt"
-        }
-      }
-    }
-  },
-  adapter: () => {
-    const client = new PrismaClient();
-    return new SeedPrisma(client);
-  },
-  select: ["!*_prisma_migrations"],
-});
-```
-
-After updating your configuration, run `npx @snaplet/seed sync` to apply the changes. Now, you can continue using the Prisma model names and conventions in Snaplet Seed:
-
-```ts
-await seed.UserProfile((x) => x(10, {
-    createdAt: new Date()
-}))
 ```
