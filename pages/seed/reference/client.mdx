@@ -82,6 +82,29 @@ const seed = await createSeedClient({
 });
 ```
 
+### `connect`
+
+- **Type:** `boolean`
+
+If `true`, the Seed Client will apply the [`connect`](#connect-1) option to every plan.
+
+**Example**
+
+```ts
+const seed = await createSeedClient({
+  connect: true,
+});
+
+await seed.users((x) => x(2));
+
+// these posts will be connected to the users
+await seed.posts((x) => x(10));
+
+// these posts will generate their own users, a plan's connect option overrides the client's connect option
+await seed.posts((x) => x(10), { connect: false });
+```
+
+
 ### `dryRun`
 
 - **Type:** `boolean`
