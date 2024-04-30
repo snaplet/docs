@@ -8,6 +8,38 @@ import { Steps } from "nextra/components"
 #### Snaplet Release Notes
 
 <Step>
+## 30 April 2024 - v0.97.0
+
+#### Breaking Change
+- **`.snaplet/config.json` new "adapter" key**: We changed the way we detect the adapter/dialect that you're using for generating your Seed Client for better integrations.
+The adapter is now persisted to `.snaplet/config.json`.
+
+  You can run `npx @snaplet/seed init` again which should update your `.snaplet/config.json` file with the adapter you're using.
+
+  If you want to do it manually, you can add the `adapter` key to your `.snaplet/config.json` file.
+  ```jsonc .snaplet/config.json
+  {
+    // possible values: "prisma" | "postgres" | "pg" | "better-sqlite3" | "mysql2"
+    "adapter": "prisma"
+  }
+  ```
+- **Deeper Prisma integration**: When using Prisma adapter, we are now parsing your `prisma.schema` and automatically reflect your model and field names in the generated Seed Client.
+
+  To have this change applied, regenerate your Seed Client using `npx @snaplet/seed sync`.
+
+#### New Features
+- **Global connect strategy**: You can now pass a `connect` option when creating the Seed Client to automatically connect all generated data to the global store.
+  ```ts seed.ts
+  const seed = await createSeedClient({ connect: true })
+
+  await seed.users(x => x(2))
+
+  // all the posts will be connected to the previously created users in the seed.$store
+  await seed.posts(x => x(2))
+  ```
+</Step>
+
+<Step>
 ## 23 April 2024 - v0.96.0
 
 #### Breaking Change
@@ -1196,6 +1228,8 @@ If you've been using `generate` you'll need to migrate to use the latest version
 
 Just getting started? If you want to know more about how to generate data you can refer to our [quick start guide](https://docs.snaplet.dev/getting-started/quick-start/generate) or our [`generate` core concept](https://docs.snaplet.dev/core-concepts/generate) page where we dig deeper into `generate` and its options.
 
-Happy generating!
+Happy gen
+import ts from "typescript"
+erating!
 </Step>
 </Steps>
