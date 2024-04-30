@@ -28,6 +28,7 @@ The adapter is now persisted to `.snaplet/config.json`.
   To apply this change, regenerate your Seed Client using `npx @snaplet/seed sync`.
 
 #### New Features
+- **MySQL support 🐬**: We now support MySQL databases! You can use the [`mysql2`](./reference/adapters.mdx#mysql2) adapter to connect to your database.
 - **Global connect strategy**: You can now pass a `connect` option when creating the Seed Client to automatically connect all generated data to the global store.
   ```ts seed.ts
   const seed = await createSeedClient({ connect: true })
