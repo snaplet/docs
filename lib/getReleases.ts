@@ -13,5 +13,5 @@ export async function getReleases() {
     }
   })
 
-  return Promise.all(releases)
+  return (await Promise.all(releases)).sort(((a, b) => a.filename.localeCompare(b.filename))).reverse()
 }
