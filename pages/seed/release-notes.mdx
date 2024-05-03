@@ -8,6 +8,21 @@ import { Steps } from "nextra/components"
 #### Snaplet Release Notes
 
 <Step>
+## 30 April 2024 - v0.97.8
+
+#### Bugfixes
+* There was a bug causing us to sometimes wait indefinitely for Snaplet AI results during `npx @snaplet/seed init` when the command was rerun, and also not wait Snaplet AI results
+  during `npx @snaplet/seed sync` if there were new columns added to the database.
+</Step>
+
+<Step>
+## 30 April 2024 - v0.97.7
+
+#### Bugfixes
+* Avoid timing out waiting for Snaplet AI jobs to start - we already provide a way to skip waiting.
+</Step>
+
+<Step>
 ## 30 April 2024 - v0.97.5
 
 #### Improvements
