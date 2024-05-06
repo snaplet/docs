@@ -4,6 +4,9 @@
     "integrations": "Integrations",
     "reference": "Reference",
     "release-notes": "Release Notes",
+    "release-notes-archive": {
+      "display": "hidden"
+    },
     "migrations": "Migrations",
     "security": "Security"
   }
