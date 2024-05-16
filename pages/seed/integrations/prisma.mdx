@@ -82,7 +82,7 @@ With this change, the database will be seeded with the data you specified in you
 Whenever your database structure changes (e.g after a new migration is applied), `@snaplet/seed` will need be regenerated to reflect the new structure. To do this, run the following command:
 
 ```bash >_&nbsp;terminal
-npx @snaplet/seed --config prisma/seed/seed.config.ts sync
+npx @snaplet/seed sync
 ```
 
 If you want to automate this process, you can add a [post script](https://docs.npmjs.com/cli/v10/using-npm/scripts#pre--post-scripts) to your `package.json` file:
@@ -90,6 +90,6 @@ If you want to automate this process, you can add a [post script](https://docs.n
 ```json package.json
 "scripts": {
   "migrate": "prisma migrate dev",
-  "postmigrate": "npx @snaplet/seed --config prisma/seed/seed.config.ts sync"
+  "postmigrate": "npx @snaplet/seed sync"
 }
 ```
