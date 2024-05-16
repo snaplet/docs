@@ -102,8 +102,9 @@ We'll create pools of users and use plan connections to generate data with the c
 ```ts
   // Create a pool of between 2 and 10 users for our workspace
   const { users } = await seed.users((x) => x({min: 2, max: 10}));
+  const workspacesNumber = 1;
   // Create our workspace and connect all our users to it
-  const { workspace, workspace_member } = await seed.workspace((x) => x(1, () => ({
+  const { workspace, workspace_member } = await seed.workspace((x) => x(workspacesNumber, () => ({
     // Each workspace will have between 1 and 10 members
     workspace_member: (x) => x(users.length)
   }), 
@@ -136,7 +137,7 @@ We'll create pools of users and use plan connections to generate data with the c
   }
 ```
 
-Now, we can generate more workspaces that match our constraints by adjusting one variable.
+Now, we can generate more workspaces that match our constraints by adjusting one variable (`workspacesNumber`).
 
 ### Global connect
 
@@ -189,4 +190,5 @@ Sometimes, you need precise control over connections for each row. For example, 
 
 ### Conclusion
 
-Whether you use path connections for simplicity, plan connections for specific scenarios, global connections for shared configurations, or field connections for fine-grained control, you can efficiently seed your database with meaningful and correctly related data. By understanding and applying these connection strategies, you can ensure your seed data accurately represents the relationships in your database.
+Whether you use path connections for simplicity, plan connections for specific scenarios, global connections for shared configurations, or field connections for fine-grained control, you can efficiently seed your database with meaningful and correctly related data.
+By understanding and applying these connection strategies, you can ensure your seed data accurately represents the relationships in your database.
