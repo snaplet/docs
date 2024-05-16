@@ -16,7 +16,7 @@ export const SlackAppERD = () => {
 
     return (
         <iframe
-            width="880"
+            width="100%"
             height="720"
             src={iframeSrc}
             title="DB Diagram"

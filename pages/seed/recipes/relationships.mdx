@@ -106,19 +106,26 @@ We'll create pools of users and use plan connections to generate data with the c
   const { users } = await seed.users((x) => x({min: 2, max: 10}));
   const workspacesNumber = 1;
   // Create our workspace and connect all our users to it
-  const { workspace, workspace_member } = await seed.workspace((x) => x(workspacesNumber, () => ({
-    // Each workspace will have between 1 and 10 members
-    workspace_member: (x) => x(users.length)
-  }), 
-  // Connect the workspace members to the pool of users we created
-  { connect: { users }}));
+  const { workspace, workspace_member } = await seed.workspace((x) => 
+    x(workspacesNumber, () => ({
+      // Each workspace will have between 1 and 10 members
+      workspace_member: (x) => x(users.length)
+    }), 
+    // Connect the workspace members to the pool of users we created
+    { connect: { users }})
+  );
 
-  // Use the workspace and workspace_member objects to create more complex relationships
+  // Use the workspace and workspace_member objects
+  // to create more complex relationships
   for (const w of workspace) {
     // Retrieve all members for this specific workspace
-    const workspace_members = workspace_member.filter((m) => m.workspace_id === w.id);
-    // Pick between 1 and the number of workspace members to be channel members
-    const channel_users = copycat.someOf(w.id, [1, workspace_members.length], workspace_members).map((m) => ({ id: m.user_id }));
+    const workspace_members = workspace_member
+      .filter((m) => m.workspace_id === w.id);
+    const channel_users = copycat
+      // Pick some of the workspace members
+      // to be channel members
+      .someOf(w.id, [1, workspace_members.length], workspace_members)
+      .map((m) => ({ id: m.user_id }));
     // Create between 1 and 10 channels for this workspace
     await seed.channel((x) => x({ min: 1, max: 10 }, () => ({
       // Add all channel users as members of the current channel
@@ -152,9 +159,13 @@ We have some issues with our data, such as `workspace members` being connected t
   await baseClient.$resetDatabase();
 
   // Seed our database with our two workspace user types
-  const { workspace_user_type } = await baseClient.workspace_user_type([{ type: "admin" }, { type: "member" }]);
+  const { workspace_user_type } = await baseClient.workspace_user_type([
+    { type: "admin" },
+    { type: "member" }
+  ]);
 
-  // Initialize another client to seed the rest of the data and link with global values
+  // Initialize another client to seed the rest
+  // of the data and link with global values
   const seed = await createSeedClient({
     connect: {
       // Make our user types globally available in all plans
@@ -170,24 +181,32 @@ Adding this global connect at the beginning of our script ensures all our worksp
 Sometimes, you need precise control over connections for each row. For example, we might want only one "admin" per workspace, with the rest being "members". We can implement this logic via field connections:
 
 ```ts
-  const { workspace_user_type } = await baseClient.workspace_user_type([{ type: "admin" }, { type: "member" }]);
+  const { workspace_user_type } = await baseClient.workspace_user_type([
+    { type: "admin" },
+    { type: "member" }
+  ]);
 
   const seed = await createSeedClient({
     connect: {
       workspace_user_type
     }
   });
+
   const { users } = await seed.users((x) => x({ min: 2, max: 10 }));
-  const { workspace, workspace_member } = await seed.workspace((x) => x(3, () => ({
-    workspace_member: (x) => x(users.length, ({ index }) => {
-      // Make the first member an admin and the rest members
-      const wtype = index === 0 ? workspace_user_type.find((wut) => wut.type === "admin") : workspace_user_type.find((wut) => wut.type === "member");
-      return {
-        workspace_user_type: (ctx) => ctx.connect(wtype!)
-      };
-    })
-  }), 
-  { connect: { users }}));
+  const { workspace, workspace_member } = await seed.workspace((x) =>
+    x(3, () => ({
+      workspace_member: (x) => x(users.length, ({ index }) => {
+        // Make the first member an admin and the rest members
+        const wtype = index === 0
+          ? workspace_user_type.find((wut) => wut.type === "admin")
+          : workspace_user_type.find((wut) => wut.type === "member");
+        return {
+          workspace_user_type: (ctx) => ctx.connect(wtype!)
+        };
+      })
+    }), 
+    { connect: { users }})
+  );
 ```
 
 ### Conclusion
