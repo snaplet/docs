@@ -2,6 +2,22 @@
 
 Seed configuration is done in the `seed.client.ts` file.
 
+## Config Location
+
+The default location is `seed.client.ts` in the root of your project.
+
+You can also specify a custom location using the [`--config`](/seed/reference/cli#common-options) flag when running the Seed CLI commands.
+
+If you want to persist your custom location to avoid having to use `--config` for every command, you can add a `@snaplet/seed` field to your `package.json` file.
+
+```json package.json
+{
+  "@snaplet/seed": {
+    "config": "prisma/seed/seed.config.ts"
+  }
+}
+```
+
 ## Config Intellisense
 
 You can use the `defineConfig` helper to define your configuration. This will provide you with intellisense for the available options.
