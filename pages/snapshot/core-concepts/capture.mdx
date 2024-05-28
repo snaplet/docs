@@ -615,7 +615,7 @@ subset: {
   fetch trough a relationship is enough for your use case.
 </Callout>
 
-#### Max Children Per Node (maxChildrenPerNode: number) (default=undefined (unlimited))
+#### Max Children Per Node (maxChildrenPerNode: number) (default=Number.MAX_SAFE_INTEGER)
 
 This parameter tells the subsetting algorithm how many optional data it's allowed to retrieve at a time.
 This can be useful in the case of 1 single row being linked to one millions rows in another table.
@@ -626,11 +626,15 @@ You can also define table specific or relation specific behaviour by using the f
 ```ts
 subset: {
   maxChildrenPerNode: {
-    $default: 1000, // Will set the default behaviour for all tables
+    $default: {
+      $default: 1000,  // Will set the default behaviour for all tables
+      'public.table_4': 100, // Will set the behaviour for all the relations pointing to table_4,
+    },
     'public.table_1': 100, // Will set the behaviour for all the relations inside table_1
     'public.table_2': {
       $default: 10, // Will set the default behaviour for all the relations inside table_2
       'relation_1': 1, // Will set the behaviour for relation_1 inside table_2
+      'public.table_3': 10, // All the relations between table_2 and table_3 will have a limit of 10
     }
   }
 }
