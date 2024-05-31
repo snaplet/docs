@@ -139,7 +139,7 @@ export default defineConfig({
         // mark
         if (row.role !== 'SUPERUSER') {
           return {
-            name: copcat.fullName(row.name),
+            name: copycat.fullName(row.name),
             email: copycat.email(row.email),
             password: copycat.password(row.password),
           };
