@@ -1,38 +1,15 @@
-### Prerequisites
+# Goodbye, world
 
-Install `brew`, `git`, `pnpm` and `Node.js` :
+Snaplet the company has shut down, but our tools are now open source.
 
-#### Brew
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
+## Seed
+Automatically seed your database with production-like dummy data based on your schema for local development and testing.
 
-#### Git
+[Docs](https://docs.snaplet.dev/seed) | [GitHub](https://github.com/snaplet/seed)
 
-```bash
-brew install git
-```
+## Snapshot
 
-#### Pnpm and Node.js
+Capture a snapshot (or subset) of your Postgres database whilst transforming the data.
 
-```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
-pnpm env use --global lts
-corepack enable
-```
-
-### Installation
-
-```bash
-git clone git@github.com:snaplet/docs.git
-cd docs
-pnpm install
-```
-
-### Run the project
-
-```bash
-pnpm next
-# Go to http://localhost:3000
-```
+[Docs](https://docs.snaplet.dev/snapshot) | [GitHub](https://github.com/snaplet/snapshot)
