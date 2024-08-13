@@ -2,7 +2,6 @@
 
 Snaplet the company has shut down, but our tools are now open source.
 
-
 ## Seed
 Automatically seed your database with production-like dummy data based on your schema for local development and testing.
 
