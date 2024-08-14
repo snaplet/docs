@@ -1,5 +1,3 @@
-/seed           https://snaplet-seed.netlify.app                200
-/seed/*         https://snaplet-seed.netlify.app/:splat         200
-/snapshot       https://snaplet-snapshot.netlify.app            200
-/snapshot/*     https://snaplet-snapshot.netlify.app/:splat     200
-/*              /index.html                                     200
+/seed/*         https://snaplet-seed.netlify.app/seed/:splat            200
+/snapshot/*     https://snaplet-snapshot.netlify.app/snapshot/:splat    200
+/*              /index.html                                             200
